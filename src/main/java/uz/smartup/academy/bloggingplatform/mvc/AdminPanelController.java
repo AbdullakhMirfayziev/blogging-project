@@ -52,7 +52,7 @@ public class AdminPanelController {
 
         List<User> userss = dao.getUsersWithoutEditorRole();
 
-        model.addAttribute("userDTO",userDTOS);
+        model.addAttribute("userEditor",userDTOS);
         model.addAttribute("userDTOs",userDTOSs);
         model.addAttribute("userss",userss);
         model.addAttribute("users",userDTOList.size());
@@ -104,13 +104,99 @@ public class AdminPanelController {
     }
 
     @GetMapping("/admin/user/search")
-    public String getUserFirstname(@RequestParam(name = "search") String username, Model model){
+    public String getUserUserName(@RequestParam(name = "search") String username, Model model){
         model.addAttribute("userDTO", userService.getUserByUsername(username));
 
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("categories",categories);
         return "admin_zip/user_table";
     }
+
+    @GetMapping("/admin/user/search/viewer")
+    public String getUserUserNameViewer(@RequestParam(name = "search") String username, Model model){
+
+        UserDTO user =  userService.getUserByUsername(getLoggedUser().getUsername());
+        model.addAttribute("user",user);
+
+        List<UserDTO> userDTOList = userService.getAllUsers();
+        List<User> userDTOS = dao.getUsersWithEditorRole();
+        List<User> userDTOSs = dao.findAllByEnabledIsNull();
+        List<PostDto> postDtos = postService.getAllPosts();
+        List<CategoryDto> categories = categoryService.getAllCategories();
+
+        //List<User> userss = dao.getUsersWithoutEditorRole();
+
+        model.addAttribute("userEditor",userDTOS);
+        model.addAttribute("userDTOs",userDTOSs);
+        //model.addAttribute("userss",userss);
+        model.addAttribute("users",userDTOList.size());
+        model.addAttribute("posts",postDtos.size());
+        model.addAttribute("categories",categories);
+
+
+
+        model.addAttribute("userss", dao.getUserByUsername(username));
+
+        return "admin_zip/admin_panel";
+    }
+
+    @GetMapping("/admin/user/search/editor")
+    public String getUserUserNameEditor(@RequestParam(name = "search") String username, Model model){
+
+        UserDTO user =  userService.getUserByUsername(getLoggedUser().getUsername());
+        model.addAttribute("user",user);
+
+        List<UserDTO> userDTOList = userService.getAllUsers();
+        //List<User> userDTOS = dao.getUsersWithEditorRole();
+        List<User> userDTOSs = dao.findAllByEnabledIsNull();
+        List<PostDto> postDtos = postService.getAllPosts();
+        List<CategoryDto> categories = categoryService.getAllCategories();
+
+        List<User> userss = dao.getUsersWithoutEditorRole();
+
+        //model.addAttribute("userEditor",userDTOS);
+        model.addAttribute("userDTOs",userDTOSs);
+        model.addAttribute("userss",userss);
+        model.addAttribute("users",userDTOList.size());
+        model.addAttribute("posts",postDtos.size());
+        model.addAttribute("categories",categories);
+
+
+
+        model.addAttribute("userEditor", dao.getUserByUsername(username));
+
+        return "admin_zip/admin_panel";
+    }
+
+    @GetMapping("/admin/user/search/ban")
+    public String getUserUserNameBan(@RequestParam(name = "search") String username, Model model){
+
+        UserDTO user =  userService.getUserByUsername(getLoggedUser().getUsername());
+        model.addAttribute("user",user);
+
+        List<UserDTO> userDTOList = userService.getAllUsers();
+        List<User> userDTOS = dao.getUsersWithEditorRole();
+        //List<User> userDTOSs = dao.findAllByEnabledIsNull();
+        List<PostDto> postDtos = postService.getAllPosts();
+        List<CategoryDto> categories = categoryService.getAllCategories();
+
+        List<User> userss = dao.getUsersWithoutEditorRole();
+
+        model.addAttribute("userEditor",userDTOS);
+        //model.addAttribute("userDTOs",userDTOSs);
+        model.addAttribute("userss",userss);
+        model.addAttribute("users",userDTOList.size());
+        model.addAttribute("posts",postDtos.size());
+        model.addAttribute("categories",categories);
+
+
+
+        model.addAttribute("userDTOs", dao.getUserByUsername(username));
+
+        return "admin_zip/admin_panel";
+    }
+
+
 
     @GetMapping("/admin/user/{userId}/edit")
     public String editProfile(Model model, @PathVariable("userId") String  username) {
