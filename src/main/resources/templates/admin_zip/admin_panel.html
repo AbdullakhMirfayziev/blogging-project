@@ -122,6 +122,11 @@
 					  <div class="card-header">
 						  <h6 style="padding-top:2px;" class="d-inline-block mb-0">USERS(Viewer)</h6>
 					  </div>
+					  <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0 d-flex" th:action="@{/admin/user/search/viewer}" method="get" role="form">
+						  <input class="form-control me-2" name="search" type="text" placeholder="Search" aria-label="Search">
+						  <button class="btn btn-success" type="submit">Search</button>
+					  </form>
+
 					  <div class="card-body table-responsive table_tow">
 						  <div class="table_tow">
 							  <table class="table table-hover table-bordered table-centered mb-0">
@@ -177,6 +182,10 @@
 					  <div class="card-header">
 						  <h6 style="padding-top:2px;" class="d-inline-block mb-0">USERS(Editor)</h6>
 					  </div>
+					  <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0 d-flex" th:action="@{/admin/user/search/editor}" method="get" role="form">
+						  <input class="form-control me-2" name="search" type="text" placeholder="Search" aria-label="Search">
+						  <button class="btn btn-success" type="submit">Search</button>
+					  </form>
 					  <div class="card-body table-responsive table_tow">
 						  <div class="table_tow">
 							  <table class="table table-hover table-bordered table-centered mb-0">
@@ -191,7 +200,7 @@
 								  </tr>
 								  </thead>
 								  <tbody>
-								  <tr th:each = "user: ${userDTO}">
+								  <tr th:each = "user: ${userEditor}">
 									  <td th:text = "${user.id}"></td>
 									  <td th:text = "${user.firstName}"></td>
 									  <td th:text = "${user.lastName}"></td>
@@ -243,6 +252,10 @@
 					  <div class="card-header">
 						  <h6 style="padding-top:2px;" class="d-inline-block mb-0">USERS(BAN)</h6>
 					  </div>
+					  <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0 d-flex" th:action="@{/admin/user/search/ban}" method="get" role="form">
+						  <input class="form-control me-2" name="search" type="text" placeholder="Search" aria-label="Search">
+						  <button class="btn btn-success" type="submit">Search</button>
+					  </form>
 					  <div class="card-body table-responsive table_tow">
 						  <div class="table_tow">
 							  <table class="table table-hover table-bordered table-centered mb-0">
