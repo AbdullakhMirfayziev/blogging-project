@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -84,9 +84,51 @@
                 <button class="btn btn-success" type="submit">Search</button>
             </form>
 
-            <form th:action="@{/logout}" method="POST" style="height: 60%;">
-                <input class="btn btn-danger me-2" type="submit" value="Logout" />
-            </form>
+            <div th:if="${loggedIn != null}" style="display: flex;">
+                <button class="open" type="button" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas" aria-controls="profileOffcanvas">
+                    <img th:src="'data:image/png;base64,' + ${base64EncodedPhoto}" alt="Profile Image" >
+                </button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas" aria-labelledby="profileOffcanvasLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="profileOffcanvasLabel">Profile Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <form th:action="@{/profile/{username}(username=${loggedIn.username})}" method="GET">
+                            <i class="fa-regular fa-circle-user"></i>
+                            <button class="w-100 mb-2" type="submit">Profile</button>
+                        </form>
+
+                        <form th:action="@{/editor/{username}/posts(username=${loggedIn.username})}"
+                              sec:authorize="hasRole('ROLE_EDITOR')">
+                            <i class="fa-regular fa-newspaper"></i>
+                            <button class="w-100 mb-2">Your Posts</button>
+                        </form>
+
+                        <form th:action="@{/editor/{username}/posts/new(username=${loggedIn.username})}" method="GET" sec:authorize="hasRole('ROLE_EDITOR')">
+                            <i class="fa-regular fa-square-plus"></i>
+                            <button type="submit" class="w-100 mb-2">Create New Post</button>
+                        </form>
+
+                        <form th:action="@{/vacancy}"
+                              sec:authorize="!hasRole('ROLE_EDITOR')">
+                            <i class="fa-solid fa-suitcase"></i>
+                            <button class="w-100 mb-2">GWN Jobs</button>
+                        </form>
+
+
+                        <form th:action="@{/changePassword}">
+                            <i class="fa-solid fa-key"></i>
+                            <button class="w-100 mb-2">Change Password</button>
+                        </form>
+                        <form th:action="@{/logout}" method="POST" class="w-100">
+                            <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i>
+                            <button type="submit" class="text-danger w-100">Log Out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </nav>

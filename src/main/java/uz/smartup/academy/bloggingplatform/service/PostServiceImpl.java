@@ -1,6 +1,7 @@
 package uz.smartup.academy.bloggingplatform.service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import uz.smartup.academy.bloggingplatform.dao.CategoryDao;
 import uz.smartup.academy.bloggingplatform.dao.PostDao;
@@ -11,7 +12,9 @@ import uz.smartup.academy.bloggingplatform.entity.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -25,9 +28,12 @@ public class PostServiceImpl implements PostService {
     private final TagDao tagDao;
     private final CategoryService categoryService;
     private final UserDtoUtil userDtoUtil;
+    private final TagService tagService;
+    private final UserService userService;
+    private final TagDtoUtil tagDtoUtil;
 
 
-    public PostServiceImpl(PostDao dao, PostDtoUtil dtoUtil, CommentDtoUtil commentDtoUtil, LikeService likeService, PostDtoUtil postDtoUtil, UserDao userDao, CategoryDao categoryDao, TagDao tagDao, CategoryService categoryService, UserDtoUtil userDtoUtil) {
+    public PostServiceImpl(PostDao dao, PostDtoUtil dtoUtil, CommentDtoUtil commentDtoUtil, LikeService likeService, PostDtoUtil postDtoUtil, UserDao userDao, CategoryDao categoryDao, TagDao tagDao, CategoryService categoryService, UserDtoUtil userDtoUtil, TagService tagService, UserService userService, TagDtoUtil tagDtoUtil) {
         this.dao = dao;
         this.dtoUtil = dtoUtil;
         this.commentDtoUtil = commentDtoUtil;
@@ -37,6 +43,9 @@ public class PostServiceImpl implements PostService {
         this.tagDao = tagDao;
         this.categoryService = categoryService;
         this.userDtoUtil = userDtoUtil;
+        this.tagService = tagService;
+        this.userService = userService;
+        this.tagDtoUtil = tagDtoUtil;
     }
 
     @Override
@@ -53,7 +62,6 @@ public class PostServiceImpl implements PostService {
         post.setComments(dao.getPostComments(post.getId()));
         post.setAuthor(dao.getAuthorById(post.getId()));
         post.setStatus(dao.findPostStatusById(post.getId()));
-        post.setTags(tagDao.getTagsByPostId(post.getId()));
         post.setCreatedAt(dao.getById(post.getId()).getCreatedAt());
 
         List<CategoryDto> categories = categoryService.getCategoriesByPostId(post.getId());
@@ -65,14 +73,52 @@ public class PostServiceImpl implements PostService {
         }
 
         List<Category> categories1 = new ArrayList<>();
+        List<String> tagTitle = separate_string(postDto.getTagsString());
 
         postDto.getCategories().forEach(categoryId -> {
             categories1.add(categoryDao.findCategoryById(categoryId));
         });
 
+        removeTags(post.getId());
+        List<Tag> tags = new ArrayList<>();
+
+        for(String tag : tagTitle) {
+            tag = tag.toLowerCase();
+            TagDto tagDto = tagService.getTagByName(tag);
+
+            if(tagDto == null) {
+                tagDto = new TagDto();
+                tagDto.setTitle(tag);
+                tags.add(tagDtoUtil.toEntity(tagDto));
+                userService.addNewTagToPost(tagDto, post.getId());
+            } else {
+                tags.add(tagDtoUtil.toEntity(tagDto));
+                userService.addExistTagToPost(tagDto.getId(), post.getId());
+            }
+        }
+
+        if (postDto.getCategories() != null) {
+            for (int categoryId : postDto.getCategories()) {
+                userService.addExistCategoriesToPost(categoryId, post.getId());
+            }
+        }
+
+        post.setTags(tags);
         post.setCategories(categories1);
 
         dao.update(post);
+    }
+
+    @Override
+    @Transactional
+    public void removeTags(int postId) {
+        Post post = dao.getById(postId);
+        List<Tag> tags = post.getTags();
+
+        if(!tags.isEmpty())
+            for(int i = 0; i < tags.size(); i++) {
+                post.removeTag(tags.get(i));
+            }
     }
 
     @Override
@@ -217,6 +263,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<String> separate_string(String s) {
+        List<String> list = new ArrayList<>();
+        String  word = "";
+
+        for(int i = 0; i < s.length(); i++) {
+            if(s.charAt(i) != ' ') word += s.charAt(i);
+            else {
+                list.add(word);
+                word = "";
+            }
+        }
+
+        if(!word.isEmpty()) list.add(word);
+
+        return list;
+    }
+
+    @Override
     @Transactional
     public void addExistCategoriesToPost(int categoryId, int postId) {
         Post post = dao.getById(postId);
@@ -227,6 +291,15 @@ public class PostServiceImpl implements PostService {
         post.addCategories(category);
 
         dao.update(post);
+    }
+
+    @Override
+    public Page<PostDto> getPosts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<Post> postPage = dao.findPosts(pageable, Post.Status.PUBLISHED);
+
+        return postPage.map(dtoUtil::toDto);
     }
 
 }

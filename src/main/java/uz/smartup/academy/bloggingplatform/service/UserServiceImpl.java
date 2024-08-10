@@ -44,7 +44,6 @@ public class UserServiceImpl implements UserService {
     private final UserDtoUtil dtoUtil;
     private final PostDao postDao;
     private final PostDtoUtil postDtoUtil;
-    private final PostService postService;
     private final CategoryDtoUtil categoryDtoUtil;
     private final CategoryDao categoryDao;
     private final CommentDtoUtil commentDtoUtil;
@@ -57,12 +56,11 @@ public class UserServiceImpl implements UserService {
 //    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
-    public UserServiceImpl(UserDao userDao, UserDtoUtil dtoUtil, PostDao postDao, PostDtoUtil postDtoUtil, PostService postService, CategoryDtoUtil categoryDtoUtil, CategoryDao categoryDao, CommentDtoUtil commentDtoUtil, TagDao tagDao, TagDtoUtil tagDtoUtil, PasswordEncoder passwordEncoder, MailSenderService mailSenderService, EmailVerificationService emailVerificationService) {
+    public UserServiceImpl(UserDao userDao, UserDtoUtil dtoUtil, PostDao postDao, PostDtoUtil postDtoUtil, CategoryDtoUtil categoryDtoUtil, CategoryDao categoryDao, CommentDtoUtil commentDtoUtil, TagDao tagDao, TagDtoUtil tagDtoUtil, PasswordEncoder passwordEncoder, MailSenderService mailSenderService, EmailVerificationService emailVerificationService) {
         this.userDao = userDao;
         this.dtoUtil = dtoUtil;
         this.postDao = postDao;
         this.postDtoUtil = postDtoUtil;
-        this.postService = postService;
         this.categoryDtoUtil = categoryDtoUtil;
         this.categoryDao = categoryDao;
         this.commentDtoUtil = commentDtoUtil;
@@ -291,15 +289,15 @@ public class UserServiceImpl implements UserService {
         postDao.update(post);
     }
 
-    @Override
-    public List<PostDto> userPublishedPosts(int userId) {
-        return postService.getPublishedPostsByAuthorId(userId);
-    }
-
-    @Override
-    public List<PostDto> userDraftPosts(int userId) {
-        return postService.getDraftPostsByAuthorId(userId);
-    }
+//    @Override
+//    public List<PostDto> userPublishedPosts(int userId) {
+//        return postService.getPublishedPostsByAuthorId(userId);
+//    }
+//
+//    @Override
+//    public List<PostDto> userDraftPosts(int userId) {
+//        return postService.getDraftPostsByAuthorId(userId);
+//    }
 
     @Override
     @Transactional

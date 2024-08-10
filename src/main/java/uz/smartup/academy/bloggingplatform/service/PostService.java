@@ -1,5 +1,6 @@
 package uz.smartup.academy.bloggingplatform.service;
 
+import org.springframework.data.domain.Page;
 import uz.smartup.academy.bloggingplatform.dto.CommentDTO;
 import uz.smartup.academy.bloggingplatform.dto.PostDto;
 import uz.smartup.academy.bloggingplatform.dto.UserDTO;
@@ -12,6 +13,8 @@ public interface PostService {
     void createPost(Post post);
 
     void update(PostDto postDto);
+
+    void removeTags(int postId);
 
     void delete(int postId);
 
@@ -49,6 +52,10 @@ public interface PostService {
 
     void removeCategoryFromPost(int postId, int categoryId);
 
+    List<String> separate_string(String s);
+
     void addExistCategoriesToPost(int categoryId, int postId);
+
+    Page<PostDto> getPosts(int page, int size);
 
 }

@@ -54,7 +54,7 @@
             </div>
             <form th:action="@{/search}" method="get" class="d-flex me-auto">
                 <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search">
-                <button class="btn btn-success" type="submit">Search</button>
+                <button class="btn btn-success" type="submit" style="height: min-content;">Search</button>
             </form>
             <div th:if="${loggedIn != null}" style="display: flex;">
                 <button class="open" type="button" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas" aria-controls="profileOffcanvas">
@@ -114,14 +114,6 @@
     </div>
 </nav>
 
-<div th:if="${param.success}" class="container">
-    <h5 class="text-success">Your request was successfully sent!</h5>
-</div>
-
-<div th:if="${param.error}" class="container">
-    <h5 class="text-danger">Ops, something went wrong, please try again</h5>
-</div>
-
 <div class="container">
     <div class="card">
         <h2 class="card-title">Job Vacancy: Post Editor</h2>
@@ -142,10 +134,26 @@
                 <label for="username" class="form-label">Username</label>
                 <input type="text" class="form-control" id="username" name="username" required>
             </div>
+
+            <div class="mb-3">
+                <label for="username" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+
             <div class="mb-3">
                 <label for="cv" class="form-label">Upload CV</label>
                 <input type="file" class="form-control" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
             </div>
+
+            <div th:if="${param.error}" class="container">
+                <h5 class="text-danger">Ops, something went wrong, write username and email the same with your profile. please try again</h5>
+            </div>
+
+
+            <div th:if="${param.success}" class="container">
+                <h5 class="text-success">Your request was successfully sent!</h5>
+            </div>
+
             <button type="submit" class="btn btn-primary btn-submit">Submit</button>
         </form>
     </div>

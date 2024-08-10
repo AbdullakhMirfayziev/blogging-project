@@ -223,6 +223,11 @@
                             <button type="submit" class="w-100 mb-2">Create New Post</button>
                         </form>
 
+                        <form th:action="@{/vacancy}"
+                              sec:authorize="!hasRole('ROLE_EDITOR')">
+                            <i class="fa-solid fa-suitcase"></i>
+                            <button class="w-100 mb-2">GWN Jobs</button>
+                        </form>
 
                         <form th:action="@{/changePassword}">
                             <i class="fa-solid fa-key"></i>

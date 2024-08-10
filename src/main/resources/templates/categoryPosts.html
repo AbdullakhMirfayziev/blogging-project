@@ -104,6 +104,12 @@
                             <button type="submit" class="w-100 mb-2">Create New Post</button>
                         </form>
 
+                        <form th:action="@{/vacancy}"
+                              sec:authorize="!hasRole('ROLE_EDITOR')">
+                            <i class="fa-solid fa-suitcase"></i>
+                            <button class="w-100 mb-2">GWN Jobs</button>
+                        </form>
+
                         <form th:action="@{/changePassword}">
                             <i class="fa-solid fa-key"></i>
                             <button class="w-100 mb-2">Change Password</button>
@@ -141,10 +147,15 @@
                 <i class="fa-solid fa-calendar-days"></i>
                 <h5 th:text="${#temporals.format(topPost.createdAt, 'yyyy-MM-dd HH:mm')}"></h5>
             </div>
+
             <a th:href="@{/posts/{postId}(postId=${topPost.id})}" class="title" th:text="${topPost.title}"></a>
-            <p th:if="${topPost.content.length() > 300}" th:utext="${topPost.content.substring(0,300)} + '...'"></p>
-            <p th:if="${topPost.content.length() <= 300}" th:utext="${topPost.content}"></p>
-            <a th:href="@{/posts/{postId}(postId=${topPost.id})}" class="link-primary" style="font-size:15px; font-weight: 500;">READ MORE</a>
+
+            <p th:with="contentLength=${#strings.length(topPost.content)}">
+                <span th:if="${contentLength <= 300}" th:utext="${topPost.content}"></span>
+                <span th:if="${contentLength > 300}" th:utext="${#strings.substring(topPost.content, 0, 300)} + '...'"></span>
+                <a th:if="${contentLength > 300}" th:href="@{/posts/{postId}(postId=${topPost.id})}" class="link-primary" style="font-size:15px; font-weight: 500;">READ MORE</a>
+            </p>
+
 
             <div class="like d-flex justify-content-start">
                 <div th:if="${loggedIn!=null}">

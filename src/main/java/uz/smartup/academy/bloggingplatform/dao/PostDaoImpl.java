@@ -4,13 +4,18 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jdk.jfr.Registered;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import uz.smartup.academy.bloggingplatform.dto.CommentDTO;
 import uz.smartup.academy.bloggingplatform.entity.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.StringJoiner;
 
 @Repository
 public class PostDaoImpl implements PostDao{
@@ -64,6 +69,38 @@ public class PostDaoImpl implements PostDao{
         query.setParameter("keyword", keyword);
 
         return query.getResultList();
+    }
+
+    @Override
+    public Page<Post> findPosts(Pageable pageable, Post.Status status) {
+        // Create the base query
+        String jpql = "SELECT p FROM Post p WHERE p.status = :status";
+        String countJpql = "SELECT COUNT(p) FROM Post p WHERE p.status = :status";
+
+        // Apply sorting
+        if (pageable.getSort().isSorted()) {
+            jpql += " ORDER BY ";
+            StringJoiner joiner = new StringJoiner(", ");
+            pageable.getSort().forEach(order ->
+                    joiner.add("p." + order.getProperty() + " " + order.getDirection().name())
+            );
+            jpql += joiner.toString();
+        }
+
+        // Create and execute the main query
+        TypedQuery<Post> query = entityManager.createQuery(jpql, Post.class);
+        query.setParameter("status", status);
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+        List<Post> posts = query.getResultList();
+
+        // Execute count query
+        TypedQuery<Long> countQuery = entityManager.createQuery(countJpql, Long.class);
+        countQuery.setParameter("status", status);
+        long total = countQuery.getSingleResult();
+
+
+        return new PageImpl<>(posts, pageable, total);
     }
 
     @Override

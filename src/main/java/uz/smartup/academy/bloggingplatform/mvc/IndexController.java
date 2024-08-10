@@ -1,6 +1,9 @@
 package uz.smartup.academy.bloggingplatform.mvc;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +17,7 @@ import uz.smartup.academy.bloggingplatform.entity.Post;
 import uz.smartup.academy.bloggingplatform.service.*;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -35,62 +39,60 @@ public class IndexController {
         this.commentService = commentService;
     }
 
+
     @GetMapping("/")
-    public String index(Model model) {
-        List<PostDto> posts = postService.getPublishedPost();
+    public String index(Model model,
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "5") int size) {
 
-        if (posts != null) {
-            posts = posts.stream()
-                    .filter(postDto -> postDto.getStatus().equals(Post.Status.PUBLISHED))
-                    .sorted((post1, post2) -> post2.getCreatedAt().compareTo(post1.getCreatedAt()))
-                    .toList();
+        Page<PostDto> postPage = postService.getPosts(page, size);
+        List<PostDto> posts = postPage.getContent();
 
-            if (posts.size() > 20) {
-                posts = posts.stream()
-                        .limit(20)
-                        .toList();
-            }
-
+        if (posts != null && !posts.isEmpty()) {
             for (PostDto post : posts) {
                 post.setLikesCount(likeService.countLikesByPostId(post.getId()));
+                post.setHashedPhoto(post.getPhoto() == null
+                        ? userService.encodePhotoToBase64(userService.getDefaultPostPhoto())
+                        : userService.encodePhotoToBase64(post.getPhoto()));
+
+                if (getLoggedUser() != null) {
+                    post.setLiked(likeService.findByUserAndPost(
+                            userService.getUserByUsername(getLoggedUser().getUsername()).getId(),
+                            post.getId()) != null);
+                } else {
+                    post.setLiked(false);
+                }
             }
-
-
-            for(PostDto postDto : posts) {
-                if(postDto.getPhoto() == null) postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
-                else postDto.setHashedPhoto(userService.encodePhotoToBase64(postDto.getPhoto()));
-            }
-
-            if(getLoggedUser() != null)
-                for(PostDto postDto : posts)
-                    postDto.setLiked(likeService.findByUserAndPost(userService.getUserByUsername(getLoggedUser().getUsername()).getId(), postDto.getId()) != null);
-            else
-                for (PostDto postDto : posts)
-                    postDto.setLiked(false);
-
         }
+
         String photo = "";
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
-        if(userDTO != null){
+        if (userDTO != null) {
             photo = userService.encodePhotoToBase64(userDTO.getPhoto());
         }
 
         List<CategoryDto> categories = categoryService.getAllCategories();
 
-        PostDto topPost = (posts != null && !posts.isEmpty()) ? posts.getFirst() : null;
-        if(topPost != null) {
+        PostDto topPost = (posts != null && !posts.isEmpty()) ? posts.get(0) : null;
+        if (topPost != null) {
             String safeContent = Jsoup.clean(topPost.getContent(), Safelist.basic());
             topPost.setContent(safeContent);
         }
 
+        System.out.println("_".repeat(100));
+        System.out.println(size);
+        System.out.println("_".repeat(100));
 
         model.addAttribute("topPost", topPost);
         model.addAttribute("posts", posts);
         model.addAttribute("photo", photo);
         model.addAttribute("categories", categories);
         model.addAttribute("loggedIn", userDTO);
+        model.addAttribute("postPage", postPage); // For pagination controls
+
         return "index";
     }
+
 
     @GetMapping("/posts/{postId}")
     public String getPostById(@PathVariable("postId") int postId, Model model) {
@@ -232,6 +234,11 @@ public class IndexController {
 
         PostDto topPost = (posts != null && !posts.isEmpty()) ? posts.getFirst() : null;
 
+        if(topPost != null) {
+            String safeContent = Jsoup.clean(topPost.getContent(), Safelist.basic());
+            topPost.setContent(safeContent);
+        }
+
         model.addAttribute("loggedIn", getLoggedUser());
         model.addAttribute("photo", photo);
         model.addAttribute("posts", posts);
@@ -294,6 +301,7 @@ public class IndexController {
         List<CategoryDto> categories = categoryService.getAllCategories();
 
         String base64EncodedPhoto = userService.encodePhotoToBase64(user.getPhoto());
+        model.addAttribute("loggedIn", getLoggedUser());
         model.addAttribute("base64EncodedPhoto", base64EncodedPhoto);
         model.addAttribute("user", user);
         model.addAttribute("categories", categories);

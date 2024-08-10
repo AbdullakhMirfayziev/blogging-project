@@ -244,6 +244,13 @@
                             <i class="fa-regular fa-pen-to-square"></i>
                             <button class="w-100 mb-2" type="submit">Edit Profile</button>
                         </form>
+
+                        <form th:action="@{/vacancy}"
+                              sec:authorize="!hasRole('ROLE_EDITOR')">
+                            <i class="fa-solid fa-suitcase"></i>
+                            <button class="w-100 mb-2">GWN Jobs</button>
+                        </form>
+
                         <form th:action="@{/changePassword}">
                             <i class="fa-solid fa-key"></i>
                             <button class="w-100 mb-2">Change Password</button>

@@ -101,7 +101,7 @@ public class Post {
     }
 
     public void removeTag(Tag tag) {
-        if(!tags.isEmpty())
+        if(!tags.isEmpty() || tag != null)
             tags.remove(tag);
 
     }

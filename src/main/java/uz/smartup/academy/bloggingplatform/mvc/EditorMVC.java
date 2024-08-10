@@ -142,7 +142,7 @@ public class EditorMVC {
                 .reversed()
                 .getFirst();
 
-        List<String> tags = separate_string(postDto.getTagsString());
+        List<String> tags = postService.separate_string(postDto.getTagsString());
 
         for(String tag : tags) {
             tag = tag.toLowerCase();
@@ -168,22 +168,6 @@ public class EditorMVC {
     }
 
 
-    private List<String> separate_string(String s) {
-        List<String> list = new ArrayList<>();
-        String  word = "";
-
-        for(int i = 0; i < s.length(); i++) {
-            if(s.charAt(i) != ' ') word += s.charAt(i);
-            else {
-                list.add(word);
-                word = "";
-            }
-        }
-
-        if(!word.isEmpty()) list.add(word);
-
-        return list;
-    }
 
 
     @RequestMapping("/editor/posts/{username}/delete/{postId}")
@@ -228,6 +212,16 @@ public class EditorMVC {
 
         postDto.setCategories(postCategories);
 
+        List<TagDto> tags = tagService.getTagsByPostId(postId);
+
+        String tagsString = "";
+        for(TagDto tag : tags) {
+            tagsString += tag.getTitle() + " ";
+        }
+
+        postDto.setTagsString(tagsString);
+
+
         model.addAttribute("photo", userPhoto);
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("loggedIn", getLoggedUser());
@@ -235,7 +229,6 @@ public class EditorMVC {
         model.addAttribute("username", username);
         model.addAttribute("tags", tagService.getAllTags());
         model.addAttribute("loggedIn", getLoggedUser());
-        model.addAttribute("tags", tagService.getAllTags());
 
         return "editPost";
     }
@@ -253,6 +246,7 @@ public class EditorMVC {
 
         postDto.setId(postId);
         postDto.setLikesCount(postService.getPostWithLikeCount(postId).getLikesCount());
+
 
         postService.update(postDto);
 

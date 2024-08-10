@@ -74,7 +74,7 @@ public class UserApi {
 
     @GetMapping("/{id}/publishedPosts")
     public List<PostDto> getUserPublishedPosts(@PathVariable("id") int id) {
-        List<PostDto> posts = service.userPublishedPosts(id);
+        List<PostDto> posts = postService.getPublishedPostsByAuthorId(id);
 
         if(!posts.isEmpty()) return posts;
         else throw new RuntimeException("Empty!! Any post doesn't exist");
@@ -82,7 +82,7 @@ public class UserApi {
 
     @GetMapping("/{id}/draftPosts")
     public List<PostDto> getUserDraftPosts(@PathVariable("id") int id) {
-        List<PostDto> posts = service.userDraftPosts(id);
+        List<PostDto> posts = postService.getDraftPostsByAuthorId(id);
 
         if(!posts.isEmpty()) return posts;
         else throw new RuntimeException("Empty!! Any post doesn't exist");

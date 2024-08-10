@@ -1,5 +1,7 @@
 package uz.smartup.academy.bloggingplatform.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uz.smartup.academy.bloggingplatform.entity.*;
@@ -34,6 +36,8 @@ public interface PostDao {
     Post.Status findPostStatusById(int postId);
 
     List<Post> searchPosts(String keyword);
+
+    Page<Post> findPosts(Pageable pageable, Post.Status status);
 }
 
 /*

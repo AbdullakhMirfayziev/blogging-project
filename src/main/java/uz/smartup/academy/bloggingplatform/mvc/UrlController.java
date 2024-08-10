@@ -137,10 +137,16 @@ public class UrlController {
 
 
     @PostMapping("/sendEmail")
-    public String sendEmail(@RequestParam("username") String username, @RequestParam("cv") MultipartFile cv) {
+    public String sendEmail(@RequestParam("username") String username, @RequestParam("cv") MultipartFile cv, @RequestParam("email") String email) {
         try {
+            UserDTO userDTO = userService.getUserByUsername(getLoggedUser().getUsername());
+
+            if(!username.equals(getLoggedUser().getUsername()) || !email.equals(userDTO.getEmail())){
+                return "redirect:/vacancy?error";
+            }
+
             String subject = "Job Application: Post Editor";
-            String text = "Username: " + username + "\n\nAttached is the CV.";
+            String text = "Username: " + username + "\n\nEmail: " + email + "\n\nAttached is the CV.";
             mailSenderService.sendEmailWithAttachment(
                     "greenwhitenews1@gmail.com",
                     subject,

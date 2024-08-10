@@ -41,9 +41,9 @@ public interface UserService {
 
     String encodePhotoToBase64(byte[] photo);
 
-    List<PostDto> userPublishedPosts(int userId);
-
-    List<PostDto> userDraftPosts(int userId);
+//    List<PostDto> userPublishedPosts(int userId);
+//
+//    List<PostDto> userDraftPosts(int userId);
 
     void updateUserComment(int userId, int postId, CommentDTO comment);
 
