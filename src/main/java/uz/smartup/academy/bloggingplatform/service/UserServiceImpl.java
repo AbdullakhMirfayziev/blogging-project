@@ -352,11 +352,12 @@ public class UserServiceImpl implements UserService {
 
         List<User> bannedUsers = userDao.findAllByEnabledIsNull();
         LocalDate now = LocalDate.now();
-        for (User user : bannedUsers) {
+        for (int i = 0; i < bannedUsers.size(); i ++) {
+            User user = bannedUsers.get(i);
             if (user.getRegistered() != null && user.getRegistered().plusDays(1).isBefore(now)) {
                 user.setEnabled("1");
                 user.setRegistered(LocalDate.now());  // Tiklangandan vaqtini yangilaymiz
-                userDao.save(user);
+                userDao.update(user);
             }
         }
     }

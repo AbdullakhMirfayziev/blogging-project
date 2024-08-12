@@ -454,9 +454,12 @@
     </div>
     <p th:utext="${post.content}"></p>
 
-    <div class="tags" th:if="${tags!=null}" th:each="tag : ${tags}" style="display: flex; justify-content: start; align-items: center;">
-        <a th:href="@{/posts/tags/{tagTitle}(tagTitle=${tag.title})}" th:text="'#' + ${tag.title}"
-           style="font-size: 20px; "></a>
+    <div class="tags" th:if="${tags != null}" style="display: flex; justify-content: start; align-items: center; flex-wrap: wrap;">
+        <a th:each="tag : ${tags}"
+           th:href="@{/posts/tags/{tagTitle}(tagTitle=${tag.title})}"
+           th:text="'#' + ${tag.title}"
+           style="font-size: 20px; margin-right: 10px;">
+        </a>
     </div>
 
 </section>
