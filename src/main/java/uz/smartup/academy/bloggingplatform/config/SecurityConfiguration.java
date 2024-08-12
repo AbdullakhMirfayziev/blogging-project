@@ -60,8 +60,8 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(authManager ->
                         authManager
                                 .requestMatchers(HttpMethod.GET, "/?page=*").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/admin", "/admin/*").hasAnyRole("ADMIN")
-                                .requestMatchers(HttpMethod.POST, "/admin", "/admin/*").hasAnyRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/admin", "/admin/**").hasAnyRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/admin", "/admin/**").hasAnyRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/editor", "/editor/**").hasAnyRole("EDITOR")
                                 .requestMatchers(HttpMethod.POST, "/editor", "/editor/**").hasAnyRole("EDITOR")
                                 .requestMatchers(HttpMethod.GET, "/password/reset", "/auto-login","/password/reset/*", "/login?success=true").permitAll()
