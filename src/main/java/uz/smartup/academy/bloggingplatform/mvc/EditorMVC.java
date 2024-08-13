@@ -198,6 +198,16 @@ public class EditorMVC {
         return "redirect:/editor/{username}/posts";
     }
 
+    @RequestMapping("/editor/posts/{username}/draft/{postId}")
+    public String draftPost(@PathVariable("username") String username, @PathVariable("postId") int postId, RedirectAttributes attributes) {
+        postService.switchPublishedToDraft(postId);
+
+        attributes.addAttribute("username", username);
+
+        return "redirect:/editor/{username}/posts";
+    }
+
+
 
     @GetMapping("/editor/posts/{username}/edit/{postId}")
     public String editPost(@PathVariable("username") String username, @PathVariable("postId") int postId, Model model) {

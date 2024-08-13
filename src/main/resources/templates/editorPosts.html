@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -245,12 +245,6 @@
                             <button class="w-100 mb-2" type="submit">Edit Profile</button>
                         </form>
 
-                        <form th:action="@{/vacancy}"
-                              sec:authorize="!hasRole('ROLE_EDITOR')">
-                            <i class="fa-solid fa-suitcase"></i>
-                            <button class="w-100 mb-2">GWN Jobs</button>
-                        </form>
-
                         <form th:action="@{/changePassword}">
                             <i class="fa-solid fa-key"></i>
                             <button class="w-100 mb-2">Change Password</button>
@@ -307,6 +301,13 @@
                         <form th:action="@{/editor/posts/{username}/switch/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
                             <input type="hidden" name="_method" value="put">
                             <button type="submit" class="dropdown-item">Publish Post</button>
+                        </form>
+                    </li>
+
+                    <li th:if="${post.status == post.getStatus().PUBLISHED}">
+                        <form th:action="@{/editor/posts/{username}/draft/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                            <input type="hidden" name="_method" value="put">
+                            <button type="submit" class="dropdown-item">Draft Post</button>
                         </form>
                     </li>
                     <li>
