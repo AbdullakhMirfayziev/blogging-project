@@ -185,7 +185,7 @@ public class PostServiceImpl implements PostService {
     public List<PostDto> getPublishedPostsByAuthorId(int authorId) {
         List<Post> posts = dao.findPostByStatusAndAuthorId(Post.Status.PUBLISHED, authorId);
 
-        System.out.println(dtoUtil.toDTOs(posts));
+//        System.out.println(dtoUtil.toDTOs(posts));
 
         return dtoUtil.toDTOs(posts);
     }
@@ -286,7 +286,7 @@ public class PostServiceImpl implements PostService {
         Post post = dao.getById(postId);
         Category category = categoryDao.findCategoryById(categoryId);
 
-        System.out.println(categoryId);
+//        System.out.println(categoryId);
 
         post.addCategories(category);
 
