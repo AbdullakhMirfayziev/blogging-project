@@ -158,10 +158,10 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> userFindByFirstName(String username) {
+    public List<User> userFindByUserName(String username) {
         TypedQuery<User> query = entityManager.createQuery(
                 "SELECT u FROM User u WHERE u.username LIKE :username", User.class);
-        query.setParameter("firstName", username + "%");
+        query.setParameter("username","%"+ username + "%");
         return query.getResultList();
     }
 
