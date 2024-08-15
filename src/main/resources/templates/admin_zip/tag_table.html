@@ -117,17 +117,17 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Title</th>
-                                            <th>Active?</th>
+<!--                                            <th>Active?</th>-->
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr th:each = "tag: ${tagDTO}">
                                             <td th:text = "${tag.id}"></td>
                                             <td th:text = "${tag.title}"></td>
-                                            <td>
-                                                <h6 data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Edit" class="d-inline-block mb-0"><a th:href="@{/admin/post/edit/{id}(id=post.id)}"><i style="vertical-align:middle; margin-left:5px;margin-right:5px;" class="fa fa-edit col_3"></i></a></h6>
-                                                <h6 data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Delete" class="d-inline-block mb-0"><a th:href="@{/admin/post/delete/{id}(id=post.id)}"><i class="fa fa-trash col_3"></i></a></h6>
-                                            </td>
+<!--                                            <td>-->
+<!--                                                <h6 data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Edit" class="d-inline-block mb-0"><a th:href="@{/admin/post/edit/{id}(id=post.id)}"><i style="vertical-align:middle; margin-left:5px;margin-right:5px;" class="fa fa-edit col_3"></i></a></h6>-->
+<!--                                                <h6 data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Delete" class="d-inline-block mb-0"><a th:href="@{/admin/post/delete/{id}(id=post.id)}"><i class="fa fa-trash col_3"></i></a></h6>-->
+<!--                                            </td>-->
                                         </tr>
                                         </tbody>
                                     </table>

@@ -247,7 +247,7 @@ public class AdminPanelController {
 
         userService.saveRole(newRole);
 
-        return "redirect:/admin/user";
+        return "redirect:/admin";
 
 
     }
