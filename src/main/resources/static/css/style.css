@@ -31,6 +31,12 @@
     justify-content: center;
     align-items: center;
 }
+
+.navbar h4 {
+    margin-bottom: 0;
+}
+
+
 .open {
     width: 60px;
     height: 60px;

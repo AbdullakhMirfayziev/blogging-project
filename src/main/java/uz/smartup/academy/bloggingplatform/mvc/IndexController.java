@@ -79,9 +79,9 @@ public class IndexController {
             topPost.setContent(safeContent);
         }
 
-        System.out.println("_".repeat(100));
-        System.out.println(size);
-        System.out.println("_".repeat(100));
+//        System.out.println("_".repeat(100));
+//        System.out.println(size);
+//        System.out.println("_".repeat(100));
 
         model.addAttribute("topPost", topPost);
         model.addAttribute("posts", posts);
