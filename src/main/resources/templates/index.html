@@ -6,15 +6,11 @@
     <title>GREEN WHITE NEWS</title>
     <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <style>
         .contact .contacts li {
             list-style: none;
@@ -22,20 +18,18 @@
             font-family: serif;
             font-size: 0.8em;
         }
-
         .faq {
             text-align: left;
             color: #7c8688;
             font-size: 0.7em;
         }
-
         .page-item.active .page-link {
             background-color: rgb(0, 166, 81);
             border-color: rgb(0, 166, 81);
             color: white;
         }
 
-        .page-item.active .page-link a {
+        .page-item.active .page-link a{
             color: white;
         }
 
@@ -61,15 +55,12 @@
         </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <div class="dropdown me-2">
-                <button class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     Categories
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li th:each="category : ${categories}">
-                        <a class="dropdown-item text-success"
-                           th:href="@{categories/{categoryTitle}(categoryTitle=${category.title})}"
-                           th:text="${category.title}"> ></a>
+                        <a class="dropdown-item text-success" th:href="@{categories/{categoryTitle}(categoryTitle=${category.title})}" th:text="${category.title}"> ></a>
                     </li>
                 </ul>
             </div>
@@ -78,12 +69,10 @@
                 <button class="btn btn-success" type="submit">Search</button>
             </form>
             <div th:if="${loggedIn != null}" style="display: flex;">
-                <button class="open" type="button" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas"
-                        aria-controls="profileOffcanvas">
+                <button class="open" type="button" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas" aria-controls="profileOffcanvas">
                     <img th:src="'data:image/png;base64,' + ${photo}" alt="Profile Image">
                 </button>
-                <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas"
-                     aria-labelledby="profileOffcanvasLabel">
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas" aria-labelledby="profileOffcanvasLabel">
                     <div class="offcanvas-header">
                         <h5 class="offcanvas-title" id="profileOffcanvasLabel">Profile Menu</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -108,8 +97,7 @@
                             <button class="w-100 mb-2">Your Posts</button>
                         </form>
 
-                        <form th:action="@{/editor/{username}/posts/new(username=${loggedIn.username})}" method="GET"
-                              sec:authorize="hasRole('ROLE_EDITOR')">
+                        <form th:action="@{/editor/{username}/posts/new(username=${loggedIn.username})}" method="GET" sec:authorize="hasRole('ROLE_EDITOR')">
                             <i class="fa-regular fa-square-plus"></i>
                             <button type="submit" class="w-100 mb-2">Create New Post</button>
                         </form>
@@ -144,8 +132,7 @@
     </div>
 </nav>
 
-<div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert"
-     style="display:flex; justify-content: space-around; margin: 4%;">
+<div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert" style="display:flex; justify-content: space-around; margin: 4%;">
     <span th:text="${success}"></span>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
@@ -158,7 +145,7 @@
         <div class="post_content">
             <div class="date">
                 <i class="fa-solid fa-calendar-days"></i>
-                <!--                <h5 th:text="${#temporals.format(topPost.createdAt, 'yyyy-MM-dd HH:mm')}"></h5>-->
+<!--                <h5 th:text="${#temporals.format(topPost.createdAt, 'yyyy-MM-dd HH:mm')}"></h5>-->
 
                 <h5 th:attr="data-timestamp=${topPost.createdAt}" class="timeago"></h5>
             </div>
@@ -166,17 +153,14 @@
 
             <p th:with="contentLength=${#strings.length(topPost.content)}">
                 <span th:if="${contentLength <= 300}" th:utext="${topPost.content}"></span>
-                <span th:if="${contentLength > 300}"
-                      th:utext="${#strings.substring(topPost.content, 0, 300)} + '...'"></span>
-                <a th:if="${contentLength > 300}" th:href="@{/posts/{postId}(postId=${topPost.id})}"
-                   class="link-primary" style="font-size:15px; font-weight: 500;">READ MORE</a>
+                <span th:if="${contentLength > 300}" th:utext="${#strings.substring(topPost.content, 0, 300)} + '...'"></span>
+                <a th:if="${contentLength > 300}" th:href="@{/posts/{postId}(postId=${topPost.id})}" class="link-primary" style="font-size:15px; font-weight: 500;">READ MORE</a>
             </p>
 
 
             <div class="like d-flex justify-content-start">
                 <div th:if="${loggedIn!=null}">
-                    <form th:action="@{posts/{postId}/likes/{username}(postId=${topPost.id}, username=${loggedIn.username})}"
-                          method="post" class="like-form me-2">
+                    <form th:action="@{posts/{postId}/likes/{username}(postId=${topPost.id}, username=${loggedIn.username})}" method="post" class="like-form me-2">
                         <button th:if="${!topPost.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
                             <i class="fa-regular fa-thumbs-up text-dark like-icon"></i>
                         </button>
@@ -204,25 +188,22 @@
 </section>
 
 
+
 <section id="News" th:if="${posts != null && !posts.isEmpty()}">
     <div class="post" th:each="post : ${posts}" th:if="${post != topPost}">
-        <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}"
-             alt="Post Image">
-        <a th:if="${post.title.length() > 30}" th:href="@{/posts/{postId}(postId=${post.id})}"
-           th:text="${#strings.substring(post.title, 0, 30)} + '...'"></a>
-        <a th:if="${post.title.length() <= 30}" th:href="@{/posts/{postId}(postId=${post.id})}"
-           th:text="${post.title}"></a>
+        <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
+        <a th:if="${post.title.length() > 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${#strings.substring(post.title, 0, 30)} + '...'"></a>
+        <a th:if="${post.title.length() <= 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${post.title}"></a>
         <div class="date">
             <div class="calendar">
                 <i class="fa-solid fa-calendar-days"></i>
-                <!--                <h5 th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></h5>-->
+<!--                <h5 th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></h5>-->
                 <h5 th:attr="data-timestamp=${post.createdAt}" class="timeago"></h5>
 
             </div>
             <div class="like">
                 <div th:if="${loggedIn!=null}">
-                    <form th:action="@{posts/{postId}/likes/{username}(postId=${post.id}, username=${loggedIn.username})}"
-                          method="post" class="like-form">
+                    <form th:action="@{posts/{postId}/likes/{username}(postId=${post.id}, username=${loggedIn.username})}" method="post" class="like-form">
                         <button th:if="${!post.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
                             <i class="fa-regular fa-thumbs-up text-dark like-icon"></i>
                         </button>
@@ -249,22 +230,34 @@
 </section>
 
 <section id="pagination" th:if="${postPage.totalPages > 1}" class="d-flex justify-content-center mt-4">
-    <ul class="pagination">
+    <div class="btn-group">
+        <button th:text="${size} + '/page'" type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="height: min-content;">
+        </button>
+        <ul class="dropdown-menu" >
+            <li th:if="${postsSize >= 3}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=3'}">3</a></li>
+            <li th:if="${postsSize >= 5}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=5'}">5</a></li>
+            <li th:if="${postsSize >= 10}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=10'}">10</a></li>
+            <li th:if="${postsSize >= 15}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=15'}">15</a></li>
+            <li th:if="${postsSize >= 20}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=20'}">20</a></li>
+        </ul>
+    </div>
+
+    <ul class="pagination" style="margin-left: 10px;">
         <!-- Previous page link -->
         <li th:classappend="${postPage.hasPrevious() ? '' : 'disabled'}"
             style="color: rgb(0, 166, 81); margin-right: 7px;">
-            <a th:if="${postPage.number == 0}" class="page-link" th:href="@{/(page=${postPage.totalPages - 1})}"
+            <a th:if="${postPage.number == 0}" class="page-link" th:href="@{/(page=${postPage.totalPages}, size=${size})}"
                aria-label="Previous" style="color: rgb(0, 166, 81); border-radius: 7px;">
                 <span aria-hidden="true">&laquo;</span>
             </a>
-            <a th:if="${postPage.number > 0}" class="page-link" th:href="@{/(page=${postPage.number - 1})}"
+            <a th:if="${postPage.number > 0}" class="page-link" th:href="@{/(page=${postPage.number}, size=${size})}"
                aria-label="Previous" style="color: rgb(0, 166, 81); border-radius: 7px;">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
 
         <li class="page-item" th:classappend="${postPage.number == 0 ? 'active' : ''}" style="border-radius: 50px;">
-            <a class="page-link" th:href="@{/(page=0)}" style="border-radius: 7px;">1</a>
+            <a class="page-link" th:href="@{/(page=1, size=${size})}" style="border-radius: 7px;">1</a>
         </li>
 
         <li class="page-item disabled" th:if="${postPage.number > 2}">
@@ -276,7 +269,7 @@
             th:classappend="${i == postPage.number ? 'active' : ''}"
             th:if="${i > 0 and i < postPage.totalPages - 1}"
             style="border-radius: 50px;">
-            <a class="page-link" th:href="@{/(page=${i})}" th:text="${i + 1}" style="border-radius: 7px;"></a>
+            <a class="page-link" th:href="@{/(page=${i + 1}, size=${size})}" th:text="${i + 1}" style="border-radius: 7px;"></a>
         </li>
 
         <li class="page-item disabled" th:if="${postPage.number < postPage.totalPages - 3}">
@@ -285,23 +278,26 @@
 
         <li class="page-item" th:classappend="${postPage.number == postPage.totalPages - 1 ? 'active' : ''}"
             th:if="${postPage.totalPages > 1}" style="border-radius: 50px;">
-            <a class="page-link" th:href="@{/(page=${postPage.totalPages - 1})}" th:text="${postPage.totalPages}"
+            <a class="page-link" th:href="@{/(page=${postPage.totalPages}, size=${size})}" th:text="${postPage.totalPages}"
                style="border-radius: 7px;"></a>
         </li>
 
         <li th:classappend="${postPage.hasNext() ? '' : 'disabled'}">
-            <a th:if="${postPage.number == postPage.totalPages - 1}" class="page-link" th:href="@{/(page=0)}"
+            <a th:if="${postPage.number == postPage.totalPages - 1}" class="page-link" th:href="@{/(page=1, size=${size})}"
                aria-label="Next" style="border-radius: 7px; color: rgb(0, 166, 81);">
                 <span aria-hidden="true">&raquo;</span>
             </a>
             <a th:if="${postPage.number < postPage.totalPages - 1}" class="page-link"
-               th:href="@{/(page=${postPage.number + 1})}" aria-label="Next"
+               th:href="@{/(page=${postPage.number + 2}, size=${size})}" aria-label="Next"
                style="color: rgb(0, 166, 81); border-radius: 7px;">
                 <span aria-hidden="true" style="color: rgb(0, 166, 81);">&raquo;</span>
             </a>
         </li>
     </ul>
 </section>
+
+
+
 <section id="Contact" class="mt-5">
     <div class="contact">
         <div class="image">
@@ -324,20 +320,18 @@
         </div>
     </div>
     <div class="line"></div>
-    <div class="faq">
+    <div class="faq" >
         <p><i class="bi bi-c-circle"></i> LLC Green White Solutions. All rights reserved 2024</p>
     </div>
 </section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.timeago').forEach(function (element) {
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.timeago').forEach(function(element) {
             var timestamp = element.getAttribute('data-timestamp');
             element.textContent = moment(timestamp).fromNow();
         });
@@ -347,13 +341,13 @@
 <script>
 
 
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         var loggedIn = document.body.getAttribute("data-logged-in") === "true";
 
         var likeForms = document.querySelectorAll('.like-form');
 
-        likeForms.forEach(function (form) {
-            form.addEventListener('submit', function (event) {
+        likeForms.forEach(function(form) {
+            form.addEventListener('submit', function(event) {
                 if (!loggedIn) {
                     event.preventDefault();
 
@@ -364,7 +358,7 @@
                     });
 
                     popover.show();
-                    setTimeout(function () {
+                    setTimeout(function() {
                         popover.hide();
                     }, 3000);
                 }

@@ -42,11 +42,21 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model,
-                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "1") int page,
                         @RequestParam(defaultValue = "5") int size) {
 
-        Page<PostDto> postPage = postService.getPosts(page, size);
+        int postsSize = postService.getPublishedPost().size();
+
+        System.out.println(page * size);
+
+        if(postsSize < page * size) {
+            page = postsSize / size + 1;
+        }
+
+        Page<PostDto> postPage = postService.getPosts(page - 1, size);
         List<PostDto> posts = postPage.getContent();
+
+
 
         if (posts != null && !posts.isEmpty()) {
             for (PostDto post : posts) {
@@ -89,6 +99,8 @@ public class IndexController {
         model.addAttribute("categories", categories);
         model.addAttribute("loggedIn", userDTO);
         model.addAttribute("postPage", postPage);
+        model.addAttribute("size", size);
+        model.addAttribute("postsSize", postsSize);
 
         return "index";
     }
