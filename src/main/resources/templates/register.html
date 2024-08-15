@@ -340,11 +340,7 @@
                 }
             })
                 .then(response => {
-                    // Check if the response status is OK (200-299)
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-                    return response.json(); // Parse JSON response
+                    return response.json();
                 })
                 .then(data => {
                     var errorContainer = document.getElementById('errorContainer');
@@ -357,6 +353,7 @@
                             errorContainer.style.display = 'block';
                             errorContainer.textContent = data.error;
                             errorContainer.style.color = "red";
+                            document.getElementById('loadingSpinner').style.display = 'none';
                         } else {
                             console.warn('Error container element not found.');
                         }

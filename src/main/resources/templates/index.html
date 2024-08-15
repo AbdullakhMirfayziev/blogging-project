@@ -243,7 +243,6 @@
     </div>
 
     <ul class="pagination" style="margin-left: 10px;">
-        <!-- Previous page link -->
         <li th:classappend="${postPage.hasPrevious() ? '' : 'disabled'}"
             style="color: rgb(0, 166, 81); margin-right: 7px;">
             <a th:if="${postPage.number == 0}" class="page-link" th:href="@{/(page=${postPage.totalPages}, size=${size})}"
