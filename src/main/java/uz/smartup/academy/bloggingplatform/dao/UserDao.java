@@ -40,7 +40,7 @@ public interface UserDao {
 
     List<User> findAllByEnabledIsNull();
 
-    List<User> userFindByFirstName(String username);
+    List<User> userFindByUserName(String username);
 
 }
 
