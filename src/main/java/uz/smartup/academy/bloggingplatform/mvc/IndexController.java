@@ -73,7 +73,7 @@ public class IndexController {
 
         List<CategoryDto> categories = categoryService.getAllCategories();
 
-        PostDto topPost = (posts != null && !posts.isEmpty()) ? posts.get(0) : null;
+        PostDto topPost = !posts.isEmpty() ? posts.getFirst() : null;
         if (topPost != null) {
             String safeContent = Jsoup.clean(topPost.getContent(), Safelist.basic());
             topPost.setContent(safeContent);
@@ -88,7 +88,7 @@ public class IndexController {
         model.addAttribute("photo", photo);
         model.addAttribute("categories", categories);
         model.addAttribute("loggedIn", userDTO);
-        model.addAttribute("postPage", postPage); // For pagination controls
+        model.addAttribute("postPage", postPage);
 
         return "index";
     }
@@ -549,5 +549,23 @@ public class IndexController {
 
 
         return "postsWithAuthor";
+    }
+
+    @PostMapping("posts/{postId}/likes/{username}/{keyword}")
+    public String searchLike(@PathVariable("postId") int postId, @PathVariable("username") String username, @PathVariable("keyword") String keyword) {
+        UserDTO userDTO = userService.getUserByUsername(username);
+
+        likeService.addLike(userDTO.getId(), postId);
+
+        return "redirect:/search?keyword=" + keyword;
+    }
+
+    @PostMapping("/posts/tags/posts/{postId}/likes/{username}/{keyword}")
+    public String tagLike(@PathVariable("postId") int postId, @PathVariable("username") String username, @PathVariable("keyword") String keyword) {
+        UserDTO userDto = userService.getUserByUsername(username);
+
+        likeService.addLike(userDto.getId(), postId);
+
+        return "redirect:/posts/tags/" + keyword;
     }
 }

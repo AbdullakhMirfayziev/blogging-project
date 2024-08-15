@@ -118,7 +118,8 @@
 <section id="News" th:if="${posts != null && !posts.isEmpty()}">
     <div class="post" th:each="post : ${posts}" th:if="${post != topPost}">
         <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
-        <a th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${post.title}"></a>
+        <a th:if="${post.title.length() > 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${#strings.substring(post.title, 0, 30)} + '...'"></a>
+        <a th:if="${post.title.length() <= 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${post.title}"></a>
         <div class="date">
             <div class="calendar">
                 <i class="fa-solid fa-calendar-days"></i>

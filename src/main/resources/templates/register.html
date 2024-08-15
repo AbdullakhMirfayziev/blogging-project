@@ -169,12 +169,12 @@
             width: 100%;
             height: 100%;
             position: absolute;
-            background-color: rgba(175, 172, 172, 0.2);
+            background-color: rgba(140, 139, 139, 0.4);
             top: 0;
             left: 0;
             display: none;
+            text-align: center;
             justify-content: center;
-            align-items: center;
             z-index: 1;
         }
 
@@ -186,12 +186,19 @@
             border: 0.40em solid currentColor;
             border-right-color: transparent;
             border-radius: 50%;
-            animation: spinner-border 0.75s linear infinite;
+            margin-top: 60%;
+            animation: spinner-border 2s linear infinite;
         }
 
         .spinner-border.text-success {
             color: rgba(0,166,81,1);
         }
+
+        #loadingSpinner p {
+            font-family: sans-serif;
+            font-size: 20px;
+        }
+
 
         @keyframes spinner-border {
             to { transform: rotate(360deg); }
@@ -207,6 +214,7 @@
 
     <div class="spinner-border text-success" role="status">
     </div>
+    <p>Loading...</p>
 </div>
 
 <div class="form-background">
@@ -322,7 +330,7 @@
         if (!firstName || !lastName || !email || !password || !username) {
             alert('All fields are required.');
         } else {
-            document.getElementById('loadingSpinner').style.display = 'flex';
+            document.getElementById('loadingSpinner').style.display = 'block';
 
             fetch(event.target.action, {
                 method: 'POST',
@@ -342,9 +350,7 @@
                 .then(data => {
                     var errorContainer = document.getElementById('errorContainer');
 
-                    console.log('Redirect URL:', data.redirect);
                     if (data.redirect) {
-                        console.log('Redirecting to:', data.redirect);
                         window.location.href = "/login";
                     } else if (data.error) {
                         // Display error message

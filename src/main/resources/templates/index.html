@@ -23,13 +23,30 @@
             color: #7c8688;
             font-size: 0.7em;
         }
+        .page-item.active .page-link {
+            background-color: rgb(0, 166, 81);
+            border-color: rgb(0, 166, 81);
+            color: white;
+        }
+
+        .page-item.active .page-link a{
+            color: white;
+        }
+
+        .page-item .page-link {
+            color: rgb(0, 166, 81);
+        }
+
+        .page-item {
+            margin-right: 7px;
+        }
     </style>
 </head>
 <body th:data-logged-in="${loggedIn != null}">
 <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
     <div class="container-fluid">
         <div class="navbar-start">
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand" href="#">
                 <div class="image">
                     <img th:src="@{/css/photos/greenNews.jpg}" alt="">
                 </div>
@@ -128,7 +145,9 @@
         <div class="post_content">
             <div class="date">
                 <i class="fa-solid fa-calendar-days"></i>
-                <h5 th:text="${#temporals.format(topPost.createdAt, 'yyyy-MM-dd HH:mm')}"></h5>
+<!--                <h5 th:text="${#temporals.format(topPost.createdAt, 'yyyy-MM-dd HH:mm')}"></h5>-->
+
+                <h5 th:attr="data-timestamp=${topPost.createdAt}" class="timeago"></h5>
             </div>
             <a th:href="@{/posts/{postId}(postId=${topPost.id})}" class="title" th:text="${topPost.title}"></a>
 
@@ -173,11 +192,14 @@
 <section id="News" th:if="${posts != null && !posts.isEmpty()}">
     <div class="post" th:each="post : ${posts}" th:if="${post != topPost}">
         <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
-        <a th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${post.title}"></a>
+        <a th:if="${post.title.length() > 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${#strings.substring(post.title, 0, 30)} + '...'"></a>
+        <a th:if="${post.title.length() <= 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${post.title}"></a>
         <div class="date">
             <div class="calendar">
                 <i class="fa-solid fa-calendar-days"></i>
-                <h5 th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></h5>
+<!--                <h5 th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></h5>-->
+                <h5 th:attr="data-timestamp=${post.createdAt}" class="timeago"></h5>
+
             </div>
             <div class="like">
                 <div th:if="${loggedIn!=null}">
@@ -209,29 +231,28 @@
 
 <section id="pagination" th:if="${postPage.totalPages > 1}" class="d-flex justify-content-center mt-4" >
     <ul class="pagination">
-        <!-- Previous Page Link -->
-        <li th:classappend="${postPage.hasPrevious() ? '' : 'disabled'}" style="color : rgb(0, 166, 81);">
-            <a th:if="${postPage.number == 0}" class="page-link" th:href="@{/(page=${postPage.totalPages - 1})}" aria-label="Previous" style="color : rgb(0, 166, 81);">
+        <li th:classappend="${postPage.hasPrevious() ? '' : 'disabled'}" style="color : rgb(0, 166, 81);  margin-right: 7px;">
+            <a th:if="${postPage.number == 0}" class="page-link" th:href="@{/(page=${postPage.totalPages - 1})}" aria-label="Previous" style="color : rgb(0, 166, 81); border-radius: 7px;">
                 <span aria-hidden="true">&laquo;</span>
             </a>
-            <a th:if="${postPage.number > 0}" class="page-link" th:href="@{/(page=${postPage.number - 1})}" aria-label="Previous" style="color : rgb(0, 166, 81);">
+            <a th:if="${postPage.number > 0}" class="page-link" th:href="@{/(page=${postPage.number - 1})}" aria-label="Previous" style="color : rgb(0, 166, 81); border-radius: 7px;">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
 
-        <!-- Page Number Links -->
         <li th:each="i : ${#numbers.sequence(0, postPage.totalPages - 1)}"
-            th:classappend="${i == postPage.number ? 'active' : ''}" style="color : rgb(0, 166, 81);">
-            <a class="page-link" th:href="@{/(page=${i})}" th:text="${i + 1}" style="color : rgb(0, 166, 81);">1</a>
+            class="page-item"
+            th:classappend="${i == postPage.number ? 'active' : ''}"
+            style="border-radius: 50px;">
+            <a class="page-link" th:href="@{/(page=${i})}" th:text="${i + 1}" style="border-radius: 7px;">1</a>
         </li>
 
-        <!-- Next Page Link -->
-        <li th:classappend="${postPage.hasNext() ? '' : 'disabled'}" style="color : rgb(0, 166, 81);">
-            <a th:if="${postPage.number == postPage.totalPages - 1}" class="page-link" th:href="@{/(page=0)}" aria-label="Next" style="color : rgb(0, 166, 81);">
-                <span aria-hidden="true" style="color : rgb(0, 166, 81);">&raquo;</span>
+        <li th:classappend="${postPage.hasNext() ? '' : 'disabled'}" >
+            <a th:if="${postPage.number == postPage.totalPages - 1}" class="page-link" th:href="@{/(page=0)}" aria-label="Next" style="border-radius: 7px; color : rgb(0, 166, 81);">
+                <span aria-hidden="true" >&raquo;</span>
             </a>
 
-            <a th:if="${postPage.number < postPage.totalPages - 1}" class="page-link" th:href="@{/(page=${postPage.number + 1})}" aria-label="Next" style="color : rgb(0, 166, 81);">
+            <a th:if="${postPage.number < postPage.totalPages - 1}" class="page-link" th:href="@{/(page=${postPage.number + 1})}" aria-label="Next" style="color : rgb(0, 166, 81); border-radius: 7px;">
                 <span aria-hidden="true" style="color : rgb(0, 166, 81);">&raquo;</span>
             </a>
         </li>
@@ -266,9 +287,22 @@
     </div>
 </section>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.timeago').forEach(function(element) {
+            var timestamp = element.getAttribute('data-timestamp');
+            element.textContent = moment(timestamp).fromNow();
+        });
+    });
+</script>
+
+<script>
+
+
     document.addEventListener("DOMContentLoaded", function() {
         var loggedIn = document.body.getAttribute("data-logged-in") === "true";
 
