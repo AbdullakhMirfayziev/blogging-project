@@ -383,10 +383,7 @@
                            text-anchor="end"
                            style="mix-blend-mode: normal">
                             <g transform="scale(8,8)">
-                                <!--                            <path d="M11.46875,5c-3.55078,0 -6.46875,2.91406 -6.46875,6.46875v9.0625c0,3.55078 2.91406,6.46875 6.46875,6.46875h9.0625c3.55078,0 6.46875,-2.91406 6.46875,-6.46875v-9.0625c0,-3.55078 -2.91406,-6.46875 -6.46875,-6.46875zM11.46875,7h9.0625c2.47266,0 4.46875,1.99609 4.46875,4.46875v9.0625c0,2.47266 -1.99609,4.46875 -4.46875,4.46875h-9.0625c-2.47266,0 -4.46875,-1.99609 -4.46875,-4.46875v-9.0625c0,-2.47266 1.99609,-4.46875 4.46875,-4.46875zM21.90625,9.1875c-0.50391,0 -0.90625,0.40234 -0.90625,0.90625c0,0.50391 0.40234,0.90625 0.90625,0.90625c0.50391,0 0.90625,-0.40234 0.90625,-0.90625c0,-0.50391 -0.40234,-0.90625 -0.90625,-0.90625zM16,10c-3.30078,0 -6,2.69922 -6,6c0,3.30078 2.69922,6 6,6c3.30078,0 6,-2.69922 6,-6c0,-3.30078 -2.69922,-6 -6,-6zM16,12c2.22266,0 4,1.77734 4,4c0,2.22266 -1.77734,4 -4,4c-2.22266,0 -4,-1.77734 -4,-4c0,-2.22266 1.77734,-4 4,-4z"></path>-->
-                                <!--                            <path d="M12 13.333l8.234-6.155c.298-.224.766-.478 1.152-.478.366 0 .614.18.614.631v11.603c0 .35-.373.906-.739.906h-17.497c-.367 0-.764-.542-.764-.902v-11.6c0-.467.27-.695.633-.695.375 0 .799.223 1.125.451l8.234 6.139zm0-3.333l-8.33-6.225c-.553-.412-1.358-.7-2.024-.7-.834 0-1.646.37-2.326 1.074-.714.74-1.068 1.767-1.068 2.914v13.666c0 1.125.271 2.145.908 2.78.564.563 1.453.91 2.506.91h17.497c1.007 0 1.91-.348 2.472-.92.63-.642.888-1.606.888-2.72v-13.666c0-1.15-.348-2.181-1.08-2.912-.654-.657-1.497-1.068-2.397-1.068-.692 0-1.496.267-2.021.66l-8.282 6.178z"/>-->
-
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48">
                                     <path fill="#E0E0E0" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z"/>
                                     <path fill="#CFD8DC" d="M20 6L12 13 4 6z"/>
                                     <path fill="#F44336" d="M4 6v12h16V6l-8 7z"/>
@@ -441,7 +438,7 @@
 
         <div class="author-info">
             <i class="fa-regular fa-user-circle"></i>
-            <a th:href="@{/posts/author/{username}(username=${author.username})}" th:text="${author.username}" class="author-name"></a>
+            <a th:href="@{/posts/author/{username}(username=${author.username})}" th:text="${author.first_name + ' ' + author.last_name}" class="author-name"></a>
         </div>
     </div>
 
@@ -502,7 +499,13 @@
             </div>
             <div>
                 <div class="content">
-                    <a th:href="@{/profile/{username}(username=${comment.username})}" th:text="${comment.username}"></a>
+                    <div th:if="${comment.username.startsWith('deleted_user_')}">
+                        <a >deleted user</a>
+                    </div>
+                    <div th:if="${!comment.username.startsWith('deleted_user_')}">
+                        <a th:href="@{/profile/{username}(username=${comment.username})}" th:text="${comment.username}"></a>
+
+                    </div>
                     <p th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></p>
 
                     <form th:if="${loggedIn != null and loggedInId == comment.authorId}"

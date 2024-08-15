@@ -302,4 +302,20 @@ public class PostServiceImpl implements PostService {
         return postPage.map(dtoUtil::toDto);
     }
 
+    @Override
+    @Transactional
+    public void savePostTags(PostDto postDto, List<Integer> tags) {
+        Post post = dao.getById(postDto.getId());
+        if (post == null) {
+            throw new IllegalArgumentException("Post not found with ID: " + postDto.getId());
+        }
+        for (Integer tagId : tags) {
+            Tag tag = (Tag) tagDao.getTagsByPostId(tagId);
+            if (tag != null) {
+                post.getTags().add(tag);
+            }
+        }
+        dao.save(post);
+    }
+
 }

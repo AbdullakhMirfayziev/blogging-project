@@ -114,6 +114,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUser(UserDTO userDTO) {
         User user = userDao.getUserById(userDTO.getId());
+
+        System.out.println("-".repeat(100));
+        System.out.println(userDTO.getEnabled());
+        System.out.println("-".repeat(100));
+
+        if(userDTO.getEnabled() != null && userDTO.getEnabled().equals("0"))
+            user.setEnabled("0");
+
         userDao.update(dtoUtil.userMergeEntity(user, userDTO));
     }
 
@@ -375,7 +383,19 @@ public class UserServiceImpl implements UserService {
         return dtoUtil.toDTOs(users);
     }
 
+    @Override
+    @Transactional
+    public void removeRolesFromUser(int userId) {
+        User user = userDao.getUserById(userId);
 
+        List<Role> roles = user.getRoles();
+
+        for(int i = 0; i < roles.size(); ++ i)
+            user.removeRole(roles.get(i));
+
+        userDao.update(user);
+
+    }
 
 
 }

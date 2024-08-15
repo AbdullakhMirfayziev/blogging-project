@@ -50,6 +50,8 @@ public class User {
     @Column(name = "password", length = 100)
     private String password;
 
+    @Column(name = "web_push_token")
+    private String webPushToken;
 
     @OneToMany(  cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "username", referencedColumnName = "username", updatable = false)
@@ -67,6 +69,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PasswordResetToken> passwordResetTokens;
 
+
+
+
     public void addPostToAuthor(Post post){
         if(posts == null) posts = new ArrayList<>();
         posts.add(post);
@@ -83,6 +88,11 @@ public class User {
         }
 
         roles.add(role);
+    }
+
+    public void removeRole(Role role) {
+        if(!roles.isEmpty())
+            roles.remove(role);
     }
 
 //    public void setEmail(String email) {
