@@ -58,4 +58,5 @@ public interface PostService {
 
     Page<PostDto> getPosts(int page, int size);
 
+    void savePostTags(PostDto postDto, List<Integer> tags);
 }

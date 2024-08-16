@@ -15,6 +15,7 @@ import uz.smartup.academy.bloggingplatform.dto.TagDto;
 import uz.smartup.academy.bloggingplatform.dto.UserDTO;
 import uz.smartup.academy.bloggingplatform.entity.Post;
 import uz.smartup.academy.bloggingplatform.entity.Role;
+import uz.smartup.academy.bloggingplatform.entity.Tag;
 import uz.smartup.academy.bloggingplatform.service.CategoryService;
 import uz.smartup.academy.bloggingplatform.service.PostService;
 import uz.smartup.academy.bloggingplatform.service.TagService;
@@ -100,7 +101,6 @@ public class EditorMVC {
 
         return "createPost";
     }
-
     @RequestMapping("/editor/{username}/posts/next")
     public String nextCreatePost(@PathVariable("username") String username,@ModelAttribute("post") PostDto postDto, @RequestParam("file") MultipartFile photo, Model model) throws IOException {
         byte[] photoBytes = photo.getBytes();
@@ -125,6 +125,7 @@ public class EditorMVC {
 
         return "nextCreatePost";
     }
+
 
     @RequestMapping("/editor/{username}/posts/save")
     public String savePost(@PathVariable("username") String username,

@@ -1,8 +1,13 @@
 package uz.smartup.academy.bloggingplatform.mvc;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,7 +18,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StreamUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uz.smartup.academy.bloggingplatform.dto.UserDTO;
 import uz.smartup.academy.bloggingplatform.dto.UserDtoUtil;
@@ -25,24 +34,41 @@ import uz.smartup.academy.bloggingplatform.service.MailSenderService;
 import uz.smartup.academy.bloggingplatform.service.UserService;
 
 
+import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import org.springframework.validation.FieldError;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Validated
 @Controller
 public class UserMVC {
+
+    @Value("classpath:static/css/photos/deleted_user.jpg")
+    private Resource defaultPhotoResource;
+
+    private byte[] defaultPhoto;
 
     private final UserService service;
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
     private final UserDtoUtil userDtoUtil;
+    private static final Logger logger = LoggerFactory.getLogger(UserMVC.class);
+
 
     public UserMVC(UserService userService, PasswordEncoder passwordEncoder, MailSenderService mailSenderService, UserDtoUtil userDtoUtil) {
         this.service = userService;
         this.passwordEncoder = passwordEncoder;
         this.mailSenderService = mailSenderService;
         this.userDtoUtil = userDtoUtil;
+    }
+
+    @PostConstruct
+    public void init() throws IOException {
+        defaultPhoto = StreamUtils.copyToByteArray(defaultPhotoResource.getInputStream());
     }
 
     @GetMapping("/register")
@@ -53,7 +79,17 @@ public class UserMVC {
     }
 
     @PostMapping("/register-user")
-    public ResponseEntity<?> createUser(@ModelAttribute("user") UserDTO user, HttpServletRequest request, HttpSession session) {
+    public ResponseEntity<?> createUser(@Valid @ModelAttribute("user") UserDTO user, HttpServletRequest request, HttpSession session, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = bindingResult.getFieldErrors().stream()
+                    .collect(Collectors.toMap(
+                            FieldError::getField,
+                            FieldError::getDefaultMessage
+                    ));
+            return ResponseEntity.badRequest().body(errors);
+        }
+        
+        
         if (request.getHeader("X-Requested-With") != null && request.getHeader("X-Requested-With").equals("XMLHttpRequest")) {
             if(service.userExists(user.getUsername(), user.getEmail())) {
                 return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Username or email is already taken"));
@@ -165,8 +201,12 @@ public class UserMVC {
     }
 
     @PostMapping("/password-change")
-    public String changePassword(@ModelAttribute("passwordChangeForm") PasswordChangeForm form, Model model, Principal principal, RedirectAttributes attributes) {
+    public String changePassword(@Valid @ModelAttribute("passwordChangeForm") PasswordChangeForm form, Model model, Principal principal, RedirectAttributes attributes, BindingResult bindingResult) {
         UserDTO loggedUser = service.getUserByUsername(principal.getName());
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "changePassword";
+        }
 
         if (!form.getNewPassword().equals(form.getConfirmPassword())) {
             String photo = "";
@@ -220,23 +260,34 @@ public class UserMVC {
 
     @GetMapping("/complete-registration")
     public String showCompleteRegistrationPage(Model model, HttpSession session) {
+        if (!model.containsAttribute("userDTO")) {
+            model.addAttribute("userDTO", new UserDTO());
+        }
+
         OAuth2User oauth2User = (OAuth2User) session.getAttribute("oauth2User");
         model.addAttribute("email", oauth2User.getAttribute("email"));
         return "setPassword";
     }
 
     @PostMapping("/complete-registration")
-    public String completeRegistration(@RequestParam String email,
+    public String completeRegistration(@Valid @ModelAttribute("userDTO") UserDTO userDTO,
+                                       @RequestParam String email,
                                        @RequestParam String username,
                                        @RequestParam String password,
                                        @RequestParam String confirmPassword,
-                                       RedirectAttributes redirectAttributes,
+                                       Model model,
                                        HttpSession session,
+                                       BindingResult bindingResult,
                                        HttpServletRequest request) throws ServletException {
 
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "setPassword";
+        }
+
         if (!password.equals(confirmPassword)) {
-            redirectAttributes.addFlashAttribute("error", "Passwords do not match");
-            return "redirect:/complete-registration";
+            model.addAttribute("error", "Passwords do not match");
+            return "setPassword";
         }
 
         OAuth2User oauth2User = (OAuth2User) session.getAttribute("oauth2User");
@@ -249,23 +300,61 @@ public class UserMVC {
         role.setUsername(username);
         roles.add(role);
 
-        UserDTO userDTO = new UserDTO();
         userDTO.setUsername(username);
         userDTO.setFirst_name(firstName);
         userDTO.setLast_name(lastName);
         userDTO.setPassword(password);
         userDTO.setEmail(email);
 
-        service.registerUser(userDTO, roles);
+        try {
+            service.registerUser(userDTO, roles);
+        } catch (Exception e) {
+            model.addAttribute("error", "Error registering user: " + e.getMessage());
+            return "setPassword";
+        }
 
         Authentication auth = new UsernamePasswordAuthenticationToken(username, service.getUserByUsername(username).getPassword());
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        request.login(username, password);
+        try {
+            request.login(username, password);
+        } catch (ServletException e) {
+            model.addAttribute("error", "Error logging in: " + e.getMessage());
+            return "setPassword";
+        }
 
         return "redirect:/";
     }
 
+    @PostMapping("/users/{username}/delete")
+    public String deleteUser(@PathVariable String username, HttpSession session, RedirectAttributes redirectAttributes) {
+        try {
+            UserDTO userDTO = service.getUserByUsername(username);
+            String loggedInUsername = (String) session.getAttribute("username");
+            String newUsername = "deleted_user_" + userDTO.getId();
+            userDTO.setUsername(newUsername);
+            userDTO.setEnabled("0");
+            userDTO.setEmail(newUsername + "@gmail.com");
+//            userDTO.setFirst_name("Deleted");
+//            userDTO.setLast_name("User");
+            userDTO.setBio(null);
+            userDTO.setPhoto(defaultPhoto);
+            userDTO.setRegistered(null);
+
+            service.removeRolesFromUser(userDTO.getId());
+            service.updateUser(userDTO);
+
+
+            session.invalidate();
+            redirectAttributes.addFlashAttribute("message", "Your account has been successfully deleted.");
+            return "redirect:/login";
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("Error deleting user: ", e);
+            redirectAttributes.addFlashAttribute("errorMessage", "An error occurred while deleting the profile: " + e.getMessage());
+            return "redirect:/profile/" + username;
+        }
+    }
 
 
 

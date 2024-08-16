@@ -517,7 +517,15 @@ public class IndexController {
     public String authorPost(@PathVariable("username") String username, Model model) {
         UserDTO author = userService.getUserByUsername(username);
         List<PostDto> posts = postService.getPostsByAuthor(author.getId());
+        String firstName = author.getFirst_name();
+        String lastName = author.getLast_name();
+
         String photo = userService.encodePhotoToBase64(author.getPhoto());
+        if(getLoggedUser() != null) {
+            UserDTO userDTO = userService.getUserByUsername(getLoggedUser().getUsername());
+            String userPhoto = userService.encodePhotoToBase64(userDTO.getPhoto());
+            model.addAttribute("userPhoto", userPhoto);
+        }
 
         if (posts != null) {
 
@@ -554,6 +562,8 @@ public class IndexController {
 
 
         model.addAttribute("posts", posts);
+        model.addAttribute("firstName", firstName);
+        model.addAttribute("lastName", lastName);
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("loggedIn", getLoggedUser());
         model.addAttribute("username", username);

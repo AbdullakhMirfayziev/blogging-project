@@ -65,4 +65,6 @@ public interface UserService {
     boolean userExists(String email, String userEmail);
 
     List<UserDTO> UserByUsername(String username);
+
+    void removeRolesFromUser(int userId);
 }
