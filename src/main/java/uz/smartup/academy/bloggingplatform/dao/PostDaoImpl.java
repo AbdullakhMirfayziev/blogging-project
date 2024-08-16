@@ -63,7 +63,6 @@ public class PostDaoImpl implements PostDao{
         TypedQuery<Post> query = entityManager.createQuery(
                 "SELECT DISTINCT p FROM Post p LEFT JOIN p.tags t WHERE " +
                         "LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-                        "LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
                         "LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%'))", Post.class
         );
         query.setParameter("keyword", keyword);

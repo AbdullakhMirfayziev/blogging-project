@@ -259,7 +259,7 @@ public class UserServiceImpl implements UserService {
         Post post = postDao.getById(postId);
         Category category = categoryDao.findCategoryById(categoryId);
 
-        System.out.println(categoryId);
+//        System.out.println(categoryId);
 
         post.addCategories(category);
 

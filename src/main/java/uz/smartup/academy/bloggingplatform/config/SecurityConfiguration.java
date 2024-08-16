@@ -59,7 +59,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authManager ->
                         authManager
-                                .requestMatchers(HttpMethod.GET, "/?page=*").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/?page=*", "/?page=**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/admin", "/admin/**").hasAnyRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/admin", "/admin/**").hasAnyRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/editor", "/editor/**").hasAnyRole("EDITOR")

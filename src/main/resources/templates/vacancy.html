@@ -130,15 +130,6 @@
 
         <h4>Apply Now:</h4>
         <form action="/sendEmail" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="username" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-            </div>
 
             <div class="mb-3">
                 <label for="cv" class="form-label">Upload CV</label>
@@ -146,7 +137,7 @@
             </div>
 
             <div th:if="${param.error}" class="container">
-                <h5 class="text-danger">Ops, something went wrong, write username and email the same with your profile. please try again</h5>
+                <h5 class="text-danger">Ops, something went wrong, please try again</h5>
             </div>
 
 

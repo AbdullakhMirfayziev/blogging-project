@@ -42,11 +42,21 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model,
-                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "1") int page,
                         @RequestParam(defaultValue = "5") int size) {
 
-        Page<PostDto> postPage = postService.getPosts(page, size);
+        int postsSize = postService.getPublishedPost().size();
+
+        System.out.println(page * size);
+
+        if(postsSize < page * size) {
+            page = postsSize / size + 1;
+        }
+
+        Page<PostDto> postPage = postService.getPosts(page - 1, size);
         List<PostDto> posts = postPage.getContent();
+
+
 
         if (posts != null && !posts.isEmpty()) {
             for (PostDto post : posts) {
@@ -73,22 +83,24 @@ public class IndexController {
 
         List<CategoryDto> categories = categoryService.getAllCategories();
 
-        PostDto topPost = (posts != null && !posts.isEmpty()) ? posts.get(0) : null;
+        PostDto topPost = !posts.isEmpty() ? posts.getFirst() : null;
         if (topPost != null) {
             String safeContent = Jsoup.clean(topPost.getContent(), Safelist.basic());
             topPost.setContent(safeContent);
         }
 
-        System.out.println("_".repeat(100));
-        System.out.println(size);
-        System.out.println("_".repeat(100));
+//        System.out.println("_".repeat(100));
+//        System.out.println(size);
+//        System.out.println("_".repeat(100));
 
         model.addAttribute("topPost", topPost);
         model.addAttribute("posts", posts);
         model.addAttribute("photo", photo);
         model.addAttribute("categories", categories);
         model.addAttribute("loggedIn", userDTO);
-        model.addAttribute("postPage", postPage); // For pagination controls
+        model.addAttribute("postPage", postPage);
+        model.addAttribute("size", size);
+        model.addAttribute("postsSize", postsSize);
 
         return "index";
     }
@@ -559,5 +571,23 @@ public class IndexController {
 
 
         return "postsWithAuthor";
+    }
+
+    @PostMapping("posts/{postId}/likes/{username}/{keyword}")
+    public String searchLike(@PathVariable("postId") int postId, @PathVariable("username") String username, @PathVariable("keyword") String keyword) {
+        UserDTO userDTO = userService.getUserByUsername(username);
+
+        likeService.addLike(userDTO.getId(), postId);
+
+        return "redirect:/search?keyword=" + keyword;
+    }
+
+    @PostMapping("/posts/tags/posts/{postId}/likes/{username}/{keyword}")
+    public String tagLike(@PathVariable("postId") int postId, @PathVariable("username") String username, @PathVariable("keyword") String keyword) {
+        UserDTO userDto = userService.getUserByUsername(username);
+
+        likeService.addLike(userDto.getId(), postId);
+
+        return "redirect:/posts/tags/" + keyword;
     }
 }

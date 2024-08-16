@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <title>Admin Console</title>
+    <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
     <!-- Bootstrap core CSS -->
     <link th:href="@{/admin/css/bootstrap.min.css}" rel="stylesheet" >
     <link th:href="@{/admin/css/font-awesome.min.css}" rel="stylesheet" >
@@ -98,8 +99,8 @@
                 </div>
             </div>
 
-            <div class="row analytic_2 mt-4">
-                <div class="col-xl-9 col-md-7 col-lg-7">
+            <div class="row analytic_2 mt-4" style="width: 100%;">
+                <div class="col-xl-9 col-md-7 col-lg-7"  style="width: 100%;">
                     <div class="project_2r">
                         <div class="card">
                             <div class="card-header">
@@ -107,16 +108,18 @@
                                 <h6 style="padding-top:2px;" class="d-inline-block mb-0">(</h6>
                                 <h6 th:text="${postSize}" style="padding-top:2px;" class="d-inline-block mb-0"></h6>
                                 <h6 style="padding-top:2px;" class="d-inline-block mb-0">)</h6>
+                                <br>
+
                             </div>
 
 
-                            <div class="card-body table-responsive table_tow">
-                                <div class="table_tow">
+                            <div class="card-body table-responsive table_tow" style="width: 100%;">
+                                <div class="table_tow" style="width: 100%;">
                                     <table class="table table-hover table-bordered table-centered mb-0">
                                         <thead>
                                         <tr>
                                             <th>ID</th>
-<!--                                            <th>User</th>-->
+                                            <!--         <th>User</th>-->
                                             <th>Title</th>
                                             <th>Status</th>
                                             <th>Content</th>
@@ -127,10 +130,10 @@
                                         <tbody>
                                         <tr th:each = "post: ${postDTO}">
                                             <td th:text = "${post.id}"></td>
-<!--                                            <td th:text = "${post.user_id}"></td>-->
+                                            <!--     <td th:text = "${post.user_id}"></td>-->
                                             <td th:text = "${post.title}"></td>
                                             <td th:text = "${post.status}"></td>
-                                            <td th:text = "${post.content}"></td>
+                                            <td th:utext = "${post.content}"></td>
                                             <td th:text = "${post.createdAt}"></td>
                                             <td>
                                                 <h6 data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Edit" class="d-inline-block mb-0"><a th:href="@{/editor/posts/{username}/edit/{postId}(postId=${post.id}, username=${userDTO.username})}"><i style="vertical-align:middle; margin-left:5px;margin-right:5px;" class="fa fa-edit col_3"></i></a></h6>

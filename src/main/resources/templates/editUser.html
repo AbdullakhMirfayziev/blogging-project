@@ -143,7 +143,7 @@
             <img id="profileImage" th:src="'data:image/png;base64,' + ${base64EncodedPhoto}" alt="Profile Image">
         </div>
         <h5>Upload photo: </h5>
-        <input class="form-control file" type="file" id="file" name="file">
+        <input class="form-control file" type="file" id="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" name="file">
 
         <div class="fields mt-3">
             <label class="form-label">First name: </label>

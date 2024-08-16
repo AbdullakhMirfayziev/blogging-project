@@ -130,7 +130,7 @@ public class EditorMVC {
     @RequestMapping("/editor/{username}/posts/save")
     public String savePost(@PathVariable("username") String username,
                            @ModelAttribute("post") PostDto postDto,
-                           @RequestParam("action") String action) {
+                           @RequestParam(value = "action", defaultValue = "Publish") String action) {
         UserDTO userDTO = userService.getUserByUsername(username);
 
 
