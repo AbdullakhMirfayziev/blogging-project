@@ -68,6 +68,9 @@ public class Post {
     @Transient
     private long commentsCount;
 
+    @OneToOne(mappedBy = "post",cascade = CascadeType.ALL)
+    private PostSchedule postSchedule;
+
     public void addCategories(Category category) {
         if(categories == null || categories.isEmpty())
             categories = new ArrayList<>();
@@ -105,6 +108,7 @@ public class Post {
             tags.remove(tag);
 
     }
+
 
     public enum Status {
         DRAFT,

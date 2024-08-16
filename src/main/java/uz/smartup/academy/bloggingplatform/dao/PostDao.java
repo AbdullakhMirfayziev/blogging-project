@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uz.smartup.academy.bloggingplatform.entity.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PostDao {
@@ -38,6 +39,12 @@ public interface PostDao {
     List<Post> searchPosts(String keyword);
 
     Page<Post> findPosts(Pageable pageable, Post.Status status);
+
+    List<Post> findDraftsScheduledForPublish(LocalDateTime now, Post.Status status);
+
+    void saveSchedule(PostSchedule postSchedule);
+
+    LocalDateTime getScheduleDateByPostId(int postId);
 }
 
 /*

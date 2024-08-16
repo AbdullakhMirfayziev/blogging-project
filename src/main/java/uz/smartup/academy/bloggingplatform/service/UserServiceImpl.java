@@ -228,10 +228,20 @@ public class UserServiceImpl implements UserService {
             post.setPhoto(defaultPhotoPost);
         }
 
+
+
         post.setStatus(Post.Status.DRAFT);
         post.setAuthor(user);
         post.setCreatedAt(LocalDateTime.now());
         postDao.save(post);
+
+        if(postDto.getScheduleTime() != null) {
+            PostSchedule postSchedule = new PostSchedule();
+            postSchedule.setPostScheduleDate(postDto.getScheduleTime());
+            postSchedule.setPost(post);
+            post.setPostSchedule(postSchedule);
+        }
+
         userDao.update(user);
     }
 

@@ -36,6 +36,8 @@ public class PostDto {
 
     private String hashedPhoto;
 
+    private LocalDateTime scheduleTime;
+
     public PostDto() {}
 
     public PostDto(Builder builder) {

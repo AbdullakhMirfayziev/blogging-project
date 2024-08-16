@@ -1,7 +1,10 @@
 package uz.smartup.academy.bloggingplatform.service;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import uz.smartup.academy.bloggingplatform.dao.CategoryDao;
 import uz.smartup.academy.bloggingplatform.dao.PostDao;
@@ -316,6 +319,27 @@ public class PostServiceImpl implements PostService {
             }
         }
         dao.save(post);
+    }
+
+    @Override
+    @Scheduled(fixedRate = 60000)
+    @Transactional
+    public void autoPublishPosts() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Post> postsToPublish = dao.findDraftsScheduledForPublish(now, Post.Status.DRAFT);
+
+        System.out.println("-".repeat(100));
+        System.out.println("hello world");
+        System.out.println("-".repeat(100));
+
+        for(int i = 0; i < postsToPublish.size(); i++) {
+            switchPostDraftToPublished(postsToPublish.get(i).getId());
+        }
+    }
+
+    @Override
+    public LocalDateTime scheduleDatePost(int postId) {
+        return dao.getScheduleDateByPostId(postId);
     }
 
 }

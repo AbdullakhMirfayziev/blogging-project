@@ -71,6 +71,10 @@ public class EditorMVC {
                     .filter(postDto -> postDto.getStatus().equals(Post.Status.DRAFT))
                     .toList();
 
+            for(int i = 0; i < draftPosts.size(); i ++) {
+                draftPosts.get(i).setScheduleTime(postService.scheduleDatePost(draftPosts.get(i).getId()));
+            }
+
             model.addAttribute("draftPosts", draftPosts);
 
             List<PostDto> publishedPosts = posts.stream()

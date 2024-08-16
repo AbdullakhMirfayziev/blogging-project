@@ -7,6 +7,7 @@ import uz.smartup.academy.bloggingplatform.dto.UserDTO;
 import uz.smartup.academy.bloggingplatform.entity.Post;
 import uz.smartup.academy.bloggingplatform.entity.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PostService {
@@ -59,4 +60,8 @@ public interface PostService {
     Page<PostDto> getPosts(int page, int size);
 
     void savePostTags(PostDto postDto, List<Integer> tags);
+
+    void autoPublishPosts();
+
+    LocalDateTime scheduleDatePost(int postId);
 }

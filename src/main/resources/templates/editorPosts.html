@@ -212,6 +212,39 @@
         /*        font-size: 35px;*/
         /*        line-height: 45px;*/
 
+        .countdown-timer {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .countdown-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .countdown-display {
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .countdown-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .countdown-display:hover {
+            background-color: #f1f3f5;
+            transition: background-color 0.3s ease;
+        }
     </style>
 
 
@@ -369,6 +402,13 @@
                         </h3>
                         <!--            <p th:utext="${post.content}"></p>-->
                         <h5 class="text-success" th:text="${post.status}" style="font-weight: 600;"></h5>
+
+                        <div th:if="${post.status == post.getStatus().DRAFT and post.scheduleTime != null}" class="countdown-timer">
+                            <p class="countdown-label">Time remaining until publish:</p>
+                            <div class="countdown-display">
+                                <span th:id="'countdown_' + ${post.id}" th:data-schedule-time="${post.scheduleTime}" class="countdown-value"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -471,6 +511,13 @@
                         </h3>
                         <!--            <p th:utext="${post.content}"></p>-->
                         <h5 class="text-success" th:text="${post.status}" style="font-weight: 600;"></h5>
+
+                        <div th:if="${post.status == post.getStatus().DRAFT and post.scheduleTime != null}" class="countdown-timer">
+                            <p class="countdown-label">Time remaining until publish:</p>
+                            <div class="countdown-display">
+                                <span th:id="'countdown_' + ${post.id}" th:data-schedule-time="${post.scheduleTime}" class="countdown-value"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -539,6 +586,47 @@
         });
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const posts = document.querySelectorAll('.post');
+
+        posts.forEach(post => {
+            const countdownElement = post.querySelector('[id^="countdown_"]');
+            if (countdownElement) {
+                const scheduleTime = countdownElement.dataset.scheduleTime;
+
+                if (scheduleTime) {
+                    startCountdown(countdownElement, new Date(scheduleTime));
+                }
+            }
+        });
+    });
+
+    function startCountdown(element, targetDate) {
+        function updateCountdown() {
+            const now = new Date();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                element.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            } else {
+                element.textContent = "Published!";
+                clearInterval(intervalId);
+            }
+        }
+
+        updateCountdown(); // Run once immediately
+        const intervalId = setInterval(updateCountdown, 1000); // Then update every second
+    }
+
+</script>
+
 
 
 </body>

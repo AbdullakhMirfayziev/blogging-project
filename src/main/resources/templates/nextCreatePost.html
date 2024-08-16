@@ -135,9 +135,19 @@
             <input th:field="*{tagsString}" type="text" class="form-control" placeholder="write tags with space, for example: law world ...">
         </div>
 
+        <div class="form-group">
+            <label for="scheduleTime" class="form-label">Schedule Time</label>
+            <input type="datetime-local" id="scheduleTime" th:field="*{scheduleTime}" class="form-control">
+        </div>
+
+        <div class="form-group mt-2">
+            <input type="checkbox" id="scheduleCheckbox">
+            <label for="scheduleCheckbox">Schedule this post</label>
+        </div>
+
 
         <input type="submit" class="btn btn-primary mt-3" name="action" value="Save as draft">
-        <input type="submit" class="btn btn-success mt-3" name="action" value="Publish">
+        <input type="submit" class="btn btn-success mt-3" id="publishButton" name="action" value="Publish">
     </form>
 </div>
 
@@ -185,6 +195,18 @@
     const tagsContainer = document.getElementById('tagsContainer');
     const publishButton = document.getElementById('publishButton');
     const saveDraftButton = document.getElementById('saveDraftButton');
+
+    document.getElementById('scheduleCheckbox').addEventListener('change', function() {
+        const publishButton = document.getElementById('publishButton');
+        if (this.checked) {
+            publishButton.disabled = true;
+            publishButton.style.backgroundColor = 'rgb(39, 97, 68)';
+            publishButton.style.cursor = 'none'
+        } else {
+            publishButton.disabled = false;
+        }
+    });
+
 
     tagInput.addEventListener('keydown', function(event) {
         if (event.key === 'Enter' && tagInput.value.trim() !== '') {

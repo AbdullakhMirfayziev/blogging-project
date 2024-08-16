@@ -1,6 +1,7 @@
 package uz.smartup.academy.bloggingplatform.dao;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jdk.jfr.Registered;
@@ -13,6 +14,7 @@ import org.hibernate.SessionFactory;
 import uz.smartup.academy.bloggingplatform.dto.CommentDTO;
 import uz.smartup.academy.bloggingplatform.entity.*;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.StringJoiner;
@@ -100,6 +102,36 @@ public class PostDaoImpl implements PostDao{
 
 
         return new PageImpl<>(posts, pageable, total);
+    }
+
+    @Override
+    public List<Post> findDraftsScheduledForPublish(LocalDateTime now, Post.Status status) {
+        TypedQuery<Post> query = entityManager.createQuery("FROM Post p WHERE p.status = :status AND p.postSchedule.postScheduleDate <= :now", Post.class);
+
+        query.setParameter("status", status);
+        query.setParameter("now", now);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public void saveSchedule(PostSchedule postSchedule) {
+        entityManager.persist(postSchedule);
+    }
+
+    @Override
+    public LocalDateTime getScheduleDateByPostId(int postId) {
+
+        try {
+            TypedQuery<PostSchedule> query = entityManager.createQuery("FROM PostSchedule p WHERE p.post.id = :postId", PostSchedule.class);
+
+            query.setParameter("postId", postId);
+
+            return query.getSingleResult().getPostScheduleDate();
+
+        }catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override
