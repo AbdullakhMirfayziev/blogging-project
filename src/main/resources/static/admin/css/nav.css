@@ -11,7 +11,7 @@ text-decoration:none;
  }
 .navbar .noti_p{
 padding:10px 20px 10px 20px;
-background:#354458;
+background:#198754;
 color: #ffffff;
  }
 .noti_p1{
@@ -21,7 +21,7 @@ color: #ffffff;
    font-size:14px;
  }
 .noti_p1 .text-muted{
-  color: #8da2b5!important;
+  color: black!important;
   font-size:12px;
 }
 .navbar .sign_box img{
@@ -41,24 +41,24 @@ box-shadow:none;
 }
 
 .dropdown-menu{
-    color: #697a8b;
+    color: #198754;
     background-color: #ffffff;
-    border: 1px solid rgb(192 219 255);
+    border: 1px solid #198754;
 }
 .dropdown-item:focus, .dropdown-item:hover {
     color: #ffffff !important;
-    background-color: #576981;
+    background-color: black;
 }
 .dropdown-item.active, .dropdown-item:active {
     color: #fff!important;
     text-decoration: none;
-    background-color: #576981;
+    background-color: black;
 }
 .btn-toggle-nav a{
 margin-left:0;
 padding-left:50px;
 font-size:14px;
-color: #899eb7!important;
+color: black!important;
 border-radius:0!important;
 padding-top:8px;
 padding-bottom:8px;
@@ -67,22 +67,23 @@ padding-bottom:8px;
 color: #b7b7b7;
 }
 .btn-toggle-nav a:hover{
-background:#354458;
+background: black;
 color:#ffffff!important;  
  }
 .btn-toggle-nav a:focus{
-background:#354458;
+background: black;
 color:#b7b7b7!important;  
  }
 .btn-toggle-nav .active_tab {
-    background: #354458;
+    background: black;
     color: #ffffff!important;
 }
 .sidebar{
-background:#232e3c!important;
+background:#198754!important;
+    color: white;
  }
 .active_tab{
-background:#354458; 
+background: black;
 color:#ffffff!important
  }
 .active_tab span{
@@ -90,19 +91,19 @@ color:#ffffff!important
  }
 .tag_m{
 border-radius:0!important;
-color: #506b8b; 
+color: #198754;
  }
 .tag_m:hover{
-background:#354458;
+background: black;
 color:#ffffff;
  }
 .tag_m:focus{
-background:#354458;
+background: black;
 color:#ffffff;
  }
 .tag_m span{
 font-size: 15px;
-    color: #a4bad7;
+    color: white;
     font-weight: 500;
  }
 .tag_m:hover span{
@@ -112,7 +113,7 @@ color:#ffffff;
 color:#ffffff;
  }
 .drop_1{
-border:1px solid #91a6c1;
+border:1px solid #198754;
 padding-top:0;
 margin-top:0!important;
  }
@@ -128,12 +129,12 @@ color: #a9bfdd;
  }
  
 .navbar{
-    background: #232e3c!important;
-    border-bottom: 2px solid #32455c;
+    background: #198754!important;
+    border-bottom: 2px solid #198754;
  }
 .navbar-brand h4{
 margin-bottom: 0;
-    color: #728399;
+    color: white;
     font-size: 26px;
 }
 .sign_box_1 .nav-link i{
