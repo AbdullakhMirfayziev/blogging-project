@@ -155,7 +155,7 @@
                 </button>
             </div>
         </div>
-        <div th:if="${param.error}" class="error-container">
+        <div th:if="${errorValue}" class="error-container">
             <div class="alert alert-danger alert-dismissible fade show">
                 <p th:text="${errorValue}"></p>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">

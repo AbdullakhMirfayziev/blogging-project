@@ -161,7 +161,6 @@ public class IndexController {
     public String createComment(RedirectAttributes attributes, @PathVariable("postId") int postId, @PathVariable("username") String username, @ModelAttribute("newComment") CommentDTO comment) {
         postService.addCommentToPost(userService.getUserByUsername(username).getId(), postId, comment);
 
-
         attributes.addAttribute("id", postId);
 
         return "redirect:/posts/{id}";

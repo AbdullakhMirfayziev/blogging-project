@@ -120,18 +120,26 @@
             width: 92%;
             margin: 0 4%;
             /*border: 1px solid red;*/
+        }
+
+        section.posts .post-container {
+            width: 100%;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 30px; /* Add gap between grid items */
+            gap: 30px;
         }
 
         section.posts .post {
             width: 100%;
-            /*border: 1px solid black;*/
+
             border-radius: 15px;
             box-shadow: 5px 5px 5px 5px gray;
             height: 450px;
         }
+
+        /*section.posts .post {*/
+        /*    width: 100%;*/
+        /*}*/
 
         section.posts .post .post-body {
             height: 50%;
@@ -173,6 +181,15 @@
             justify-content: center;
             align-items: center;
             z-index: 1;
+        }
+
+        section.posts .nav-item .active {
+            background-color: rgb(0, 166,  81);
+            color: white;
+        }
+
+        section.posts .nav-item a{
+            color: rgb(0, 166, 81);
         }
 
         .no-caret:after {
@@ -282,53 +299,187 @@
 </div>
 </section>
 
-<section class="posts">
-    <div th:each="post : ${posts}" class="post">
-        <div class="post-image">
-            <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
+<section th:if="${!posts.isEmpty()}" class="posts">
+    <ul class="nav nav-tabs nav-justified nav-bordered mb-3">
+        <li class="nav-item">
+            <a href="#home-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+                <i class="mdi mdi-home-variant d-md-none d-block"></i>
+                <span class="d-md-block" th:text="'All posts ' + '(' + ${posts.size()} + ')'"></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#profile-b2" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
+                <i class="mdi mdi-account-circle d-md-none d-block"></i>
+                <span class="d-md-block" th:text="'Published posts ' + '(' + ${publishedPosts.size()} + ')'"></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#settings-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                <i class="mdi mdi-settings-outline d-md-none d-block"></i>
+                <span class="d-md-block" th:text="'Draft posts ' + '(' + ${draftPosts.size()} + ')' "></span>
+            </a>
+        </li>
+    </ul>
 
-            <div class="dropdown modallll">
-                <button class="btn dropdown-toggle no-caret" type="button" th:id="'dropdownMenuButton_' + ${post.id}" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-ellipsis-vertical text-white"></i>
-                </button>
-                <ul class="dropdown-menu" th:aria-labelledby="'dropdownMenuButton_' + ${post.id}">
-                    <li>
-                        <form th:action="@{/editor/posts/{username}/edit/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="GET">
-                            <button type="submit" class="dropdown-item">Edit</button>
-                        </form>
-                    </li>
-                    <li th:if="${post.status == post.getStatus().DRAFT}">
-                        <form th:action="@{/editor/posts/{username}/switch/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
-                            <input type="hidden" name="_method" value="put">
-                            <button type="submit" class="dropdown-item">Publish Post</button>
-                        </form>
-                    </li>
+    <div class="tab-content">
+        <div class="tab-pane p" id="home-b2">
 
-                    <li th:if="${post.status == post.getStatus().PUBLISHED}">
-                        <form th:action="@{/editor/posts/{username}/draft/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
-                            <input type="hidden" name="_method" value="put">
-                            <button type="submit" class="dropdown-item">Draft Post</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form th:action="@{/editor/posts/{username}/delete/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
-                            <input type="hidden" name="_method" value="delete">
-                            <button type="submit" class="dropdown-item">Delete</button>
-                        </form>
-                    </li>
-                </ul>
+            <div class="post-container">
+                <div th:each="post : ${posts}" class="post">
+                    <div class="post-image">
+                        <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
+
+                        <div class="dropdown modallll">
+                            <button class="btn dropdown-toggle no-caret" type="button" th:id="'dropdownMenuButton_' + ${post.id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis-vertical text-white"></i>
+                            </button>
+                            <ul class="dropdown-menu" th:aria-labelledby="'dropdownMenuButton_' + ${post.id}">
+                                <li>
+                                    <form th:action="@{/editor/posts/{username}/edit/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="GET">
+                                        <button type="submit" class="dropdown-item">Edit</button>
+                                    </form>
+                                </li>
+                                <li th:if="${post.status == post.getStatus().DRAFT}">
+                                    <form th:action="@{/editor/posts/{username}/switch/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="put">
+                                        <button type="submit" class="dropdown-item">Publish Post</button>
+                                    </form>
+                                </li>
+
+                                <li th:if="${post.status == post.getStatus().PUBLISHED}">
+                                    <form th:action="@{/editor/posts/{username}/draft/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="put">
+                                        <button type="submit" class="dropdown-item">Draft Post</button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form th:action="@{/editor/posts/{username}/delete/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="delete">
+                                        <button type="submit" class="dropdown-item">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="post-body" style="padding-right: 20px; padding-left: 20px;">
+                        <h3>
+                            <a th:href="@{/posts/{postId}(postId=${post.id})}" class="title" th:text="${post.title}" style="color: black;
+                text-decoration: none;"></a>
+                        </h3>
+                        <!--            <p th:utext="${post.content}"></p>-->
+                        <h5 class="text-success" th:text="${post.status}" style="font-weight: 600;"></h5>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="post-body" style="padding-right: 20px; padding-left: 20px;">
-            <h3>
-                <a th:href="@{/posts/{postId}(postId=${post.id})}" class="title" th:text="${post.title}" style="color: black;
+        <div class="tab-pane p show active" id="profile-b2">
+
+            <div class="post-container">
+                <div th:each="post : ${publishedPosts}" class="post">
+                    <div class="post-image">
+                        <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
+
+                        <div class="dropdown modallll">
+                            <button class="btn dropdown-toggle no-caret" type="button" th:id="'dropdownMenuButton_' + ${post.id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis-vertical text-white"></i>
+                            </button>
+                            <ul class="dropdown-menu" th:aria-labelledby="'dropdownMenuButton_' + ${post.id}">
+                                <li>
+                                    <form th:action="@{/editor/posts/{username}/edit/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="GET">
+                                        <button type="submit" class="dropdown-item">Edit</button>
+                                    </form>
+                                </li>
+                                <li th:if="${post.status == post.getStatus().DRAFT}">
+                                    <form th:action="@{/editor/posts/{username}/switch/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="put">
+                                        <button type="submit" class="dropdown-item">Publish Post</button>
+                                    </form>
+                                </li>
+
+                                <li th:if="${post.status == post.getStatus().PUBLISHED}">
+                                    <form th:action="@{/editor/posts/{username}/draft/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="put">
+                                        <button type="submit" class="dropdown-item">Draft Post</button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form th:action="@{/editor/posts/{username}/delete/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="delete">
+                                        <button type="submit" class="dropdown-item">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="post-body" style="padding-right: 20px; padding-left: 20px;">
+                        <h3>
+                            <a th:href="@{/posts/{postId}(postId=${post.id})}" class="title" th:text="${post.title}" style="color: black;
                 text-decoration: none;"></a>
-            </h3>
-<!--            <p th:utext="${post.content}"></p>-->
-            <h5 class="text-success" th:text="${post.status}" style="font-weight: 600;"></h5>
+                        </h3>
+                        <!--            <p th:utext="${post.content}"></p>-->
+                        <h5 class="text-success" th:text="${post.status}" style="font-weight: 600;"></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane p" id="settings-b2">
+            <div class="post-container">
+                <div th:each="post : ${draftPosts}" class="post">
+                    <div class="post-image">
+                        <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
+
+                        <div class="dropdown modallll">
+                            <button class="btn dropdown-toggle no-caret" type="button" th:id="'dropdownMenuButton_' + ${post.id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis-vertical text-white"></i>
+                            </button>
+                            <ul class="dropdown-menu" th:aria-labelledby="'dropdownMenuButton_' + ${post.id}">
+                                <li>
+                                    <form th:action="@{/editor/posts/{username}/edit/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="GET">
+                                        <button type="submit" class="dropdown-item">Edit</button>
+                                    </form>
+                                </li>
+                                <li th:if="${post.status == post.getStatus().DRAFT}">
+                                    <form th:action="@{/editor/posts/{username}/switch/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="put">
+                                        <button type="submit" class="dropdown-item">Publish Post</button>
+                                    </form>
+                                </li>
+
+                                <li th:if="${post.status == post.getStatus().PUBLISHED}">
+                                    <form th:action="@{/editor/posts/{username}/draft/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="put">
+                                        <button type="submit" class="dropdown-item">Draft Post</button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form th:action="@{/editor/posts/{username}/delete/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="delete">
+                                        <button type="submit" class="dropdown-item">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="post-body" style="padding-right: 20px; padding-left: 20px;">
+                        <h3>
+                            <a th:href="@{/posts/{postId}(postId=${post.id})}" class="title" th:text="${post.title}" style="color: black;
+                text-decoration: none;"></a>
+                        </h3>
+                        <!--            <p th:utext="${post.content}"></p>-->
+                        <h5 class="text-success" th:text="${post.status}" style="font-weight: 600;"></h5>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
+
+
 </section>
 
 

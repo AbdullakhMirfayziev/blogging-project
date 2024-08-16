@@ -66,7 +66,21 @@ public class EditorMVC {
             for (PostDto post : posts)
                 if(post.getContent().length() > 100)
                     post.setContent(post.getContent().substring(0, 100) + "...");
+
+            List<PostDto> draftPosts = posts.stream()
+                    .filter(postDto -> postDto.getStatus().equals(Post.Status.DRAFT))
+                    .toList();
+
+            model.addAttribute("draftPosts", draftPosts);
+
+            List<PostDto> publishedPosts = posts.stream()
+                    .filter(postDto -> postDto.getStatus().equals(Post.Status.PUBLISHED))
+                    .toList();
+
+            model.addAttribute("publishedPosts", publishedPosts);
         }
+
+
 
         String photo = "";
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
