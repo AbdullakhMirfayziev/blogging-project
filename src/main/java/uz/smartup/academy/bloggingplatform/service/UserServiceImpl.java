@@ -386,7 +386,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> UserByUsername(String username) {
+    public List<UserDTO> userFindByUsername(String username) {
         List<User> users= userDao.userFindByUserName(username);
         return dtoUtil.toDTOs(users);
     }
