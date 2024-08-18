@@ -145,9 +145,12 @@
         <div class="post_content">
             <div class="date">
                 <i class="fa-solid fa-calendar-days"></i>
-<!--                <h5 th:text="${#temporals.format(topPost.createdAt, 'yyyy-MM-dd HH:mm')}"></h5>-->
+                <h5 th:if="${topPost.createdAt.toLocalDate().isBefore(T(java.time.LocalDate).now())}"
+                    th:text="${#temporals.format(topPost.createdAt, 'dd')} + ' ' + ${months[topPost.createdAt.monthValue - 1]} + ' ' + ${#temporals.format(topPost.createdAt, 'yyyy HH:mm')}">
+                </h5>
 
-                <h5 th:attr="data-timestamp=${topPost.createdAt}" class="timeago"></h5>
+                <h5 th:if="${topPost.createdAt.toLocalDate().isEqual(T(java.time.LocalDate).now())}"  th:attr="data-timestamp=${topPost.createdAt}" class="timeago"></h5>
+
             </div>
             <a th:href="@{/posts/{postId}(postId=${topPost.id})}" class="title" th:text="${topPost.title}"></a>
 
@@ -197,8 +200,11 @@
         <div class="date">
             <div class="calendar">
                 <i class="fa-solid fa-calendar-days"></i>
-<!--                <h5 th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></h5>-->
-                <h5 th:attr="data-timestamp=${post.createdAt}" class="timeago"></h5>
+                <h5 th:if="${post.createdAt.toLocalDate().isBefore(T(java.time.LocalDate).now())}"
+                    th:text="${#temporals.format(post.createdAt, 'dd')} + ' ' + ${months[post.createdAt.monthValue - 1]} + ' ' + ${#temporals.format(post.createdAt, 'yyyy HH:mm')}">
+                </h5>
+
+                <h5 th:if="${post.createdAt.toLocalDate().isEqual(T(java.time.LocalDate).now())}"  th:attr="data-timestamp=${post.createdAt}" class="timeago"></h5>
 
             </div>
             <div class="like">

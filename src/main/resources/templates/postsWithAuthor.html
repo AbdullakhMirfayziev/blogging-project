@@ -123,7 +123,12 @@
         <div class="date">
             <div class="calendar">
                 <i class="fa-solid fa-calendar-days"></i>
-                <h5 th:attr="data-timestamp=${post.createdAt}" class="timeago"></h5>
+                <h5 th:if="${post.createdAt.toLocalDate().isBefore(T(java.time.LocalDate).now())}"
+                    th:text="${#temporals.format(post.createdAt, 'dd')} + ' ' + ${months[post.createdAt.monthValue - 1]} + ' ' + ${#temporals.format(post.createdAt, 'yyyy HH:mm')}">
+                </h5>
+
+                <h5 th:if="${post.createdAt.toLocalDate().isEqual(T(java.time.LocalDate).now())}"  th:attr="data-timestamp=${post.createdAt}" class="timeago"></h5>
+
             </div>
             <div class="like">
                 <div th:if="${loggedIn!=null}">

@@ -69,6 +69,7 @@ public class EditorMVC {
 
             List<PostDto> draftPosts = posts.stream()
                     .filter(postDto -> postDto.getStatus().equals(Post.Status.DRAFT))
+                    .sorted((post1, post2) -> post2.getCreatedAt().compareTo(post1.getCreatedAt()))
                     .toList();
 
             for(int i = 0; i < draftPosts.size(); i ++) {
@@ -79,6 +80,7 @@ public class EditorMVC {
 
             List<PostDto> publishedPosts = posts.stream()
                     .filter(postDto -> postDto.getStatus().equals(Post.Status.PUBLISHED))
+                    .sorted((post1, post2) -> post2.getCreatedAt().compareTo(post1.getCreatedAt()))
                     .toList();
 
             model.addAttribute("publishedPosts", publishedPosts);

@@ -1,4 +1,5 @@
 package uz.smartup.academy.bloggingplatform.mvc;
+
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import uz.smartup.academy.bloggingplatform.entity.Post;
 import uz.smartup.academy.bloggingplatform.service.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -47,16 +49,16 @@ public class IndexController {
 
         int postsSize = postService.getPublishedPost().size();
 
+        List<String> months = new ArrayList<>(List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
+
         System.out.println(page * size);
 
-        if(postsSize < page * size) {
+        if (postsSize < page * size - size) {
             page = postsSize / size + 1;
         }
 
         Page<PostDto> postPage = postService.getPosts(page - 1, size);
         List<PostDto> posts = postPage.getContent();
-
-
 
         if (posts != null && !posts.isEmpty()) {
             for (PostDto post : posts) {
@@ -101,6 +103,7 @@ public class IndexController {
         model.addAttribute("postPage", postPage);
         model.addAttribute("size", size);
         model.addAttribute("postsSize", postsSize);
+        model.addAttribute("months", months);
 
         return "index";
     }
@@ -110,7 +113,9 @@ public class IndexController {
     public String getPostById(@PathVariable("postId") int postId, Model model) {
         PostDto post = postService.getById(postId);
 
-        if((getLoggedUser() == null && post.getStatus() == Post.Status.DRAFT) || (post.getStatus() == Post.Status.DRAFT && !getLoggedUser().getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EDITOR")) )) {
+        List<String> months = new ArrayList<>(List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
+
+        if ((getLoggedUser() == null && post.getStatus() == Post.Status.DRAFT) || (post.getStatus() == Post.Status.DRAFT && !getLoggedUser().getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EDITOR")))) {
             return "redirect:/";
         }
 
@@ -126,13 +131,14 @@ public class IndexController {
         comments.forEach(commentDTO -> commentDTO.setUsername(userService.getUserById(commentDTO.getAuthorId()).getUsername()));
         String photo = "";
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
-        if(userDTO != null)
+        if (userDTO != null)
             photo = userService.encodePhotoToBase64(userDTO.getPhoto());
 
-        if(getLoggedUser() != null)
+        if (getLoggedUser() != null)
             post.setLiked(likeService.findByUserAndPost(userService.getUserByUsername(getLoggedUser().getUsername()).getId(), post.getId()) != null);
 
-        if(post.getPhoto() == null) post.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
+        if (post.getPhoto() == null)
+            post.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
         else post.setHashedPhoto(userService.encodePhotoToBase64(post.getPhoto()));
 
         for (CommentDTO commentDTO : comments)
@@ -140,7 +146,7 @@ public class IndexController {
 
         comments = comments.reversed();
 
-        if(userDTO != null)
+        if (userDTO != null)
             model.addAttribute("loggedInId", userDTO.getId());
         model.addAttribute("photo", photo);
         model.addAttribute("loggedIn", getLoggedUser());
@@ -153,6 +159,7 @@ public class IndexController {
         model.addAttribute("loggedIn", getLoggedUser());
         model.addAttribute("authorPhoto", authorPhoto);
         model.addAttribute("author", author);
+        model.addAttribute("months", months);
 
         return "getPost";
     }
@@ -207,6 +214,8 @@ public class IndexController {
     public String categoryPost(@PathVariable("categoryTitle") String categoryTitle, Model model) {
         List<PostDto> posts = postService.getPostsByCategory(categoryTitle);
 
+        List<String> months = new ArrayList<>(List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
+
         if (posts != null) {
             posts = posts.stream()
                     .filter(postDto -> postDto.getStatus().equals(Post.Status.PUBLISHED))
@@ -223,13 +232,14 @@ public class IndexController {
                 post.setLikesCount(likeService.countLikesByPostId(post.getId()));
             }
 
-            for(PostDto postDto : posts) {
-                if(postDto.getPhoto() == null) postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
+            for (PostDto postDto : posts) {
+                if (postDto.getPhoto() == null)
+                    postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
                 else postDto.setHashedPhoto(userService.encodePhotoToBase64(postDto.getPhoto()));
             }
 
-            if(getLoggedUser() != null)
-                for(PostDto postDto : posts)
+            if (getLoggedUser() != null)
+                for (PostDto postDto : posts)
                     postDto.setLiked(likeService.findByUserAndPost(userService.getUserByUsername(getLoggedUser().getUsername()).getId(), postDto.getId()) != null);
             else
                 for (PostDto postDto : posts)
@@ -238,14 +248,14 @@ public class IndexController {
 
         String photo = "";
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
-        if(userDTO != null)
+        if (userDTO != null)
             photo = userService.encodePhotoToBase64(userDTO.getPhoto());
 
         List<CategoryDto> categories = categoryService.getAllCategories();
 
         PostDto topPost = (posts != null && !posts.isEmpty()) ? posts.getFirst() : null;
 
-        if(topPost != null) {
+        if (topPost != null) {
             String safeContent = Jsoup.clean(topPost.getContent(), Safelist.basic());
             topPost.setContent(safeContent);
         }
@@ -256,6 +266,7 @@ public class IndexController {
         model.addAttribute("topPost", topPost);
         model.addAttribute("categories", categories);
         model.addAttribute("categoryTitle", categoryTitle);
+        model.addAttribute("months", months);
 
         return "categoryPosts";
     }
@@ -268,7 +279,7 @@ public class IndexController {
 
         String photo = "";
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
-        if(userDTO != null)
+        if (userDTO != null)
             photo = userService.encodePhotoToBase64(userDTO.getPhoto());
 
         String base64EncodedPhoto = userService.encodePhotoToBase64(user.getPhoto());
@@ -282,12 +293,12 @@ public class IndexController {
     }
 
     @PostMapping("/profile/{username}/uploadPhoto")
-    public String uploadPhoto(RedirectAttributes attributes,@RequestParam("file") MultipartFile file, Model model, @PathVariable("username") String username) {
+    public String uploadPhoto(RedirectAttributes attributes, @RequestParam("file") MultipartFile file, Model model, @PathVariable("username") String username) {
         UserDTO user = userService.getUserByUsername(username);
 
         try {
             byte[] bytes = file.getBytes();
-            if(!file.isEmpty() && file != null) {
+            if (!file.isEmpty() && file != null) {
                 user.setPhoto(bytes);
                 userService.updateUser(user);
             }
@@ -303,8 +314,8 @@ public class IndexController {
 
 
     @GetMapping("/profile/{userId}/edit")
-    public String editProfile(Model model, @PathVariable("userId") String  username) {
-        if(getLoggedUser() == null || !getLoggedUser().getUsername().equals(username)) {
+    public String editProfile(Model model, @PathVariable("userId") String username) {
+        if (getLoggedUser() == null || !getLoggedUser().getUsername().equals(username)) {
             return "redirect:/";
         }
 
@@ -321,13 +332,13 @@ public class IndexController {
     }
 
     @PostMapping("/profile/{userId}/update")
-    public String updateUser(@PathVariable("userId") int userId,Model model, @ModelAttribute("user") UserDTO userDTO, RedirectAttributes attributes, @RequestParam(value = "file", required = false) MultipartFile photo) throws IOException {
+    public String updateUser(@PathVariable("userId") int userId, Model model, @ModelAttribute("user") UserDTO userDTO, RedirectAttributes attributes, @RequestParam(value = "file", required = false) MultipartFile photo) throws IOException {
         try {
 //            System.out.println(userDTO.getId());
             UserDTO user = userService.getUserById(userId);
             if (photo == null || photo.isEmpty()) {
                 userDTO.setPhoto(user.getPhoto());
-            }else {
+            } else {
                 byte[] photoBytes = photo.getBytes();
                 userDTO.setPhoto(photoBytes);
             }
@@ -347,18 +358,6 @@ public class IndexController {
         return "redirect:/profile/{username}";
     }
 
-
-
-
-    private UserDetails getLoggedUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails)
-            return (UserDetails) principal;
-
-        return null;
-    }
-
     @PostMapping("/deletePhoto/{userId}")
     public String deletePhoto(@PathVariable("userId") int userId, RedirectAttributes attributes) {
         UserDTO userDTO = userService.getUserById(userId);
@@ -374,7 +373,7 @@ public class IndexController {
     public String deleteComment(@PathVariable("commentId") int commentId, @PathVariable("postId") int postId, RedirectAttributes attributes) {
         UserDTO loggedIn = userService.getUserByUsername(getLoggedUser().getUsername());
         CommentDTO commentDTO = commentService.getComment(commentId);
-        if(commentDTO.getAuthorId() == loggedIn.getId())
+        if (commentDTO.getAuthorId() == loggedIn.getId())
             commentService.deleteComment(commentId);
 
         attributes.addAttribute("postId", postId);
@@ -397,7 +396,7 @@ public class IndexController {
     }
 
     @PostMapping("/{commentId}/updateComment/{postId}")
-    public String updateComment(@PathVariable("commentId") int commentId ,@PathVariable("postId") int postId, @ModelAttribute("comment") CommentDTO comment, RedirectAttributes attributes) {
+    public String updateComment(@PathVariable("commentId") int commentId, @PathVariable("postId") int postId, @ModelAttribute("comment") CommentDTO comment, RedirectAttributes attributes) {
         comment.setId(commentId);
         commentService.updateComment(comment);
 
@@ -410,9 +409,11 @@ public class IndexController {
     public String searchPosts(@RequestParam("keyword") String keyword, Model model) {
         List<PostDto> posts = postService.searchPosts(keyword);
 
+        List<String> months = new ArrayList<>(List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
+
         String photo = "";
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
-        if(userDTO != null){
+        if (userDTO != null) {
             photo = userService.encodePhotoToBase64(userDTO.getPhoto());
         }
 
@@ -434,13 +435,14 @@ public class IndexController {
             }
 
 
-            for(PostDto postDto : posts) {
-                if(postDto.getPhoto() == null) postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
+            for (PostDto postDto : posts) {
+                if (postDto.getPhoto() == null)
+                    postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
                 else postDto.setHashedPhoto(userService.encodePhotoToBase64(postDto.getPhoto()));
             }
 
-            if(getLoggedUser() != null)
-                for(PostDto postDto : posts)
+            if (getLoggedUser() != null)
+                for (PostDto postDto : posts)
                     postDto.setLiked(likeService.findByUserAndPost(userService.getUserByUsername(getLoggedUser().getUsername()).getId(), postDto.getId()) != null);
             else
                 for (PostDto postDto : posts)
@@ -453,6 +455,7 @@ public class IndexController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("loggedIn", getLoggedUser());
+        model.addAttribute("months", months);
 
         return "searchResults";
     }
@@ -462,11 +465,13 @@ public class IndexController {
     public String findPostsByTag(@PathVariable("tagTitle") String tagTitle, Model model) {
         List<PostDto> posts = postService.getPostsByTag(tagTitle);
 
+        List<String> months = new ArrayList<>(List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
+
 //        posts.removeIf(postDto -> postDto.getStatus().equals(Post.Status.DRAFT));
         String photo = "";
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
 
-        if(userDTO != null){
+        if (userDTO != null) {
             photo = userService.encodePhotoToBase64(userDTO.getPhoto());
         }
 
@@ -488,13 +493,14 @@ public class IndexController {
             }
 
 
-            for(PostDto postDto : posts) {
-                if(postDto.getPhoto() == null) postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
+            for (PostDto postDto : posts) {
+                if (postDto.getPhoto() == null)
+                    postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
                 else postDto.setHashedPhoto(userService.encodePhotoToBase64(postDto.getPhoto()));
             }
 
-            if(getLoggedUser() != null)
-                for(PostDto postDto : posts)
+            if (getLoggedUser() != null)
+                for (PostDto postDto : posts)
                     postDto.setLiked(likeService.findByUserAndPost(userService.getUserByUsername(getLoggedUser().getUsername()).getId(), postDto.getId()) != null);
             else
                 for (PostDto postDto : posts)
@@ -507,6 +513,7 @@ public class IndexController {
         model.addAttribute("keyword", tagTitle);
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("loggedIn", getLoggedUser());
+        model.addAttribute("months", months);
 
         return "searchResults";
     }
@@ -519,8 +526,10 @@ public class IndexController {
         String firstName = author.getFirst_name();
         String lastName = author.getLast_name();
 
+        List<String> months = new ArrayList<>(List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
+
         String photo = userService.encodePhotoToBase64(author.getPhoto());
-        if(getLoggedUser() != null) {
+        if (getLoggedUser() != null) {
             UserDTO userDTO = userService.getUserByUsername(getLoggedUser().getUsername());
             String userPhoto = userService.encodePhotoToBase64(userDTO.getPhoto());
             model.addAttribute("userPhoto", userPhoto);
@@ -544,20 +553,20 @@ public class IndexController {
             }
 
 
-            for(PostDto postDto : posts) {
-                if(postDto.getPhoto() == null) postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
+            for (PostDto postDto : posts) {
+                if (postDto.getPhoto() == null)
+                    postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
                 else postDto.setHashedPhoto(userService.encodePhotoToBase64(postDto.getPhoto()));
             }
 
-            if(getLoggedUser() != null)
-                for(PostDto postDto : posts)
+            if (getLoggedUser() != null)
+                for (PostDto postDto : posts)
                     postDto.setLiked(likeService.findByUserAndPost(userService.getUserByUsername(getLoggedUser().getUsername()).getId(), postDto.getId()) != null);
             else
                 for (PostDto postDto : posts)
                     postDto.setLiked(false);
 
         }
-
 
 
         model.addAttribute("posts", posts);
@@ -567,6 +576,7 @@ public class IndexController {
         model.addAttribute("loggedIn", getLoggedUser());
         model.addAttribute("username", username);
         model.addAttribute("photo", photo);
+        model.addAttribute("months", months);
 
 
         return "postsWithAuthor";
@@ -588,5 +598,14 @@ public class IndexController {
         likeService.addLike(userDto.getId(), postId);
 
         return "redirect:/posts/tags/" + keyword;
+    }
+
+    private UserDetails getLoggedUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails)
+            return (UserDetails) principal;
+
+        return null;
     }
 }
