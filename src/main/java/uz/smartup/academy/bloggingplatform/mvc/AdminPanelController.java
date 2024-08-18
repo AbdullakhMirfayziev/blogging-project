@@ -53,8 +53,8 @@ public class AdminPanelController {
         List<User> userss = dao.getUsersWithoutEditorRole();
 
         model.addAttribute("userEditor",userDTOS);
-        model.addAttribute("userDTOs",userDTOSs);
-        model.addAttribute("userss",userss);
+        model.addAttribute("userBan",userDTOSs);
+        model.addAttribute("userViewer",userss);
         model.addAttribute("users",userDTOList.size());
         model.addAttribute("posts",postDtos.size());
         model.addAttribute("categories",categories);
@@ -105,7 +105,7 @@ public class AdminPanelController {
 
     @GetMapping("/admin/user/search")
     public String getUserUserName(@RequestParam(name = "search") String username, Model model){
-        model.addAttribute("userDTO", userService.getUserByUsername(username));
+        model.addAttribute("userDTO", userService.userFindByUsername(username));
 
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("categories",categories);
@@ -124,18 +124,18 @@ public class AdminPanelController {
         List<PostDto> postDtos = postService.getAllPosts();
         List<CategoryDto> categories = categoryService.getAllCategories();
 
-        //List<User> userss = dao.getUsersWithoutEditorRole();
 
         model.addAttribute("userEditor",userDTOS);
-        model.addAttribute("userDTOs",userDTOSs);
+        model.addAttribute("userBan",userDTOSs);
         //model.addAttribute("userss",userss);
         model.addAttribute("users",userDTOList.size());
         model.addAttribute("posts",postDtos.size());
         model.addAttribute("categories",categories);
 
 
+        List<User> userViewer = dao.userFindByUserName(username);
 
-        model.addAttribute("userss", dao.getUserByUsername(username));
+        model.addAttribute("userViewer", userViewer);
 
         return "admin_zip/admin_panel";
     }
@@ -155,15 +155,15 @@ public class AdminPanelController {
         List<User> userss = dao.getUsersWithoutEditorRole();
 
         //model.addAttribute("userEditor",userDTOS);
-        model.addAttribute("userDTOs",userDTOSs);
-        model.addAttribute("userss",userss);
+        model.addAttribute("userBan",userDTOSs);
+        model.addAttribute("usersViewer",userss);
         model.addAttribute("users",userDTOList.size());
         model.addAttribute("posts",postDtos.size());
         model.addAttribute("categories",categories);
 
 
 
-        model.addAttribute("userEditor", dao.getUserByUsername(username));
+        model.addAttribute("userEditor", dao.userFindByUserName(username));
 
         return "admin_zip/admin_panel";
     }
@@ -184,14 +184,14 @@ public class AdminPanelController {
 
         model.addAttribute("userEditor",userDTOS);
         //model.addAttribute("userDTOs",userDTOSs);
-        model.addAttribute("userss",userss);
+        model.addAttribute("userViewer",userss);
         model.addAttribute("users",userDTOList.size());
         model.addAttribute("posts",postDtos.size());
         model.addAttribute("categories",categories);
 
 
 
-        model.addAttribute("userDTOs", dao.getUserByUsername(username));
+        model.addAttribute("userBan", dao.userFindByUserName(username));
 
         return "admin_zip/admin_panel";
     }
