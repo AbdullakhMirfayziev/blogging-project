@@ -1,5 +1,6 @@
 package uz.smartup.academy.bloggingplatform.mvc;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -380,5 +381,16 @@ public class AdminPanelController {
     public String deleteCategory(@PathVariable int id){
         categoryService.delete(id);
         return "redirect:/admin/category";
+    }
+
+    @RequestMapping("/access-denied")
+    public String accessDenied(HttpServletRequest request) {
+        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+
+        if (statusCode == null) {
+            return "admin_zip/error";
+        }
+
+        return "admin_zip/error";
     }
 }
