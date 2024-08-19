@@ -93,6 +93,9 @@ public class SecurityConfiguration {
                         .defaultSuccessUrl("/", true)
                         .successHandler(oAuth2LoginSuccessHandler)
                         .permitAll()
+                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedPage("/access-denied")
                 );
 
         http.csrf(AbstractHttpConfigurer::disable);
