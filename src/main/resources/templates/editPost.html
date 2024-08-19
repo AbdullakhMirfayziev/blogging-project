@@ -136,6 +136,11 @@
             </label>
         </div>
 
+        <div th:if="${post.status == post.status.DRAFT}" class="form-group">
+            <label for="scheduleTime" class="form-label">Schedule Time</label>
+            <input type="datetime-local" id="scheduleTime" th:field="*{scheduleTime}" class="form-control">
+        </div>
+
         <div class="form-group">
             <label class="form-label">Tags</label>
             <input th:field="*{tagsString}" type="text" class="form-control" placeholder="write tags with space, for example: law world ...">

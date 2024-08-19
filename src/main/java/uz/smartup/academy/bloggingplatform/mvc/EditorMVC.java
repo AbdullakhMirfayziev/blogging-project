@@ -242,6 +242,7 @@ public class EditorMVC {
                 .toList();
 
         postDto.setCategories(postCategories);
+        postDto.setScheduleTime(postService.scheduleDatePost(postId));
 
         List<TagDto> tags = tagService.getTagsByPostId(postId);
 

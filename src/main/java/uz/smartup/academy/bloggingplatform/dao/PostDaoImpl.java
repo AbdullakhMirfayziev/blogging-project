@@ -17,6 +17,7 @@ import uz.smartup.academy.bloggingplatform.entity.*;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 @Repository
@@ -24,11 +25,8 @@ public class PostDaoImpl implements PostDao{
 
     private final EntityManager entityManager;
 
-    private final SessionFactory sessionFactory;
-
-    public PostDaoImpl(EntityManager entityManager, SessionFactory sessionFactory) {
+    public PostDaoImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
-        this.sessionFactory = sessionFactory;
     }
 
 
@@ -73,12 +71,37 @@ public class PostDaoImpl implements PostDao{
     }
 
     @Override
-    public Page<Post> findPosts(Pageable pageable, Post.Status status) {
-        // Create the base query
+    public Page<Post> findPosts(Pageable pageable, Post.Status status, String category, String tag, String keyword) {
         String jpql = "SELECT p FROM Post p WHERE p.status = :status";
         String countJpql = "SELECT COUNT(p) FROM Post p WHERE p.status = :status";
+        Category category1 = null;
+        Tag tag1 = null;
 
-        // Apply sorting
+        if(keyword != null && !keyword.isEmpty()) {
+            jpql += " AND LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))";
+
+            countJpql += " AND LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))";
+        }
+
+        if (category != null && !category.isEmpty()) {
+            TypedQuery<Category> categoryTypedQuery = entityManager.createQuery("SELECT c FROM Category c WHERE c.title = :category", Category.class);
+            categoryTypedQuery.setParameter("category", category);
+            category1 = categoryTypedQuery.getSingleResult();
+            jpql += " AND :category1 MEMBER OF p.categories";
+            countJpql += " AND :category1 MEMBER OF p.categories";
+        }
+
+        if (tag != null && !tag.isEmpty()) {
+            TypedQuery<Tag> tagTypedQuery = entityManager.createQuery("SELECT c FROM Tag c WHERE c.title = :tag", Tag.class);
+            tagTypedQuery.setParameter("tag", tag);
+            tag1 = tagTypedQuery.getSingleResult();
+            jpql += " AND :tag1 MEMBER OF p.tags";
+            countJpql += " AND :tag1 MEMBER OF p.tags";
+        }
+
+
+
+
         if (pageable.getSort().isSorted()) {
             jpql += " ORDER BY ";
             StringJoiner joiner = new StringJoiner(", ");
@@ -88,16 +111,34 @@ public class PostDaoImpl implements PostDao{
             jpql += joiner.toString();
         }
 
-        // Create and execute the main query
         TypedQuery<Post> query = entityManager.createQuery(jpql, Post.class);
+        if (category1 != null) {
+            query.setParameter("category1", category1);
+        }
+        if (tag1 != null) {
+            query.setParameter("tag1", tag1);
+        }
+        if(keyword != null && !keyword.isEmpty()) {
+            query.setParameter("keyword", keyword);
+        }
         query.setParameter("status", status);
+
+
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
         List<Post> posts = query.getResultList();
 
-        // Execute count query
         TypedQuery<Long> countQuery = entityManager.createQuery(countJpql, Long.class);
         countQuery.setParameter("status", status);
+        if (category1 != null) {
+            countQuery.setParameter("category1", category1);
+        }
+        if (tag1 != null) {
+            countQuery.setParameter("tag1", tag1);
+        }
+        if(keyword != null && !keyword.isEmpty()) {
+            countQuery.setParameter("keyword", keyword);
+        }
         long total = countQuery.getSingleResult();
 
 
@@ -132,6 +173,26 @@ public class PostDaoImpl implements PostDao{
         }catch (NoResultException e) {
             return null;
         }
+    }
+
+    @Override
+    public PostSchedule getScheduleByPostId(int postId) {
+
+        try {
+            TypedQuery<PostSchedule> query = entityManager.createQuery("FROM PostSchedule p WHERE p.post.id = :postId", PostSchedule.class);
+
+            query.setParameter("postId", postId);
+
+            return query.getSingleResult();
+
+        }catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void saveSchedulePost(PostSchedule postSchedule) {
+        entityManager.persist(postSchedule);
     }
 
     @Override

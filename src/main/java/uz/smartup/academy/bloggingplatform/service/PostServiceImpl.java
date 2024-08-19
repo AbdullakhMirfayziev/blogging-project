@@ -1,7 +1,5 @@
 package uz.smartup.academy.bloggingplatform.service;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,10 +13,7 @@ import uz.smartup.academy.bloggingplatform.entity.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -67,6 +62,10 @@ public class PostServiceImpl implements PostService {
         post.setStatus(dao.findPostStatusById(post.getId()));
         post.setCreatedAt(dao.getById(post.getId()).getCreatedAt());
 
+        PostSchedule postSchedule = dao.getScheduleByPostId(post.getId());
+
+
+
         List<CategoryDto> categories = categoryService.getCategoriesByPostId(post.getId());
 
         if (categories != null) {
@@ -106,8 +105,28 @@ public class PostServiceImpl implements PostService {
             }
         }
 
-        post.setTags(tags);
-        post.setCategories(categories1);
+        if(!tags.isEmpty())
+            post.setTags(tags);
+
+        if(!categories1.isEmpty())
+            post.setCategories(categories1);
+
+
+        if(postDto.getScheduleTime() != null) {
+            if(postSchedule != null) {
+                System.out.println("-1".repeat(100));
+                postSchedule.setPostScheduleDate(postDto.getScheduleTime());
+            }
+            else {
+                postSchedule = new PostSchedule();
+                postSchedule.setPostScheduleDate(postDto.getScheduleTime()) ;
+                postSchedule.setPost(post);
+                post.setPostSchedule(postSchedule);
+            }
+        }else if(postSchedule != null) {
+            post.setPostSchedule(postSchedule);
+            System.out.println("-3".repeat(100));
+        }
 
         dao.update(post);
     }
@@ -297,10 +316,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostDto> getPosts(int page, int size) {
+    public Page<PostDto> getPosts(int page, int size, String category, String tag, String keyword) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
-        Page<Post> postPage = dao.findPosts(pageable, Post.Status.PUBLISHED);
+        Page<Post> postPage = dao.findPosts(pageable, Post.Status.PUBLISHED, category, tag, keyword);
 
         return postPage.map(dtoUtil::toDto);
     }

@@ -2,8 +2,6 @@ package uz.smartup.academy.bloggingplatform.dao;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import uz.smartup.academy.bloggingplatform.entity.*;
 
 import java.time.LocalDateTime;
@@ -38,13 +36,17 @@ public interface PostDao {
 
     List<Post> searchPosts(String keyword);
 
-    Page<Post> findPosts(Pageable pageable, Post.Status status);
+    Page<Post> findPosts(Pageable pageable, Post.Status status, String category, String tag, String keyword);
 
     List<Post> findDraftsScheduledForPublish(LocalDateTime now, Post.Status status);
 
     void saveSchedule(PostSchedule postSchedule);
 
     LocalDateTime getScheduleDateByPostId(int postId);
+
+    PostSchedule getScheduleByPostId(int postId);
+
+    void saveSchedulePost(PostSchedule postSchedule);
 }
 
 /*

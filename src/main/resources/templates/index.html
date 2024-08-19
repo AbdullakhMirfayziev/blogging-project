@@ -55,16 +55,29 @@
         </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <div class="dropdown me-2">
-                <button class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                <button th:if="${!category.isEmpty()}" th:text="${category}" class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                </button>
+
+                <button th:if="${category.isEmpty()}" class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                     Categories
                 </button>
+
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li>
+                        <a class="dropdown-item text-success" th:href="@{/(size = ${size}, page = ${page})}">All posts</a>
+                    </li>
                     <li th:each="category : ${categories}">
-                        <a class="dropdown-item text-success" th:href="@{categories/{categoryTitle}(categoryTitle=${category.title})}" th:text="${category.title}"> ></a>
+                        <a class="dropdown-item text-success" th:href="@{/(size = ${size}, page = ${page}, category=${category.title})}" th:text="${category.title}"> ></a>
+                    </li>
+                </ul>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                    <li th:each="category : ${categories}">
+                        <a class="dropdown-item text-success" th:href="@{/(size = ${size}, page = ${page}, category=${category.title})}" th:text="${category.title}"></a>
                     </li>
                 </ul>
             </div>
-            <form th:action="@{/search}" method="get" class="d-flex me-auto">
+            <form th:action="@{/(size = ${size}, page = ${page})}" method="get" class="d-flex me-auto">
                 <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search">
                 <button class="btn btn-success" type="submit">Search</button>
             </form>
@@ -163,7 +176,7 @@
 
             <div class="like d-flex justify-content-start">
                 <div th:if="${loggedIn!=null}">
-                    <form th:action="@{posts/{postId}/likes/{username}(postId=${topPost.id}, username=${loggedIn.username})}" method="post" class="like-form me-2">
+                    <form th:action="@{posts/{postId}/likes/{username}(postId=${topPost.id}, username=${loggedIn.username}, page=${page}, size=${size}, keyword=${keyword}, tag=${tag}, category=${category})}" method="post" class="like-form me-2">
                         <button th:if="${!topPost.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
                             <i class="fa-regular fa-thumbs-up text-dark like-icon"></i>
                         </button>
@@ -209,7 +222,7 @@
             </div>
             <div class="like">
                 <div th:if="${loggedIn!=null}">
-                    <form th:action="@{posts/{postId}/likes/{username}(postId=${post.id}, username=${loggedIn.username})}" method="post" class="like-form">
+                    <form th:action="@{posts/{postId}/likes/{username}(postId=${post.id}, username=${loggedIn.username}, page=${page}, size=${size}, keyword=${keyword}, tag=${tag}, category=category)}" method="post" class="like-form">
                         <button th:if="${!post.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
                             <i class="fa-regular fa-thumbs-up text-dark like-icon"></i>
                         </button>
@@ -253,18 +266,18 @@
     <ul class="pagination" style="margin-left: 10px;">
         <li th:classappend="${postPage.hasPrevious() ? '' : 'disabled'}"
             style="color: rgb(0, 166, 81); margin-right: 7px;">
-            <a th:if="${postPage.number == 0}" class="page-link" th:href="@{/(page=${postPage.totalPages}, size=${size})}"
+            <a th:if="${postPage.number == 0}" class="page-link" th:href="@{/(page=${postPage.totalPages}, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}"
                aria-label="Previous" style="color: rgb(0, 166, 81); border-radius: 7px;">
                 <span aria-hidden="true">&laquo;</span>
             </a>
-            <a th:if="${postPage.number > 0}" class="page-link" th:href="@{/(page=${postPage.number}, size=${size})}"
+            <a th:if="${postPage.number > 0}" class="page-link" th:href="@{/(page=${postPage.number}, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}"
                aria-label="Previous" style="color: rgb(0, 166, 81); border-radius: 7px;">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
 
         <li class="page-item" th:classappend="${postPage.number == 0 ? 'active' : ''}" style="border-radius: 50px;">
-            <a class="page-link" th:href="@{/(page=1, size=${size})}" style="border-radius: 7px;">1</a>
+            <a class="page-link" th:href="@{/(page=1, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}" style="border-radius: 7px;">1</a>
         </li>
 
         <li class="page-item disabled" th:if="${postPage.number > 2}">
@@ -276,7 +289,7 @@
             th:classappend="${i == postPage.number ? 'active' : ''}"
             th:if="${i > 0 and i < postPage.totalPages - 1}"
             style="border-radius: 50px;">
-            <a class="page-link" th:href="@{/(page=${i + 1}, size=${size})}" th:text="${i + 1}" style="border-radius: 7px;"></a>
+            <a class="page-link" th:href="@{/(page=${i + 1}, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}" th:text="${i + 1}" style="border-radius: 7px;"></a>
         </li>
 
         <li class="page-item disabled" th:if="${postPage.number < postPage.totalPages - 3}">
@@ -285,17 +298,17 @@
 
         <li class="page-item" th:classappend="${postPage.number == postPage.totalPages - 1 ? 'active' : ''}"
             th:if="${postPage.totalPages > 1}" style="border-radius: 50px;">
-            <a class="page-link" th:href="@{/(page=${postPage.totalPages}, size=${size})}" th:text="${postPage.totalPages}"
+            <a class="page-link" th:href="@{/(page=${postPage.totalPages}, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}" th:text="${postPage.totalPages}"
                style="border-radius: 7px;"></a>
         </li>
 
         <li th:classappend="${postPage.hasNext() ? '' : 'disabled'}">
-            <a th:if="${postPage.number == postPage.totalPages - 1}" class="page-link" th:href="@{/(page=1, size=${size})}"
+            <a th:if="${postPage.number == postPage.totalPages - 1}" class="page-link" th:href="@{/(page=1, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}"
                aria-label="Next" style="border-radius: 7px; color: rgb(0, 166, 81);">
                 <span aria-hidden="true">&raquo;</span>
             </a>
             <a th:if="${postPage.number < postPage.totalPages - 1}" class="page-link"
-               th:href="@{/(page=${postPage.number + 2}, size=${size})}" aria-label="Next"
+               th:href="@{/(page=${postPage.number + 2}, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}" aria-label="Next"
                style="color: rgb(0, 166, 81); border-radius: 7px;">
                 <span aria-hidden="true" style="color: rgb(0, 166, 81);">&raquo;</span>
             </a>

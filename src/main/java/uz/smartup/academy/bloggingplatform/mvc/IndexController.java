@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class IndexController {
@@ -45,20 +46,22 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model,
                         @RequestParam(defaultValue = "1") int page,
-                        @RequestParam(defaultValue = "5") int size) {
+                        @RequestParam(defaultValue = "5") int size,
+                        @RequestParam(defaultValue = "") String category,
+                        @RequestParam(defaultValue = "") String tag,
+                        @RequestParam(defaultValue = "") String keyword) {
 
         int postsSize = postService.getPublishedPost().size();
 
         List<String> months = new ArrayList<>(List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
 
-        System.out.println(page * size);
-
         if (postsSize < page * size - size) {
             page = postsSize / size + 1;
         }
 
-        Page<PostDto> postPage = postService.getPosts(page - 1, size);
+        Page<PostDto> postPage = postService.getPosts(page - 1, size, category, tag, keyword);
         List<PostDto> posts = postPage.getContent();
+
 
         if (posts != null && !posts.isEmpty()) {
             for (PostDto post : posts) {
@@ -91,10 +94,9 @@ public class IndexController {
             topPost.setContent(safeContent);
         }
 
-//        System.out.println("_".repeat(100));
-//        System.out.println(size);
-//        System.out.println("_".repeat(100));
-
+        model.addAttribute("category", category);
+        model.addAttribute("tag", tag);
+        model.addAttribute("keyword", keyword);
         model.addAttribute("topPost", topPost);
         model.addAttribute("posts", posts);
         model.addAttribute("photo", photo);
@@ -102,6 +104,7 @@ public class IndexController {
         model.addAttribute("loggedIn", userDTO);
         model.addAttribute("postPage", postPage);
         model.addAttribute("size", size);
+        model.addAttribute("page", page);
         model.addAttribute("postsSize", postsSize);
         model.addAttribute("months", months);
 
@@ -174,10 +177,15 @@ public class IndexController {
     }
 
     @PostMapping("/posts/{postId}/likes/{username}")
-    public String createLike(@PathVariable("postId") int postId, @PathVariable("username") String username) {
+    public String createLike(@PathVariable("postId") int postId, @PathVariable("username") String username,
+                             @RequestParam(defaultValue = "1") int page,
+                             @RequestParam(defaultValue = "5") int size,
+                             @RequestParam(defaultValue = "") String category,
+                             @RequestParam(defaultValue = "") String tag,
+                             @RequestParam(defaultValue = "") String keyword) {
         likeService.addLike(userService.getUserByUsername(username).getId(), postId);
 
-        return "redirect:/";
+        return "redirect:/?size=" + size + "&category=" + category + "&page=" + page + "&tag=" + tag + "&keyword=" + keyword;
     }
 
     @PostMapping("/{postId}/likes/{username}")
@@ -192,15 +200,6 @@ public class IndexController {
         return "redirect:/posts/{postId}";
     }
 
-    @PostMapping("/categories/{categoryTitle}/{postId}/likes/{username}")
-    public String likeCategory(@PathVariable("categoryTitle") String categoryTitle, @PathVariable("postId") int postId, @PathVariable("username") String username, RedirectAttributes attributes) {
-        likeService.addLike(userService.getUserByUsername(username).getId(), postId);
-
-        attributes.addAttribute("categoryTitle", categoryTitle);
-
-        return "redirect:/categories/{categoryTitle}";
-    }
-
     @PostMapping("/{authorUsername}/posts/{postId}/likes/{username}")
     public String likeAuthor(@PathVariable("authorUsername") String authorUsername, @PathVariable("postId") int postId, @PathVariable("username") String username, RedirectAttributes attributes) {
         likeService.addLike(userService.getUserByUsername(username).getId(), postId);
@@ -208,67 +207,6 @@ public class IndexController {
         attributes.addAttribute("username", authorUsername);
 
         return "redirect:/posts/author/{username}";
-    }
-
-    @GetMapping("/categories/{categoryTitle}")
-    public String categoryPost(@PathVariable("categoryTitle") String categoryTitle, Model model) {
-        List<PostDto> posts = postService.getPostsByCategory(categoryTitle);
-
-        List<String> months = new ArrayList<>(List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
-
-        if (posts != null) {
-            posts = posts.stream()
-                    .filter(postDto -> postDto.getStatus().equals(Post.Status.PUBLISHED))
-                    .sorted((post1, post2) -> post2.getCreatedAt().compareTo(post1.getCreatedAt()))
-                    .toList();
-
-            if (posts.size() > 20) {
-                posts = posts.stream()
-                        .limit(20)
-                        .toList();
-            }
-
-            for (PostDto post : posts) {
-                post.setLikesCount(likeService.countLikesByPostId(post.getId()));
-            }
-
-            for (PostDto postDto : posts) {
-                if (postDto.getPhoto() == null)
-                    postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
-                else postDto.setHashedPhoto(userService.encodePhotoToBase64(postDto.getPhoto()));
-            }
-
-            if (getLoggedUser() != null)
-                for (PostDto postDto : posts)
-                    postDto.setLiked(likeService.findByUserAndPost(userService.getUserByUsername(getLoggedUser().getUsername()).getId(), postDto.getId()) != null);
-            else
-                for (PostDto postDto : posts)
-                    postDto.setLiked(false);
-        }
-
-        String photo = "";
-        UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
-        if (userDTO != null)
-            photo = userService.encodePhotoToBase64(userDTO.getPhoto());
-
-        List<CategoryDto> categories = categoryService.getAllCategories();
-
-        PostDto topPost = (posts != null && !posts.isEmpty()) ? posts.getFirst() : null;
-
-        if (topPost != null) {
-            String safeContent = Jsoup.clean(topPost.getContent(), Safelist.basic());
-            topPost.setContent(safeContent);
-        }
-
-        model.addAttribute("loggedIn", getLoggedUser());
-        model.addAttribute("photo", photo);
-        model.addAttribute("posts", posts);
-        model.addAttribute("topPost", topPost);
-        model.addAttribute("categories", categories);
-        model.addAttribute("categoryTitle", categoryTitle);
-        model.addAttribute("months", months);
-
-        return "categoryPosts";
     }
 
     @GetMapping("/profile/{username}")
@@ -405,120 +343,6 @@ public class IndexController {
         return "redirect:/posts/{postId}";
     }
 
-    @GetMapping("/search")
-    public String searchPosts(@RequestParam("keyword") String keyword, Model model) {
-        List<PostDto> posts = postService.searchPosts(keyword);
-
-        List<String> months = new ArrayList<>(List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
-
-        String photo = "";
-        UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
-        if (userDTO != null) {
-            photo = userService.encodePhotoToBase64(userDTO.getPhoto());
-        }
-
-        if (posts != null) {
-
-            posts = posts.stream()
-                    .filter(postDto -> postDto.getStatus().equals(Post.Status.PUBLISHED))
-                    .sorted((post1, post2) -> post2.getCreatedAt().compareTo(post1.getCreatedAt()))
-                    .toList();
-
-            if (posts.size() > 20) {
-                posts = posts.stream()
-                        .limit(20)
-                        .toList();
-            }
-
-            for (PostDto post : posts) {
-                post.setLikesCount(likeService.countLikesByPostId(post.getId()));
-            }
-
-
-            for (PostDto postDto : posts) {
-                if (postDto.getPhoto() == null)
-                    postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
-                else postDto.setHashedPhoto(userService.encodePhotoToBase64(postDto.getPhoto()));
-            }
-
-            if (getLoggedUser() != null)
-                for (PostDto postDto : posts)
-                    postDto.setLiked(likeService.findByUserAndPost(userService.getUserByUsername(getLoggedUser().getUsername()).getId(), postDto.getId()) != null);
-            else
-                for (PostDto postDto : posts)
-                    postDto.setLiked(false);
-
-        }
-
-        model.addAttribute("photo", photo);
-        model.addAttribute("posts", posts);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("loggedIn", getLoggedUser());
-        model.addAttribute("months", months);
-
-        return "searchResults";
-    }
-
-
-    @GetMapping("/posts/tags/{tagTitle}")
-    public String findPostsByTag(@PathVariable("tagTitle") String tagTitle, Model model) {
-        List<PostDto> posts = postService.getPostsByTag(tagTitle);
-
-        List<String> months = new ArrayList<>(List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
-
-//        posts.removeIf(postDto -> postDto.getStatus().equals(Post.Status.DRAFT));
-        String photo = "";
-        UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
-
-        if (userDTO != null) {
-            photo = userService.encodePhotoToBase64(userDTO.getPhoto());
-        }
-
-        if (posts != null) {
-
-            posts = posts.stream()
-                    .filter(postDto -> postDto.getStatus().equals(Post.Status.PUBLISHED))
-                    .sorted((post1, post2) -> post2.getCreatedAt().compareTo(post1.getCreatedAt()))
-                    .toList();
-
-            if (posts.size() > 20) {
-                posts = posts.stream()
-                        .limit(20)
-                        .toList();
-            }
-
-            for (PostDto post : posts) {
-                post.setLikesCount(likeService.countLikesByPostId(post.getId()));
-            }
-
-
-            for (PostDto postDto : posts) {
-                if (postDto.getPhoto() == null)
-                    postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
-                else postDto.setHashedPhoto(userService.encodePhotoToBase64(postDto.getPhoto()));
-            }
-
-            if (getLoggedUser() != null)
-                for (PostDto postDto : posts)
-                    postDto.setLiked(likeService.findByUserAndPost(userService.getUserByUsername(getLoggedUser().getUsername()).getId(), postDto.getId()) != null);
-            else
-                for (PostDto postDto : posts)
-                    postDto.setLiked(false);
-
-        }
-
-        model.addAttribute("photo", photo);
-        model.addAttribute("posts", posts);
-        model.addAttribute("keyword", tagTitle);
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("loggedIn", getLoggedUser());
-        model.addAttribute("months", months);
-
-        return "searchResults";
-    }
-
-
     @GetMapping("/posts/author/{username}")
     public String authorPost(@PathVariable("username") String username, Model model) {
         UserDTO author = userService.getUserByUsername(username);
@@ -580,24 +404,6 @@ public class IndexController {
 
 
         return "postsWithAuthor";
-    }
-
-    @PostMapping("posts/{postId}/likes/{username}/{keyword}")
-    public String searchLike(@PathVariable("postId") int postId, @PathVariable("username") String username, @PathVariable("keyword") String keyword) {
-        UserDTO userDTO = userService.getUserByUsername(username);
-
-        likeService.addLike(userDTO.getId(), postId);
-
-        return "redirect:/search?keyword=" + keyword;
-    }
-
-    @PostMapping("/posts/tags/posts/{postId}/likes/{username}/{keyword}")
-    public String tagLike(@PathVariable("postId") int postId, @PathVariable("username") String username, @PathVariable("keyword") String keyword) {
-        UserDTO userDto = userService.getUserByUsername(username);
-
-        likeService.addLike(userDto.getId(), postId);
-
-        return "redirect:/posts/tags/" + keyword;
     }
 
     private UserDetails getLoggedUser() {

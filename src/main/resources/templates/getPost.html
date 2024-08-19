@@ -458,7 +458,7 @@
 
     <div class="tags" th:if="${tags != null}" style="display: flex; justify-content: start; align-items: center; flex-wrap: wrap;">
         <a th:each="tag : ${tags}"
-           th:href="@{/posts/tags/{tagTitle}(tagTitle=${tag.title})}"
+           th:href="@{/(tag=${tag.title})}"
            th:text="'#' + ${tag.title}"
            style="font-size: 20px; margin-right: 10px;">
         </a>

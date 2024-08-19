@@ -57,7 +57,7 @@ public interface PostService {
 
     void addExistCategoriesToPost(int categoryId, int postId);
 
-    Page<PostDto> getPosts(int page, int size);
+    Page<PostDto> getPosts(int page, int size, String category, String tag, String keyword);
 
     void savePostTags(PostDto postDto, List<Integer> tags);
 

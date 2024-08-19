@@ -143,6 +143,7 @@ section#Home .post .title{
 section#Home .post img{
     width: 50%;
     margin-right: 20px;
+    height: 450px;
 }
 
 section#Home .post .post_content .date h5{
