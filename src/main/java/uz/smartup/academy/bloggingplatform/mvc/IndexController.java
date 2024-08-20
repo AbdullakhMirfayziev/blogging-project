@@ -51,12 +51,13 @@ public class IndexController {
                         @RequestParam(defaultValue = "") String tag,
                         @RequestParam(defaultValue = "") String keyword) {
 
-        int postsSize = postService.getPublishedPost().size();
 
         List<String> months = new ArrayList<>(List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
 
-        if (postsSize < page * size - size) {
-            page = postsSize / size + 1;
+        int postsSize = postService.getPublishedPost().size();
+
+        if (postsSize <= page * size - size) {
+            page = postsSize / size;
         }
 
         Page<PostDto> postPage = postService.getPosts(page - 1, size, category, tag, keyword);

@@ -80,8 +80,7 @@ public class PostDaoImpl implements PostDao{
         if(keyword != null && !keyword.isEmpty()) {
             jpql += " AND LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))";
 
-            countJpql += " AND LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))";
-        }
+            countJpql += " AND LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))";  }
 
         if (category != null && !category.isEmpty()) {
             TypedQuery<Category> categoryTypedQuery = entityManager.createQuery("SELECT c FROM Category c WHERE c.title = :category", Category.class);
@@ -112,35 +111,28 @@ public class PostDaoImpl implements PostDao{
         }
 
         TypedQuery<Post> query = entityManager.createQuery(jpql, Post.class);
-        if (category1 != null) {
-            query.setParameter("category1", category1);
-        }
-        if (tag1 != null) {
-            query.setParameter("tag1", tag1);
-        }
-        if(keyword != null && !keyword.isEmpty()) {
-            query.setParameter("keyword", keyword);
-        }
         query.setParameter("status", status);
-
-
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
-        List<Post> posts = query.getResultList();
 
         TypedQuery<Long> countQuery = entityManager.createQuery(countJpql, Long.class);
         countQuery.setParameter("status", status);
+
         if (category1 != null) {
+            query.setParameter("category1", category1);
             countQuery.setParameter("category1", category1);
         }
         if (tag1 != null) {
+            query.setParameter("tag1", tag1);
             countQuery.setParameter("tag1", tag1);
         }
         if(keyword != null && !keyword.isEmpty()) {
+            query.setParameter("keyword", keyword);
             countQuery.setParameter("keyword", keyword);
         }
-        long total = countQuery.getSingleResult();
 
+        List<Post> posts = query.getResultList();
+        long total = countQuery.getSingleResult();
 
         return new PageImpl<>(posts, pageable, total);
     }
