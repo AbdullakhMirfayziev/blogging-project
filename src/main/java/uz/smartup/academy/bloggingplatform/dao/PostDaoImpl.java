@@ -72,67 +72,71 @@ public class PostDaoImpl implements PostDao{
 
     @Override
     public Page<Post> findPosts(Pageable pageable, Post.Status status, String category, String tag, String keyword) {
-        String jpql = "SELECT p FROM Post p WHERE p.status = :status";
-        String countJpql = "SELECT COUNT(p) FROM Post p WHERE p.status = :status";
+        StringBuilder jpql = new StringBuilder("SELECT p FROM Post p WHERE p.status = :status");
+        StringBuilder countJpql = new StringBuilder("SELECT COUNT(p) FROM Post p WHERE p.status = :status");
+
+        if (keyword != null && !keyword.isEmpty()) {
+            jpql.append(" AND (CAST(LEVENSHTEIN(LOWER(p.title), LOWER(:keyword)) AS DOUBLE) / GREATEST(LENGTH(p.title), LENGTH(:keyword))) <= 0.2 OR LOWER(p.title) LIKE LOWER(:likeKeyword)");
+            countJpql.append(" AND (CAST(LEVENSHTEIN(LOWER(p.title), LOWER(:keyword)) AS DOUBLE) / GREATEST(LENGTH(p.title), LENGTH(:keyword))) <= 0.2 OR LOWER(p.title) LIKE LOWER(:likeKeyword)");
+        }
+
         Category category1 = null;
         Tag tag1 = null;
-
-        if(keyword != null && !keyword.isEmpty()) {
-            jpql += " AND LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))";
-
-            countJpql += " AND LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))";  }
 
         if (category != null && !category.isEmpty()) {
             TypedQuery<Category> categoryTypedQuery = entityManager.createQuery("SELECT c FROM Category c WHERE c.title = :category", Category.class);
             categoryTypedQuery.setParameter("category", category);
             category1 = categoryTypedQuery.getSingleResult();
-            jpql += " AND :category1 MEMBER OF p.categories";
-            countJpql += " AND :category1 MEMBER OF p.categories";
+            jpql.append(" AND :category1 MEMBER OF p.categories");
+            countJpql.append(" AND :category1 MEMBER OF p.categories");
         }
 
         if (tag != null && !tag.isEmpty()) {
             TypedQuery<Tag> tagTypedQuery = entityManager.createQuery("SELECT c FROM Tag c WHERE c.title = :tag", Tag.class);
             tagTypedQuery.setParameter("tag", tag);
             tag1 = tagTypedQuery.getSingleResult();
-            jpql += " AND :tag1 MEMBER OF p.tags";
-            countJpql += " AND :tag1 MEMBER OF p.tags";
+            jpql.append(" AND :tag1 MEMBER OF p.tags");
+            countJpql.append(" AND :tag1 MEMBER OF p.tags");
         }
 
-
-
-
         if (pageable.getSort().isSorted()) {
-            jpql += " ORDER BY ";
+            jpql.append(" ORDER BY ");
             StringJoiner joiner = new StringJoiner(", ");
             pageable.getSort().forEach(order ->
                     joiner.add("p." + order.getProperty() + " " + order.getDirection().name())
             );
-            jpql += joiner.toString();
+            jpql.append(joiner.toString());
         }
 
-        TypedQuery<Post> query = entityManager.createQuery(jpql, Post.class);
+        TypedQuery<Post> query = entityManager.createQuery(jpql.toString(), Post.class);
         query.setParameter("status", status);
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
 
-        TypedQuery<Long> countQuery = entityManager.createQuery(countJpql, Long.class);
+        TypedQuery<Long> countQuery = entityManager.createQuery(countJpql.toString(), Long.class);
         countQuery.setParameter("status", status);
 
-        if (category1 != null) {
+        if (category != null && !category.isEmpty()) {
             query.setParameter("category1", category1);
             countQuery.setParameter("category1", category1);
         }
-        if (tag1 != null) {
+        if (tag != null && !tag.isEmpty()) {
             query.setParameter("tag1", tag1);
             countQuery.setParameter("tag1", tag1);
         }
-        if(keyword != null && !keyword.isEmpty()) {
-            query.setParameter("keyword", keyword);
-            countQuery.setParameter("keyword", keyword);
+        if (keyword != null && !keyword.isEmpty()) {
+            query.setParameter("keyword", keyword.toLowerCase());
+            query.setParameter("likeKeyword", "%" + keyword.toLowerCase() + "%");
+            countQuery.setParameter("keyword", keyword.toLowerCase());
+            countQuery.setParameter("likeKeyword", "%" + keyword.toLowerCase() + "%");
         }
 
         List<Post> posts = query.getResultList();
         long total = countQuery.getSingleResult();
+
+        System.out.println("-".repeat(100));
+        System.out.println(status.toString());
+        System.out.println("-".repeat(100));
 
         return new PageImpl<>(posts, pageable, total);
     }
