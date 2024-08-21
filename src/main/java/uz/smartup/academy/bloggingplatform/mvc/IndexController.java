@@ -56,8 +56,8 @@ public class IndexController {
 
         int postsSize = postService.getPublishedPost().size();
 
-        if (postsSize <= page * size - size) {
-            page = postsSize / size;
+        if (postsSize <= page * (size - 1)) {
+            page = postsSize / size + 1;
         }
 
         Page<PostDto> postPage = postService.getPosts(page - 1, size, category, tag, keyword);
@@ -186,7 +186,7 @@ public class IndexController {
                              @RequestParam(defaultValue = "") String keyword) {
         likeService.addLike(userService.getUserByUsername(username).getId(), postId);
 
-        return "redirect:/?size=" + size + "&category=" + category + "&page=" + page + "&tag=" + tag + "&keyword=" + keyword;
+        return "redirect:/?page=" + page + "&size=" + size + "&category=" + category + "&tag=" + tag + "&keyword=" + keyword;
     }
 
     @PostMapping("/{postId}/likes/{username}")

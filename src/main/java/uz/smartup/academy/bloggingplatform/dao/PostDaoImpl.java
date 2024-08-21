@@ -76,8 +76,8 @@ public class PostDaoImpl implements PostDao{
         StringBuilder countJpql = new StringBuilder("SELECT COUNT(p) FROM Post p WHERE p.status = :status");
 
         if (keyword != null && !keyword.isEmpty()) {
-            jpql.append(" AND (CAST(LEVENSHTEIN(LOWER(p.title), LOWER(:keyword)) AS DOUBLE) / GREATEST(LENGTH(p.title), LENGTH(:keyword))) <= 0.2 OR LOWER(p.title) LIKE LOWER(:likeKeyword)");
-            countJpql.append(" AND (CAST(LEVENSHTEIN(LOWER(p.title), LOWER(:keyword)) AS DOUBLE) / GREATEST(LENGTH(p.title), LENGTH(:keyword))) <= 0.2 OR LOWER(p.title) LIKE LOWER(:likeKeyword)");
+            jpql.append(" AND LOWER(p.title) LIKE LOWER(:likeKeyword) OR (CAST(LEVENSHTEIN(LOWER(p.title), LOWER(:keyword)) AS DOUBLE) / GREATEST(LENGTH(p.title), LENGTH(:keyword))) <= 0.2 ");
+            countJpql.append(" AND LOWER(p.title) LIKE LOWER(:likeKeyword) OR (CAST(LEVENSHTEIN(LOWER(p.title), LOWER(:keyword)) AS DOUBLE) / GREATEST(LENGTH(p.title), LENGTH(:keyword))) <= 0.2");
         }
 
         Category category1 = null;
@@ -133,10 +133,6 @@ public class PostDaoImpl implements PostDao{
 
         List<Post> posts = query.getResultList();
         long total = countQuery.getSingleResult();
-
-        System.out.println("-".repeat(100));
-        System.out.println(status.toString());
-        System.out.println("-".repeat(100));
 
         return new PageImpl<>(posts, pageable, total);
     }

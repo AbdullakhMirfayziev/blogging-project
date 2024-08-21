@@ -222,7 +222,7 @@
             </div>
             <div class="like">
                 <div th:if="${loggedIn!=null}">
-                    <form th:action="@{posts/{postId}/likes/{username}(postId=${post.id}, username=${loggedIn.username}, page=${page}, size=${size}, keyword=${keyword}, tag=${tag}, category=category)}" method="post" class="like-form">
+                    <form th:action="@{posts/{postId}/likes/{username}(postId=${post.id}, username=${loggedIn.username}, page=${page}, size=${size}, keyword=${keyword}, tag=${tag}, category=${category})}" method="post" class="like-form">
                         <button th:if="${!post.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
                             <i class="fa-regular fa-thumbs-up text-dark like-icon"></i>
                         </button>
@@ -248,7 +248,7 @@
     </div>
 </section>
 
-<section id="pagination" th:if="${postPage.totalPages > 1}" class="d-flex justify-content-center mt-4">
+<section id="pagination"  class="d-flex justify-content-center mt-4">
     <div class="btn-group">
         <button th:text="${size} + ' / page'" type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="height: min-content; background-color: rgb(0, 166, 81); border: none;">
         </button>
@@ -263,7 +263,7 @@
         </ul>
     </div>
 
-    <ul class="pagination" style="margin-left: 10px;">
+    <ul class="pagination" th:if="${postPage.totalPages > 1}" style="margin-left: 10px;">
         <li th:classappend="${postPage.hasPrevious() ? '' : 'disabled'}"
             style="color: rgb(0, 166, 81); margin-right: 7px;">
             <a th:if="${postPage.number == 0}" class="page-link" th:href="@{/(page=${postPage.totalPages}, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}"
