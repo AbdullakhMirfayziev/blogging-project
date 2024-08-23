@@ -2,45 +2,72 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <title>Admin Console</title>
-    <!-- Bootstrap core CSS -->
-    <link th:href="@{admin/css/bootstrap.min.css}" rel="stylesheet" >
-    <link th:href="@{admin/css/font-awesome.min.css}" rel="stylesheet" >
-    <link th:href="@{admin/css/style.css}" rel="stylesheet">
-    <link th:href="@{admin/css/nav.css}" rel="stylesheet">
-    <link th:href="@{admin/css/global.css}" rel="stylesheet">
-    <link th:href="@{admin/css/authentication.css}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-
-
+    <title>404 - Page Not Found</title>
+    <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
+    <link th:href="@{admin/css/font-awesome.min.css}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+        }
+        .error-box {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+        }
+        .error-code {
+            font-size: 8rem;
+            font-weight: 600;
+            color: black;
+            margin: 0;
+        }
+        .error-message {
+            font-size: 1.5rem;
+            color: black;
+            margin-top: 20px;
+        }
+        .error-description {
+            color: black;
+            margin-top: 20px;
+        }
+        .home-button {
+            display: inline-block;
+            background-color: rgb(0, 166, 81);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+            transition: background-color 0.3s ease;
+        }
+    </style>
 </head>
 <body>
-
-<section id="autlog">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="autlog_1">
-                    <div class="autlog_1i bg-white text-center" style="width:50%; padding:40px; margin-left:auto; margin-right:auto; border-radius:5px;">
-                        <h1 class="colo_7" style="font-size: 10rem;">404</h1>
-                        <h5 class="mt-3">The page you're looking for is not found.</h5>
-                        <hr>
-                        <p>Make sure the address is correct and that the page hasn't <br> moved. If you think this is a mistake, contact us.</p>
-                        <h6 class="mt-4"><a class="button_new_2" th:href="@{/}"><i style="margin-right:5px;" class="fa fa-home"></i> Take me home</a></h6>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="container">
+    <div class="error-box">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-message">Page Not Found</h2>
+        <p class="error-description">The page you're looking for doesn't exist or has been moved.</p>
+        <a class="home-button" th:href="@{/}">
+            <i class="fa fa-home" style="margin-right: 5px;"></i> Take me home
+        </a>
     </div>
-</section>
-
-
-<script src="js/bootstrap.bundle.min.js" ></script>
-
-</script><script src="js/global.js"></script>
-
-
-</body></html>
+</div>
+</body>
+</html>
