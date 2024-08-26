@@ -47,6 +47,8 @@ public interface PostDao {
     PostSchedule getScheduleByPostId(int postId);
 
     void saveSchedulePost(PostSchedule postSchedule);
+
+    void deleteScheduleData(PostSchedule postSchedule);
 }
 
 /*

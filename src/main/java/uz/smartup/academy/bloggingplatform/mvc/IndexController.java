@@ -3,8 +3,6 @@ package uz.smartup.academy.bloggingplatform.mvc;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +17,7 @@ import uz.smartup.academy.bloggingplatform.service.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 @Controller
 public class IndexController {

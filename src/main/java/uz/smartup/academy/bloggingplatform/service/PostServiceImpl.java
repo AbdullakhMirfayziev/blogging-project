@@ -244,6 +244,12 @@ public class PostServiceImpl implements PostService {
         post.setStatus(Post.Status.PUBLISHED);
         post.setCreatedAt(LocalDateTime.now());
 
+        PostSchedule postSchedule = dao.getScheduleByPostId(id);
+
+        if(postSchedule != null) {
+            dao.deleteScheduleData(postSchedule);
+        }
+
         dao.update(post);
     }
 
@@ -308,8 +314,6 @@ public class PostServiceImpl implements PostService {
         Post post = dao.getById(postId);
         Category category = categoryDao.findCategoryById(categoryId);
 
-//        System.out.println(categoryId);
-
         post.addCategories(category);
 
         dao.update(post);
@@ -346,10 +350,6 @@ public class PostServiceImpl implements PostService {
     public void autoPublishPosts() {
         LocalDateTime now = LocalDateTime.now();
         List<Post> postsToPublish = dao.findDraftsScheduledForPublish(now, Post.Status.DRAFT);
-
-        System.out.println("-".repeat(100));
-        System.out.println("hello world");
-        System.out.println("-".repeat(100));
 
         for(int i = 0; i < postsToPublish.size(); i++) {
             switchPostDraftToPublished(postsToPublish.get(i).getId());

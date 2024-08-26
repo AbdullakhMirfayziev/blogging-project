@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 @Repository
-public class PostDaoImpl implements PostDao{
+public class PostDaoImpl implements PostDao {
 
     private final EntityManager entityManager;
 
@@ -162,7 +162,7 @@ public class PostDaoImpl implements PostDao{
 
             return query.getSingleResult().getPostScheduleDate();
 
-        }catch (NoResultException e) {
+        } catch (NoResultException e) {
             return null;
         }
     }
@@ -177,7 +177,7 @@ public class PostDaoImpl implements PostDao{
 
             return query.getSingleResult();
 
-        }catch (NoResultException e) {
+        } catch (NoResultException e) {
             return null;
         }
     }
@@ -185,6 +185,11 @@ public class PostDaoImpl implements PostDao{
     @Override
     public void saveSchedulePost(PostSchedule postSchedule) {
         entityManager.persist(postSchedule);
+    }
+
+    @Override
+    public void deleteScheduleData(PostSchedule postSchedule) {
+        entityManager.remove(postSchedule);
     }
 
     @Override
@@ -251,7 +256,6 @@ public class PostDaoImpl implements PostDao{
         Post post = getById(postId);
         return post.getStatus();
     }
-
 
 
 }
