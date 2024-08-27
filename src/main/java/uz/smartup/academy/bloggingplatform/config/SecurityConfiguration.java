@@ -25,10 +25,13 @@ import org.springframework.security.web.firewall.HttpFirewall;
 import javax.sql.DataSource;
 
 @Configuration
-public class SecurityConfiguration {
+public class SecurityConfiguration{
 
     @Autowired
     private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
+    @Autowired
+    private UserDetailsService customUserDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -36,24 +39,23 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsManager userDetailsManager(DataSource dataSource) {
-        JdbcUserDetailsManager detailsManager = new JdbcUserDetailsManager(dataSource);
-
-        detailsManager.setUsersByUsernameQuery("SELECT username, password, enabled FROM user WHERE username = ?");
-        detailsManager.setAuthoritiesByUsernameQuery("SELECT username, role FROM role WHERE username = ?");
-
-        return detailsManager;
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
+//
 //    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
+//    public UserDetailsManager userDetailsManager(DataSource dataSource) {
+//        JdbcUserDetailsManager detailsManager = new JdbcUserDetailsManager(dataSource);
+//
+//        detailsManager.setUsersByUsernameQuery("SELECT username, password, enabled FROM user WHERE username = ?");
+//        detailsManager.setAuthoritiesByUsernameQuery("SELECT username, role FROM role WHERE username = ?");
+//
+//        return detailsManager;
 //    }
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return new CustomUserDetailsService();
-//    }
+//    @Autowired
+//    private UserDetailsManager userDetailsManager;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -100,6 +102,7 @@ public class SecurityConfiguration {
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.httpBasic(Customizer.withDefaults());
+        http.userDetailsService(customUserDetailsService);
 
         return http.build();
     }
