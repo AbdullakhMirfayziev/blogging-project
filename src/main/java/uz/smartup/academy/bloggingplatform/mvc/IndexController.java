@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uz.smartup.academy.bloggingplatform.dto.*;
+import uz.smartup.academy.bloggingplatform.entity.Notification;
 import uz.smartup.academy.bloggingplatform.entity.Post;
 import uz.smartup.academy.bloggingplatform.service.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class IndexController {
@@ -27,15 +27,17 @@ public class IndexController {
     private final LikeService likeService;
     private final TagService tagService;
     private final CommentService commentService;
+    private final NotificationService notificationService;
 
 
-    public IndexController(PostService postService, CategoryService categoryService, UserService userService, LikeService likeService, TagService tagService, CommentService commentService) {
+    public IndexController(PostService postService, CategoryService categoryService, UserService userService, LikeService likeService, TagService tagService, CommentService commentService, NotificationService notificationService) {
         this.postService = postService;
         this.categoryService = categoryService;
         this.userService = userService;
         this.likeService = likeService;
         this.tagService = tagService;
         this.commentService = commentService;
+        this.notificationService = notificationService;
     }
 
 
@@ -90,6 +92,12 @@ public class IndexController {
             String safeContent = Jsoup.clean(topPost.getContent(), Safelist.basic());
             topPost.setContent(safeContent);
         }
+        if(userDTO != null) {
+            List<Notification> unreadNotifications = notificationService.getUnreadNotifications(userDTO.getId());
+            model.addAttribute("unreadNotifications", unreadNotifications);
+            model.addAttribute("userRoles", userDTO.getRoles());
+        }
+
 
         model.addAttribute("category", category);
         model.addAttribute("tag", tag);
@@ -104,6 +112,7 @@ public class IndexController {
         model.addAttribute("page", page);
         model.addAttribute("postsSize", postsSize);
         model.addAttribute("months", months);
+
 
         return "index";
     }
@@ -130,6 +139,7 @@ public class IndexController {
 
         comments.forEach(commentDTO -> commentDTO.setUsername(userService.getUserById(commentDTO.getAuthorId()).getUsername()));
         String photo = "";
+        UserDTO user = userService.getUserByUsername(author.getUsername());
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
         if (userDTO != null)
             photo = userService.encodePhotoToBase64(userDTO.getPhoto());
@@ -145,6 +155,23 @@ public class IndexController {
             commentDTO.setHashedPhoto(userService.encodePhotoToBase64(userService.getUserById(commentDTO.getAuthorId()).getPhoto()));
 
         comments = comments.reversed();
+        UserDTO loged = userService.getUserByUsername(Objects.requireNonNull(getLoggedUser()).getUsername());
+
+        if(loged != null) {
+            boolean isFollowed = false;
+
+            List<UserDTO> followers = userService.getFollowers(user.getId());
+
+            for(UserDTO userDTO1 : followers) {
+                UserDTO user1 = userService.getUserById(user.getId());
+                if(loged.getUsername().equals(user1.getUsername())){
+                    isFollowed = true;
+                    break;
+                }
+            }
+
+            model.addAttribute("isFollowed", isFollowed);
+        }
 
         if (userDTO != null)
             model.addAttribute("loggedInId", userDTO.getId());
@@ -160,6 +187,11 @@ public class IndexController {
         model.addAttribute("authorPhoto", authorPhoto);
         model.addAttribute("author", author);
         model.addAttribute("months", months);
+        model.addAttribute("user", user);
+        model.addAttribute("loggedInUser", loged);
+
+
+
 
         return "getPost";
     }
@@ -209,13 +241,32 @@ public class IndexController {
     @GetMapping("/profile/{username}")
     public String profile(@PathVariable("username") String username, Model model) {
         UserDTO user = userService.getUserByUsername(username);
+        UserDTO loged = userService.getUserByUsername(Objects.requireNonNull(getLoggedUser()).getUsername());
+        model.addAttribute("loggedInUser", loged);
         List<CategoryDto> categories = categoryService.getAllCategories();
 
+        if(loged != null) {
+            boolean isFollowed = false;
+
+            List<UserDTO> followers = userService.getFollowers(user.getId());
+
+            for(UserDTO userDTO : followers) {
+                if(loged.getUsername().equals(userDTO.getUsername())) {
+                    isFollowed = true;
+                    break;
+                }
+            }
+
+            model.addAttribute("isFollowed", isFollowed);
+        }
 
         String photo = "";
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
         if (userDTO != null)
             photo = userService.encodePhotoToBase64(userDTO.getPhoto());
+
+        int followsSize = userService.getFollowers(user.getId()).size();
+        int followingsSize = userService.getFollowing(user.getId()).size();
 
         String base64EncodedPhoto = userService.encodePhotoToBase64(user.getPhoto());
         model.addAttribute("loggedIn", getLoggedUser());
@@ -223,6 +274,8 @@ public class IndexController {
         model.addAttribute("photo", base64EncodedPhoto);
         model.addAttribute("categories", categories);
         model.addAttribute("user", user);
+        model.addAttribute("followsSize", followsSize);
+        model.addAttribute("followingsSize", followingsSize);
 
         return "profile";
     }
@@ -389,6 +442,23 @@ public class IndexController {
 
         }
 
+        UserDTO loged = userService.getUserByUsername(Objects.requireNonNull(getLoggedUser()).getUsername());
+        if(loged != null) {
+            boolean isFollowed = false;
+
+            List<UserDTO> followers = userService.getFollowers(author.getId());
+
+            for(UserDTO userDTO : followers) {
+                if(loged.getUsername().equals(userDTO.getUsername())) {
+                    isFollowed = true;
+                    break;
+                }
+            }
+
+            model.addAttribute("isFollowed", isFollowed);
+        }
+
+
 
         model.addAttribute("posts", posts);
         model.addAttribute("firstName", firstName);
@@ -398,6 +468,8 @@ public class IndexController {
         model.addAttribute("username", username);
         model.addAttribute("photo", photo);
         model.addAttribute("months", months);
+        model.addAttribute("user", author);
+        model.addAttribute("loggedInUser", loged);
 
 
         return "postsWithAuthor";
@@ -411,4 +483,22 @@ public class IndexController {
 
         return null;
     }
+
+    @GetMapping("/notifications")
+    public String notifications(Model model){
+        UserDTO user = userService.getUserByUsername(Objects.requireNonNull(getLoggedUser()).getUsername());
+        List<Notification> notifications = notificationService.getAllNotification(user.getId());
+        model.addAttribute("notifications", notifications);
+        model.addAttribute("author", user.getUsername());
+
+        System.out.println(notifications);
+        return "notifications";
+    }
+
+    @PostMapping("/notifications/mark-as-read/{id}")
+    public String markAsRead(@PathVariable int id) {
+        notificationService.markAsRead(id);
+        return "redirect:/notifications";
+    }
+
 }

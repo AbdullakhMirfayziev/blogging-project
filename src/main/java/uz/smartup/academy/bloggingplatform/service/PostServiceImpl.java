@@ -1,5 +1,7 @@
 package uz.smartup.academy.bloggingplatform.service;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,7 +15,11 @@ import uz.smartup.academy.bloggingplatform.entity.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -29,9 +35,11 @@ public class PostServiceImpl implements PostService {
     private final TagService tagService;
     private final UserService userService;
     private final TagDtoUtil tagDtoUtil;
+    private final MailSenderServiceImpl mailSenderServiceImpl;
+    private final NotificationService notificationService;
 
 
-    public PostServiceImpl(PostDao dao, PostDtoUtil dtoUtil, CommentDtoUtil commentDtoUtil, LikeService likeService, PostDtoUtil postDtoUtil, UserDao userDao, CategoryDao categoryDao, TagDao tagDao, CategoryService categoryService, UserDtoUtil userDtoUtil, TagService tagService, UserService userService, TagDtoUtil tagDtoUtil) {
+    public PostServiceImpl(PostDao dao, PostDtoUtil dtoUtil, CommentDtoUtil commentDtoUtil, LikeService likeService, PostDtoUtil postDtoUtil, UserDao userDao, CategoryDao categoryDao, TagDao tagDao, CategoryService categoryService, UserDtoUtil userDtoUtil, TagService tagService, UserService userService, TagDtoUtil tagDtoUtil, MailSenderServiceImpl mailSenderServiceImpl, NotificationService notificationService) {
         this.dao = dao;
         this.dtoUtil = dtoUtil;
         this.commentDtoUtil = commentDtoUtil;
@@ -44,6 +52,8 @@ public class PostServiceImpl implements PostService {
         this.tagService = tagService;
         this.userService = userService;
         this.tagDtoUtil = tagDtoUtil;
+        this.mailSenderServiceImpl = mailSenderServiceImpl;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -219,22 +229,34 @@ public class PostServiceImpl implements PostService {
         post.setLikesCount(likeCount);
         return post;
     }
-  
+
     @Transactional
     @Override
     public void addCommentToPost(int userId, int postId, CommentDTO commentDTO) {
         Post post = dao.getById(postId);
-
-        if (post == null)
+        if (post == null) {
             throw new IllegalArgumentException("Post not found with ID: " + postId);
+        }
 
         User user = userDao.getUserById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found with ID: " + userId);
+        }
+
         Comment comment = commentDtoUtil.toEntity(commentDTO);
         comment.setAuthor(user);
         comment.setCreatedAt(LocalDateTime.now());
+        comment.setPost(post);
+
         post.addComments(comment);
+        if(!Objects.equals(user.getUsername(), post.getAuthor().getUsername())) {
+//            mailSenderServiceImpl.sendPostCommentEmail(post.getAuthor().getEmail(), post.getAuthor().getUsername(), post.getId(), comment.getAuthor().getUsername());
+            comment.setNewNotification(true);
+            notificationService.addNotification(post.getAuthor().getId(), user.getUsername() + " commented your post", "/posts/" + post.getId(), "comment");
+        }
         dao.save(post);
     }
+
 
     @Override
     @Transactional

@@ -36,5 +36,6 @@ public class UserDTO {
     private LocalDate registered;
     private List<Role> roles;
     private List<Post> authorsPosts;
+    private String hashedPhoto;
 
 }

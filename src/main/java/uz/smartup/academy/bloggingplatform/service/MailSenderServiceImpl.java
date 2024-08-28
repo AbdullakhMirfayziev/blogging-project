@@ -8,11 +8,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import uz.smartup.academy.bloggingplatform.dao.LikeDAO;
+import uz.smartup.academy.bloggingplatform.dao.PostDao;
 import uz.smartup.academy.bloggingplatform.entity.PasswordResetToken;
 import uz.smartup.academy.bloggingplatform.entity.User;
 import uz.smartup.academy.bloggingplatform.repository.PasswordResetTokenRepository;
-import uz.smartup.academy.bloggingplatform.service.MailSenderService;
-import uz.smartup.academy.bloggingplatform.service.UserService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -24,12 +25,12 @@ public class MailSenderServiceImpl implements MailSenderService {
 //    private final UserService userService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private static final int EXPIRATION_TIME_IN_MINUTES = 60 * 24;
-    private final CategoryService categoryService;
 
-    public MailSenderServiceImpl(JavaMailSender mailSender, PasswordResetTokenRepository passwordResetTokenRepository, CategoryService categoryService) {
+
+    public MailSenderServiceImpl(JavaMailSender mailSender, PasswordResetTokenRepository passwordResetTokenRepository, CategoryService categoryService, PostDao postDao, LikeDAO likeDAO) {
         this.mailSender = mailSender;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
-        this.categoryService = categoryService;
+        //        this.postService = postService;
     }
 
     @Override
@@ -54,7 +55,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
     private static SimpleMailMessage getSimpleMailMessage(uz.smartup.academy.bloggingplatform.entity.User user, String resetLink) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom("abdullakhmirfayziev81@gmail.com");
+        simpleMailMessage.setFrom("greenwhitenews@gmail.com");
         simpleMailMessage.setTo(user.getEmail());
         simpleMailMessage.setSubject("Reset Password Request");
         simpleMailMessage.setText("Please click on the link below to reset your password:\n\n" + resetLink + "\n\n" +
@@ -62,14 +63,7 @@ public class MailSenderServiceImpl implements MailSenderService {
                 "Regards,\nGreen White News Support");
         return simpleMailMessage;
     }
-//
-//    private static SimpleMailMessage getVerificationMessage(User user, String token){
-//        token =
-//        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-//        simpleMailMessage.setFrom("abdullakhmirfayziev81@gmail.com");
-//        simpleMailMessage.setTo(user.getEmail());
-//
-//    }
+
 
 
 
@@ -92,7 +86,8 @@ public class MailSenderServiceImpl implements MailSenderService {
     }
 
     private String generateResetLink(String token) {
-        String endpointUrl = "http://localhost:8080/password/reset";
+        String endpointUrl = ServletUriComponentsBuilder.fromCurrentContextPath().path("/password/reset").toUriString();
+//        String endpointUrl = "http://localhost:8080/password/reset";
         return endpointUrl + "/" + token;
     }
 
@@ -138,6 +133,65 @@ public class MailSenderServiceImpl implements MailSenderService {
         mailSender.send(message);
 
     }
+
+    @Override
+    public void sendEmailNotification(User recipient, String message) {
+        SimpleMailMessage  simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(recipient.getEmail());
+        simpleMailMessage.setSubject("New notification");
+        simpleMailMessage.setText(message);
+
+        mailSender.send(simpleMailMessage);
+    }
+
+    @Override
+    public void sendPostLikedEmail(String toEmail, String username, int postId, String liker) {
+//        String postUrl = ServletUriComponentsBuilder.fromCurrentContextPath().path("/posts").toUriString();
+        String postUrl = "http://localhost:8080/posts/" + postId;
+        String subject = "Your Post was Liked!";
+        String content = "<p>Hi, " + username + "!</p>"
+                + liker + " liked your <a href='" + postUrl + "'>post</a>.";
+
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(toEmail);
+            helper.setSubject(subject);
+            helper.setText(content, true);
+
+            mailSender.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+    public void sendPostCommentEmail(String toEmail, String username, int postId, String commenter) {
+//        String postUrl = ServletUriComponentsBuilder.fromCurrentContextPath().path("/posts/{id}").buildAndExpand(postId).toUriString();
+        String postUrl = "http://localhost:8080/posts/" + postId;
+        String subject = "Your Post was Commented!";
+        String content = "<p>Hi, " + username + "!</p>"
+                + commenter + " commented your <a href='" + postUrl + "'>post</a>.";
+
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(toEmail);
+            helper.setSubject(subject);
+            helper.setText(content, true);
+
+            mailSender.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
 }
 
 

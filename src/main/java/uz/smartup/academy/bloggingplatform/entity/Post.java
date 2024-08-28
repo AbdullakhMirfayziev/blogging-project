@@ -42,6 +42,9 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User author;
 
+    @Column(name = "new_notification")
+    private Boolean notification;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
@@ -70,6 +73,7 @@ public class Post {
 
     @OneToOne(mappedBy = "post",cascade = CascadeType.ALL)
     private PostSchedule postSchedule;
+
 
     public void addCategories(Category category) {
         if(categories == null || categories.isEmpty())

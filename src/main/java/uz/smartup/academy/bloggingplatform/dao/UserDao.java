@@ -1,10 +1,6 @@
 package uz.smartup.academy.bloggingplatform.dao;
 
-import uz.smartup.academy.bloggingplatform.entity.Post;
-
-import uz.smartup.academy.bloggingplatform.entity.Comment;
-import uz.smartup.academy.bloggingplatform.entity.Role;
-import uz.smartup.academy.bloggingplatform.entity.User;
+import uz.smartup.academy.bloggingplatform.entity.*;
 
 import java.util.List;
 import java.util.Set;
@@ -21,6 +17,8 @@ public interface UserDao {
     User getUserByEmail(String email);
 
     User getUserById(int id);
+
+//    UserFollows getUserFollowsById(int user_id);
 
     void update(User user);
 
@@ -41,6 +39,7 @@ public interface UserDao {
     List<User> findAllByEnabledIsNull();
 
     List<User> userFindByUserName(String username);
+
 
 }
 

@@ -22,5 +22,12 @@ public interface MailSenderService {
     PasswordResetToken findByToken(String token);
 
     void sendEmailWithAttachment(String to, String subject, String text, String fileName, InputStreamSource inputStreamSource) throws IOException, MessagingException;
+
+
+    void sendEmailNotification(User recipient, String message);
+
+    void sendPostLikedEmail(String toEmail, String username, int postId, String liker);
+   void sendPostCommentEmail(String toEmail, String username, int postId, String commenter);
+
 }
 

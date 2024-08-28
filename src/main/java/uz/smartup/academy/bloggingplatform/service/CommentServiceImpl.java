@@ -8,6 +8,8 @@ import uz.smartup.academy.bloggingplatform.dao.UserDao;
 import uz.smartup.academy.bloggingplatform.dto.CommentDTO;
 import uz.smartup.academy.bloggingplatform.dto.CommentDtoUtil;
 import uz.smartup.academy.bloggingplatform.entity.Comment;
+import uz.smartup.academy.bloggingplatform.entity.Post;
+import uz.smartup.academy.bloggingplatform.entity.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,12 +22,17 @@ public class CommentServiceImpl implements CommentService {
    private final CommentDao commentDao;
    private final UserDao userDao;
    private final PostDao postDao;
+   private final NotificationService notificationService;
+    private final MailSenderServiceImpl mailSenderServiceImpl;
 
-    public CommentServiceImpl(CommentDtoUtil dtoUtil, CommentDao commentDao, UserDao userDao, PostDao postDao) {
+    public CommentServiceImpl(CommentDtoUtil dtoUtil, CommentDao commentDao, UserDao userDao, PostDao postDao, NotificationService notificationService, MailSenderServiceImpl mailSenderServiceImpl) {
         this.dtoUtil = dtoUtil;
         this.commentDao = commentDao;
         this.userDao = userDao;
         this.postDao = postDao;
+        this.notificationService = notificationService;
+//        this.notificationService = notificationService;
+        this.mailSenderServiceImpl = mailSenderServiceImpl;
     }
 
     @Transactional
@@ -35,6 +42,13 @@ public class CommentServiceImpl implements CommentService {
         comment.setAuthor(userDao.getUserById(commentDTO.getAuthorId()));
         comment.setPost(postDao.getById(commentDTO.getPostId()));
         comment.setCreatedAt(LocalDateTime.now());
+
+        User commenter = userDao.getUserById(commentDTO.getAuthorId());
+        Post post = postDao.getById(commentDTO.getPostId());
+          mailSenderServiceImpl.sendPostCommentEmail(post.getAuthor().getEmail(), post.getAuthor().getUsername(), post.getId(), commenter.getUsername());
+        notificationService.addNotification(post.getAuthor().getId(), commenter.getUsername() + " commented your post", "/posts/" + post.getId(), "like");
+        System.out.println("ishladi shekilli");
+
         commentDao.save(comment);
     }
 

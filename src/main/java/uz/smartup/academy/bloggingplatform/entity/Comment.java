@@ -32,4 +32,7 @@ public class Comment {
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "post_id", updatable = false)
     private Post post;
+
+    @Column(name = "notification")
+    private boolean newNotification;
 }

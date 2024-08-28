@@ -1,7 +1,6 @@
 package uz.smartup.academy.bloggingplatform.service;
 
 
-
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +20,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import uz.smartup.academy.bloggingplatform.entity.*;
-import uz.smartup.academy.bloggingplatform.exceptions.UserAlreadyExistsException;
+import uz.smartup.academy.bloggingplatform.repository.UserRepository;
 
 
 import java.io.IOException;
@@ -34,7 +33,6 @@ public class UserServiceImpl implements UserService {
 
     @Value("classpath:static/css/photos/GSW_news.jpg")
     private Resource defaultPhotoResourcePost;
-
 
 
     private byte[] defaultPhoto;
@@ -52,11 +50,12 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
     private final EmailVerificationService emailVerificationService;
+    private final UserRepository userRepository;
 
 //    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
-    public UserServiceImpl(UserDao userDao, UserDtoUtil dtoUtil, PostDao postDao, PostDtoUtil postDtoUtil, CategoryDtoUtil categoryDtoUtil, CategoryDao categoryDao, CommentDtoUtil commentDtoUtil, TagDao tagDao, TagDtoUtil tagDtoUtil, PasswordEncoder passwordEncoder, MailSenderService mailSenderService, EmailVerificationService emailVerificationService) {
+    public UserServiceImpl(UserDao userDao, UserDtoUtil dtoUtil, PostDao postDao, PostDtoUtil postDtoUtil, CategoryDtoUtil categoryDtoUtil, CategoryDao categoryDao, CommentDtoUtil commentDtoUtil, TagDao tagDao, TagDtoUtil tagDtoUtil, PasswordEncoder passwordEncoder, MailSenderService mailSenderService, EmailVerificationService emailVerificationService, UserRepository userRepository) {
         this.userDao = userDao;
         this.dtoUtil = dtoUtil;
         this.postDao = postDao;
@@ -70,6 +69,7 @@ public class UserServiceImpl implements UserService {
 //        this.mailSenderService = mailSenderService;
         this.mailSenderService = mailSenderService;
         this.emailVerificationService = emailVerificationService;
+        this.userRepository = userRepository;
     }
 
     @PostConstruct
@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
         System.out.println(userDTO.getEnabled());
         System.out.println("-".repeat(100));
 
-        if(userDTO.getEnabled() != null && userDTO.getEnabled().equals("0"))
+        if (userDTO.getEnabled() != null && userDTO.getEnabled().equals("0"))
             user.setEnabled("0");
 
         userDao.update(dtoUtil.userMergeEntity(user, userDTO));
@@ -133,13 +133,12 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     @Transactional
     public void changePassword(String username, String newPassword) {
         User user = userDao.getUserByUsername(username);
 
-        if(user != null) {
+        if (user != null) {
             String encodedPassword = passwordEncoder.encode(newPassword);
             user.setPassword(encodedPassword);
             userDao.update(user);
@@ -200,11 +199,11 @@ public class UserServiceImpl implements UserService {
 
         User saved = userDao.save(user);
 
-        try{
+        try {
             String token = UUID.randomUUID().toString();
             mailSenderService.save(saved, token);
             emailVerificationService.sendHtmlMail(saved);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
 //                logger.error("Error during user registration: {}", e.getMessage(), e);
         }
@@ -229,13 +228,12 @@ public class UserServiceImpl implements UserService {
         }
 
 
-
         post.setStatus(Post.Status.DRAFT);
         post.setAuthor(user);
         post.setCreatedAt(LocalDateTime.now());
         postDao.save(post);
 
-        if(postDto.getScheduleTime() != null) {
+        if (postDto.getScheduleTime() != null) {
             PostSchedule postSchedule = new PostSchedule();
             postSchedule.setPostScheduleDate(postDto.getScheduleTime());
             postSchedule.setPost(post);
@@ -370,7 +368,7 @@ public class UserServiceImpl implements UserService {
 
         List<User> bannedUsers = userDao.findAllByEnabledIsNull();
         LocalDate now = LocalDate.now();
-        for (int i = 0; i < bannedUsers.size(); i ++) {
+        for (int i = 0; i < bannedUsers.size(); i++) {
             User user = bannedUsers.get(i);
             if (user.getRegistered() != null && user.getRegistered().plusDays(1).isBefore(now)) {
                 user.setEnabled("1");
@@ -387,7 +385,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> userFindByUsername(String username) {
-        List<User> users= userDao.userFindByUserName(username);
+        List<User> users = userDao.userFindByUserName(username);
         return dtoUtil.toDTOs(users);
     }
 
@@ -398,12 +396,106 @@ public class UserServiceImpl implements UserService {
 
         List<Role> roles = user.getRoles();
 
-        for(int i = 0; i < roles.size(); ++ i)
+        for (int i = 0; i < roles.size(); ++i)
             user.removeRole(roles.get(i));
 
         userDao.update(user);
 
     }
+
+
+//    public boolean followExists(int followerId, int followedId){
+//        User userFollows = userDao.getUserById(followedId);
+//        Set<UserFollows> followers = userFollows.getFollowing();
+//        return followers.contains(userDao.getUserFollowsById(followerId));
+//
+//    }
+
+    //
+//    @Override
+//    @Transactional
+//    public void followUser(int followerId, int followedId) {
+//        User follower = userRepository.findById(followerId).orElseThrow();
+//        User followed = userRepository.findById(followedId).orElseThrow();
+//
+//        follower.getFollowing().add(followed);
+//        followed.getFollowers().add(follower);
+//
+//        userRepository.save(follower);
+//        userRepository.save(followed);
+//    }
+//
+//    @Override
+//    @Transactional
+//    public void unfollowUser(int followerId, int followedId) {
+//        User follower = userRepository.findById(followerId).orElseThrow();
+//        User followed = userRepository.findById(followedId).orElseThrow();
+//
+//        follower.getFollowing().remove(followed);
+//        followed.getFollowers().remove(follower);
+//
+//        userRepository.save(follower);
+//        userRepository.save(followed);
+//    }
+
+    @Override
+    @Transactional
+    public void followUser(int followerId, int followedId) {
+        User follower = userDao.getUserById(followerId);
+        User followed = userDao.getUserById(followedId);
+
+        follower.follow(followed);
+        userDao.update(follower);
+    }
+
+
+    @Override
+    @Transactional
+    public void unfollowUser(int followerId, int followedId) {
+        User user = userDao.getUserById(followedId);
+        User follower = userDao.getUserById(followerId);
+
+        follower.unfollow(user);
+        userDao.update(user);
+    }
+
+    @Override
+    public List<UserDTO> getFollowing(int userId) {
+        User user = userDao.getUserById(userId);
+        List<User> followings = user.getFollowing().stream().toList();
+
+        return dtoUtil.toDTOs(followings);
+    }
+
+    @Override
+    public List<UserDTO> getFollowers(int userId) {
+        User user = userDao.getUserById(userId);
+        List<User> followers = user.getFollowers().stream().toList();
+
+        return dtoUtil.toDTOs(followers);
+    }
+
+
+//    public void follow(int followerId, int followedId) {
+//        // Check if the follow relationship already exists
+//        if (userFollowsRepository.existsById(new UserFollowsId(followerId, followedId))) {
+//            throw new IllegalArgumentException("Already following this user.");
+//        }
+//
+//        User follower = userRepository.findById(followerId)
+//                .orElseThrow(() -> new IllegalArgumentException("Follower not found."));
+//        User followed = userRepository.findById(followedId)
+//                .orElseThrow(() -> new IllegalArgumentException("Followed user not found."));
+//
+//        UserFollows userFollows = new UserFollows();
+//        userFollows.setFollower(follower);
+//        userFollows.setFollowed(followed);
+//        userFollows.setId(new UserFollowsId(followerId, followedId));
+//
+//        userFollowsRepository.save(userFollows);
+//    }
+
+
 
 
 }
