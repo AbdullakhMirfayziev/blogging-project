@@ -27,4 +27,7 @@ public class Like {
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @Column(name = "notification")
+    private boolean newNotification;
 }

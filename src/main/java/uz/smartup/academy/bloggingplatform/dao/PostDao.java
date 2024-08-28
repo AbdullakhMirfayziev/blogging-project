@@ -48,6 +48,8 @@ public interface PostDao {
 
     void saveSchedulePost(PostSchedule postSchedule);
 
+    List<Post> findPostsNeedingNotification();
+
     void deleteScheduleData(PostSchedule postSchedule);
 }
 

@@ -53,4 +53,10 @@ public class CommentDaoImpl implements CommentDao{
         query.setParameter("id", id);
         return query.getResultList();
     }
+
+    @Override
+    public List<Comment> findNewComments() {
+        TypedQuery<Comment> query = entityManager.createQuery("FROM Comment c WHERE c.newNotification=true", Comment.class);
+        return query.getResultList();
+    }
 }

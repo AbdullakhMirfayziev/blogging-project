@@ -1,6 +1,7 @@
 package uz.smartup.academy.bloggingplatform.dao;
 
 import uz.smartup.academy.bloggingplatform.entity.Like;
+import uz.smartup.academy.bloggingplatform.entity.Post;
 
 import java.util.List;
 
@@ -17,6 +18,10 @@ public interface LikeDAO {
     List<Like> getAllLike();
 
     List<Like> getLikesByPostId(int postId);
+
+    List<Like> findNewLikesByPostId(int postId);
+
+    List<Like> findNewLikes();
 }
 
 

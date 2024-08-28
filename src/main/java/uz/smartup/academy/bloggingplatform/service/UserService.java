@@ -4,8 +4,10 @@ import uz.smartup.academy.bloggingplatform.dao.PostDao;
 import uz.smartup.academy.bloggingplatform.dto.*;
 
 import uz.smartup.academy.bloggingplatform.entity.Role;
+import uz.smartup.academy.bloggingplatform.entity.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
 
@@ -67,4 +69,12 @@ public interface UserService {
     List<UserDTO> userFindByUsername(String username);
 
     void removeRolesFromUser(int userId);
+
+    void followUser(int followerId, int followedId);
+
+    void unfollowUser(int followerId, int followedId);
+
+    List<UserDTO> getFollowing(int userId);
+
+    List<UserDTO> getFollowers(int userId);
 }

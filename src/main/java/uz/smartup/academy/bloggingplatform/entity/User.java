@@ -5,11 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Entity
@@ -53,6 +49,17 @@ public class User {
     @Column(name = "web_push_token")
     private String webPushToken;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_follows",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "followed_id")
+    )
+    private Set<User> following;
+
+    @ManyToMany(mappedBy = "following", fetch = FetchType.LAZY)
+    private Set<User> followers;
+
     @OneToMany(  cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "username", referencedColumnName = "username", updatable = false)
     private List<Role> roles;
@@ -69,8 +76,21 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PasswordResetToken> passwordResetTokens;
 
+    public void addFollower(User follower) {
+        followers.add(follower);
+    }
 
+    public void removeFollower(User follower) {
+        followers.remove(follower);
+    }
 
+    public void follow(User userToFollow) {
+        following.add(userToFollow);
+    }
+
+    public void unfollow(User userToUnfollow) {
+        following.remove(userToUnfollow);
+    }
 
     public void addPostToAuthor(Post post){
         if(posts == null) posts = new ArrayList<>();
@@ -94,34 +114,4 @@ public class User {
         if(!roles.isEmpty())
             roles.remove(role);
     }
-
-//    public void setEmail(String email) {
-//        int alpha = email.indexOf("@");
-//        if(alpha == -1) throw new RuntimeException("Email is invalid!");
-//        int dot = email.indexOf(".");
-//        if(dot == -1) throw new RuntimeException("Email is invalid!");
-//        String e1 = email.substring(0, alpha);
-//        String e2 = email.substring(alpha + 1, dot - alpha - 1);
-//        String e3 = email.substring(dot + 1);
-//        if(e3.length() != 2 && e3.length() != 3) throw new RuntimeException("Email is invalid!");
-//        for(int i = 0; i < e3.length(); ++i){
-//            char c = e3.charAt(i);
-//            if(!Character.isLetter(c)) throw new RuntimeException();
-//        }
-//
-//        for(int i = 0; i < e2.length(); ++i){
-//            char c = e2.charAt(i);
-//            if(!Character.isLetter(c)) throw new RuntimeException();
-//        }
-//
-//        for(int i = 0; i < e1.length(); ++i){
-//            char c = e1.charAt(i);
-//            if(Character.isLetter(c) || Character.isDigit(c)) continue;
-//            if(c == '-' || c == '_' || c == '.') continue;
-//            throw new RuntimeException();
-//        }
-//        this.email = email;
-//
-//
-//    }
 }

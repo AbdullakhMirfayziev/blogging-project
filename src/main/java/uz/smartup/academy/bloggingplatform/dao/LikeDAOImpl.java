@@ -5,7 +5,6 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 import uz.smartup.academy.bloggingplatform.entity.Like;
-import uz.smartup.academy.bloggingplatform.entity.Post;
 
 import java.util.List;
 
@@ -66,4 +65,19 @@ public class LikeDAOImpl implements LikeDAO {
         query.setParameter("postId", postId);
         return query.getResultList();
     }
+
+    @Override
+    public List<Like> findNewLikesByPostId(int postId) {
+        TypedQuery<Like> query = entityManager.createQuery("SELECT l FROM Like l WHERE l.post.id = :postId AND l.newNotification = true", Like.class);
+        query.setParameter("postId", postId);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Like> findNewLikes() {
+        TypedQuery<Like> query = entityManager.createQuery("SELECT l FROM Like l WHERE l.newNotification = true", Like.class);
+        return query.getResultList();
+    }
+
+
 }

@@ -1,8 +1,12 @@
-use `blog-tracker`;
+USE `blog-tracker`;
 
 DROP VIEW IF EXISTS `post_likes_count`;
 DROP VIEW IF EXISTS `post_comments_count`;
 
+
+
+
+DROP TABLE IF EXISTS `notification`;
 DROP TABLE IF EXISTS `like`;
 DROP TABLE IF EXISTS `comment`;
 DROP TABLE IF EXISTS `role`;
@@ -12,106 +16,124 @@ DROP TABLE IF EXISTS `tag`;
 DROP TABLE IF EXISTS `category`;
 DROP TABLE IF EXISTS `post`;
 DROP TABLE IF EXISTS `user`;
-DROP TABLE IF EXISTS `PasswordResetToken`;
+DROP TABLE IF EXISTS `password_reset_token`;
+DROP TABLE IF EXISTS `user_follows`;
 
-
--- Users Table
-create table `user`(
-                       `id` int auto_increment not null,
-                       `photo` longblob,
-                       `first_name` varchar(50) not null,
-                       `last_name` varchar(50),
-                       `email` varchar(50) not null,
-                       `enabled` varchar(1) not null,
-                       `username` varchar(50) not null,
-                       `password` varchar(50) not null,
-                       `bio` varchar(800),
-                       `registered` date,
-                       primary key (`id`),
-                       unique(`username`),
-                       unique(`email`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
-
-create table `role`(
-                       `username` varchar(50) not null,
-                       `role` varchar(50) not null,
-                       primary key(`username`, `role`),
-                       foreign key(`username`) references `user` (`username`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `PasswordResetToken` (
-                                      `id` INT AUTO_INCREMENT PRIMARY KEY,
-                                      `token` VARCHAR(255) NOT NULL,
-                                      `user_id` INT NOT NULL,
-                                      `expiry_date` TIMESTAMP NOT NULL,
-                                      FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+CREATE TABLE `user` (
+                        `id` INT AUTO_INCREMENT NOT NULL,
+                        `photo` LONGBLOB,
+                        `first_name` VARCHAR(50) NOT NULL,
+                        `last_name` VARCHAR(50),
+                        `email` VARCHAR(50) NOT NULL,
+                        `enabled` BOOLEAN NOT NULL,
+                        `username` VARCHAR(50) NOT NULL,
+                        `password` VARCHAR(255) NOT NULL,
+                        `bio` VARCHAR(1500),
+                        `web_push_token` VARCHAR(150),
+                        `registered` DATE,
+                        PRIMARY KEY (`id`),
+                        UNIQUE(`username`),
+                        UNIQUE(`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
--- Posts Table
+CREATE TABLE `role` (
+                        `username` VARCHAR(50) NOT NULL,
+                        `role` VARCHAR(50) NOT NULL,
+                        PRIMARY KEY(`username`, `role`),
+                        FOREIGN KEY(`username`) REFERENCES `user`(`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `password_reset_token` (
+                                        `id` INT AUTO_INCREMENT PRIMARY KEY,
+                                        `token` VARCHAR(255) NOT NULL,
+                                        `user_id` INT NOT NULL,
+                                        `expiry_date` TIMESTAMP NOT NULL,
+                                        FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
 CREATE TABLE `post` (
                         `id` INT AUTO_INCREMENT PRIMARY KEY,
                         `user_id` INT NOT NULL,
-                        `photo` longblob,
+                        `photo` LONGBLOB,
                         `title` VARCHAR(255) NOT NULL,
-                        `status` enum('DRAFT', 'PUBLISHED'),
+                        `status` ENUM('DRAFT', 'PUBLISHED'),
                         `content` TEXT NOT NULL,
                         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        `new_notification` BOOLEAN,
                         FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
--- Post Categories Table
-create table `category`(
-                           `id` int not null unique AUTO_INCREMENT,
-                           `title` varchar(50),
-                           primary key(`id`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+CREATE TABLE `category` (
+                            `id` INT NOT NULL UNIQUE AUTO_INCREMENT,
+                            `title` VARCHAR(50),
+                            PRIMARY KEY(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
-create table `category_post` (
-                                 `post_id` int not null,
-                                 `category_id` int not null,
-                                 primary key(`post_id`, `category_id`),
-                                 foreign key(`post_id`) references `post` (`id`),
-                                 foreign key(`category_id`) references `category` (`id`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+CREATE TABLE `category_post` (
+                                 `post_id` INT NOT NULL,
+                                 `category_id` INT NOT NULL,
+                                 PRIMARY KEY(`post_id`, `category_id`),
+                                 FOREIGN KEY(`post_id`) REFERENCES `post`(`id`),
+                                 FOREIGN KEY(`category_id`) REFERENCES `category`(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
-create table `tag`(
-                      `id` int not null unique AUTO_INCREMENT,
-                      `title` varchar(50),
-                      primary key(`id`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+CREATE TABLE `tag` (
+                       `id` INT NOT NULL UNIQUE AUTO_INCREMENT,
+                       `title` VARCHAR(50),
+                       PRIMARY KEY(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
-create table `tag_post` (
-                            `post_id` int not null,
-                            `tag_id` int not null,
-                            primary key(`post_id`, `tag_id`),
-                            foreign key(`post_id`) references `post` (`id`),
-                            foreign key(`tag_id`) references `tag` (`id`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+CREATE TABLE `tag_post` (
+                            `post_id` INT NOT NULL,
+                            `tag_id` INT NOT NULL,
+                            PRIMARY KEY(`post_id`, `tag_id`),
+                            FOREIGN KEY(`post_id`) REFERENCES `post`(`id`),
+                            FOREIGN KEY(`tag_id`) REFERENCES `tag`(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
--- Comments Table
 CREATE TABLE `comment` (
                            `id` INT AUTO_INCREMENT PRIMARY KEY,
                            `post_id` INT NOT NULL,
                            `user_id` INT NOT NULL,
                            `content` TEXT NOT NULL,
                            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           `notification` BOOLEAN,
                            FOREIGN KEY (`post_id`) REFERENCES `post`(`id`),
                            FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
-);
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
--- Post Likes Table
 CREATE TABLE `like` (
                         `id` INT AUTO_INCREMENT PRIMARY KEY,
                         `post_id` INT NOT NULL,
                         `user_id` INT NOT NULL,
                         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        `notification` BOOLEAN,
                         UNIQUE (`post_id`, `user_id`),
                         FOREIGN KEY (`post_id`) REFERENCES `post`(`id`),
                         FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
-);
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `notification` (
+                                `id` INT AUTO_INCREMENT PRIMARY KEY,
+                                `recipient_id` INT NOT NULL,
+                                `message` VARCHAR(100) NOT NULL,
+                                `redirect_url` VARCHAR(100) NOT NULL,
+                                `read` BOOLEAN,
+                                `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                `type` VARCHAR(10) not null,
+                                FOREIGN KEY(`recipient_id`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `user_follows` (
+#                                 `id` INT NOT NULL,
+                                `follower_id` INT NOT NULL,
+                                `followed_id` INT NOT NULL,
+                                PRIMARY KEY (`follower_id`, `followed_id`),
+                                FOREIGN KEY (`follower_id`) REFERENCES `user`(`id`),
+                                FOREIGN KEY (`followed_id`) REFERENCES  `user`(`id`)
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 
--- Post Like Count View
 CREATE VIEW `post_likes_count` AS
 SELECT
     `post_id`,
@@ -121,12 +143,11 @@ FROM
 GROUP BY
     `post_id`;
 
--- Post comment count view
-create view `post_comments_count` as
-select
+CREATE VIEW `post_comments_count` AS
+SELECT
     `post_id`,
-    count(*) as `comment_count`
-from
+    COUNT(*) AS `comment_count`
+FROM
     `comment`
-group by
+GROUP BY
     `post_id`;

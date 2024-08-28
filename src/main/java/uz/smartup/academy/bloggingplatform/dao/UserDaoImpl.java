@@ -4,12 +4,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
-import uz.smartup.academy.bloggingplatform.entity.Post;
-import uz.smartup.academy.bloggingplatform.entity.Comment;
-import uz.smartup.academy.bloggingplatform.entity.Role;
-import uz.smartup.academy.bloggingplatform.entity.User;
+import uz.smartup.academy.bloggingplatform.entity.*;
 
 import java.util.HashSet;
 import java.util.List;
@@ -64,6 +60,11 @@ public class UserDaoImpl implements UserDao {
     public User getUserById(int id) {
         return entityManager.find(User.class, id);
     }
+
+//    @Override
+//    public UserFollows getUserFollowsById(int user_id) {
+//        return entityManager.find(UserFollows.class, user_id);
+//    }
 
     @Override
     @Transactional
