@@ -22,14 +22,10 @@ import org.springframework.util.StreamUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uz.smartup.academy.bloggingplatform.dto.UserDTO;
 import uz.smartup.academy.bloggingplatform.dto.UserDtoUtil;
-import uz.smartup.academy.bloggingplatform.entity.PasswordChangeForm;
-import uz.smartup.academy.bloggingplatform.entity.PasswordResetToken;
-import uz.smartup.academy.bloggingplatform.entity.Role;
-import uz.smartup.academy.bloggingplatform.entity.User;
+import uz.smartup.academy.bloggingplatform.entity.*;
 import uz.smartup.academy.bloggingplatform.service.MailSenderService;
 import uz.smartup.academy.bloggingplatform.service.UserService;
 
@@ -39,9 +35,7 @@ import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.validation.FieldError;
-
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Validated
 @Controller
@@ -128,33 +122,6 @@ public class UserMVC {
         return "redirect:/login";
     }
 
-
-
-
-//    @PostMapping("/register-user")
-//    public String createUser(Model model, @ModelAttribute("user") UserDTO user, RedirectAttributes attributes, HttpServletRequest request) {
-//
-//        if(service.userExists(user.getUsername(), user.getEmail())) {
-//
-//            System.out.println("-".repeat(100));
-//            System.out.println("user already exists");
-//            System.out.println("-".repeat(100));
-//
-//            model.addAttribute("error", "this username or email is already taken");
-//            model.addAttribute("user", new UserDTO());
-//            return "register";
-//        }
-//
-//        List<Role> roles = new ArrayList<>();
-//        Role role = new Role();
-//        role.setRole("ROLE_VIEWER");
-//        role.setUsername(user.getUsername());
-//        roles.add(role);
-//        service.registerUserWithConfirmation(user, roles);
-//
-//        attributes.addFlashAttribute("success", "Registration successful! A verification email has been sent.");
-//        return "redirect:/login";
-//    }
 
 
 
@@ -355,6 +322,88 @@ public class UserMVC {
             return "redirect:/profile/" + username;
         }
     }
+    @PostMapping("/follow/{username}")
+    public String followUser(@RequestParam int followerId, @RequestParam int followedId, @PathVariable String username) {
+        service.followUser(followerId, followedId);
+
+        return "redirect:/profile/" + username;
+    }
+
+    @PostMapping("/unfollow/{username}")
+    public String unfollowUser(@RequestParam int followerId, @RequestParam int followedId, @PathVariable String username) {
+        service.unfollowUser(followerId, followedId);
+
+        return "redirect:/profile/" + username;
+    }
+
+
+
+    @PostMapping("/follow1/{username}/{postsId}")
+    public String followUserGetPost(@RequestParam int followerId, @RequestParam int followedId, @PathVariable String username, @PathVariable int postsId) {
+        service.followUser(followerId, followedId);
+
+        return "redirect:/posts/" + postsId;
+    }
+
+    @PostMapping("/unfollow2/{username}")
+    public String unfollowUserAuthorPost(@RequestParam int followerId, @RequestParam int followedId, @PathVariable String username) {
+        service.unfollowUser(followerId, followedId);
+
+        return "redirect:/posts/author/" + username;
+    }
+    @PostMapping("/follow2/{username}")
+    public String followUserAuthorPost(@RequestParam int followerId, @RequestParam int followedId, @PathVariable String username) {
+        service.followUser(followerId, followedId);
+
+        return "redirect:/posts/author/" + username;
+    }
+
+    @PostMapping("/unfollow1/{username}/{postId}")
+    public String unfollowUserGetPost(@RequestParam int followerId, @RequestParam int followedId, @PathVariable String username, @PathVariable String postId) {
+        service.unfollowUser(followerId, followedId);
+
+        return "redirect:/posts/" + postId;
+    }
+
+    @GetMapping("/{userId}/following")
+    public String getFollowing(@PathVariable int userId, Model model) {
+        List<UserDTO> following = service.getFollowing(userId);
+
+        if(!following.isEmpty()) {
+            for (UserDTO userDTO : following)
+                userDTO.setHashedPhoto(service.encodePhotoToBase64(userDTO.getPhoto()));
+
+        }
+        model.addAttribute("following", following);
+        return "following";
+    }
+
+    @GetMapping("/{userId}/followers")
+    public String getFollowers(@PathVariable int userId, Model model) {
+        List<UserDTO> followers = service.getFollowers(userId);
+
+        if(!followers.isEmpty()) {
+            for (UserDTO userDTO : followers)
+                userDTO.setHashedPhoto(service.encodePhotoToBase64(userDTO.getPhoto()));
+
+        }
+
+        model.addAttribute("followers", followers);
+        return "followers";
+    }
+
+
+//    @PostMapping("/{followerId}/follow/{followedId}")
+//    public ResponseEntity<String> followUser(@PathVariable int followerId, @PathVariable int followedId) {
+//        service.followUser(followerId, followedId);
+//        return ResponseEntity.ok("You are now following the user.");
+//    }
+//
+//    @PostMapping("/{followerId}/unfollow/{followedId}")
+//    public ResponseEntity<String> unfollowUser(@PathVariable int followerId, @PathVariable int followedId) {
+//        service.unfollowUser(followerId, followedId);
+//        return ResponseEntity.ok("You have unfollowed the user.");
+//    }
 
 
 
