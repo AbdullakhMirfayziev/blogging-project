@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #10b981;
+            margin-top: 20px;
+        }
+
+        .notifications-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            background: #e5e7eb;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            text-decoration: none;
+            color: #2563eb;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #1e40af;
+        }
+
+        .notification-meta {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .btn-success {
+            background-color: #10b981;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background-color: #059669;
+        }
+
+        .btn-secondary {
+            background-color: #9ca3af;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+<h1>Notifications</h1>
+<div class="notifications-container">
+    <ul>
+        <li th:each="notification : ${notifications}">
+            <div th:if="${notification.recipient} != ${author}">
+                <a th:href="${notification.redirectUrl}">
+                    <span th:if="${notification.type == 'like'}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
+                          <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1"/>
+                        </svg>
+                    </span>
+                    <span th:if="${notification.type == 'comment'}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-fill" viewBox="0 0 16 16">
+                            <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9 9 0 0 0 8 15"/>
+                        </svg>
+                    </span>
+                    <span th:text="${notification.message}"></span>
+                </a>
+                <div class="notification-meta">
+                    <span th:text="${#temporals.format(notification.createdAt, 'MMMM dd, yyyy HH:mm')}"></span>
+                </div>
+            </div>
+
+            <form th:if="${!notification.read}" th:action="@{/notifications/mark-as-read/{id}(id=${notification.id})}" method="post">
+                <button class="btn btn-success" type="submit">Mark as Read</button>
+            </form>
+
+            <div th:if="${notification.read}">
+                <button class="btn btn-secondary" disabled>Already read</button>
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
