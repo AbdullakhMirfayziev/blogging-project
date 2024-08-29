@@ -259,51 +259,47 @@
         <div class="row align-items-center flex-row-reverse">
             <div class="col-lg-6">
                 <div class="about-text go-to">
-                    <h3 class="dark-color">About Me</h3>
-                    <h6 class="theme-color lead" th:text="${user.first_name} + ' ' + ${user.last_name}"> </h6>
+                    <div>
+                        <h6 class="theme-color lead" style="margin-bottom: 20px" th:text="${user.first_name} + ' ' + ${user.last_name}"> </h6>
 
-                    <div style="display: flex; justify-content: start; align-items: center;">
-                        <form th:if="${!isFollowed}" th:action="@{/follow/{username}(username=${user.username})}" method="post" style="display: inline; margin-right: 20px;">
-                            <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
-                            <input type="hidden" name="followedId" th:value="${user.id}" />
-                            <button type="submit" class="follow-button" style="background: none; border: none;"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="left"
-                                    title="Follow">
-                                <i class="fa-solid fa-user-plus"></i>
-                            </button>
-                        </form>
+                        <div style="display: flex; justify-content: start; align-items: center; margin-bottom: 30px">
+                            <div style="margin-right: 20px; text-align: center; font-weight: 600;">
+                                <p style="margin-bottom: 3px;" th:text="${postsSize}"></p>
+                                <a style="text-decoration: none; color: black" th:href="@{/posts/author/{username}(username=${user.username})}">Posts</a>
+                            </div>
 
-                        <form th:if="${isFollowed}" th:action="@{/unfollow/{username}(username=${user.username})}" method="post"  style="display: inline; margin-right: 20px;">
-                            <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
-                            <input type="hidden" name="followedId" th:value="${user.id}" />
-                            <button type="submit" class="follow-button" style="background: none; border: none;"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="left"
-                                    title="Unfollow">
-
-                                <i class="fa-solid fa-user-minus"></i>
-                            </button>
-                        </form>
-
-
-
-
-                        <div style="margin-right: 20px; text-align: center; font-weight: 600;">
-                            <p style="margin-bottom: 3px;" th:text="${followingsSize}"></p>
-                            <a style="text-decoration: none; color: black" th:href="@{/{userId}/following(userId=${user.id})}">Following</a>
-                        </div>
-
-                        <div style="text-align: center; font-weight: 600;">
+                            <div style="text-align: center; font-weight: 600; margin-right: 20px;">
                                 <p style="margin-bottom: 3px;" th:text="${followsSize}"></p>
-                            <a style="color: black; text-decoration: none;" th:href="@{/{userId}/followers(userId=${user.id})}">Followers</a>
+                                <a style="color: black; text-decoration: none;" th:href="@{/followers/{userId}(userId=${user.id})}">Followers</a>
+                            </div>
+
+                            <div style="margin-right: 20px; text-align: center; font-weight: 600;">
+                                <p style="margin-bottom: 3px;" th:text="${followingsSize}"></p>
+                                <a style="text-decoration: none; color: black" th:href="@{/following/{userId}(userId=${user.id})}">Following</a>
+                            </div>
+
+
+                            <form th:if="${loggedIn} and ${!isFollowed} and ${loggedIn.username} != ${user.username}" th:action="@{/follow/{username}(username=${user.username})}" method="post" style="display: inline; margin-right: 20px;">
+                                <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
+                                <input type="hidden" name="followedId" th:value="${user.id}" />
+                                <button type="submit" class="btn btn-outline-success">
+                                    Follow
+                                </button>
+                            </form>
+
+                            <form th:if="${loggedIn} and ${isFollowed} and ${loggedIn.username} != ${user.username}" th:action="@{/unfollow/{username}(username=${user.username})}" method="post"  style="display: inline; margin-right: 20px;">
+                                <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
+                                <input type="hidden" name="followedId" th:value="${user.id}" />
+                                <button type="submit" class="btn btn-outline-success">
+                                    Unfollow
+                                </button>
+                            </form>
                         </div>
-
-
-
                     </div>
-                    <br>
-                    <p th:text="${user.bio}"></p>
+
+                    <h3 class="dark-color" style="font-size: 30px">About Me</h3>
+
+                    <p th:text="${user.bio}" style="margin-bottom: 0"></p>
                     <div class="row about-list">
                         <div class="col-md-6">
                             <div class="media">

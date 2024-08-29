@@ -448,33 +448,21 @@
         </div>
         <div class="author-info">
 <!--            <i class="fa-regular fa-user-circle"></i>-->
-            <form th:if="${!isFollowed}" th:action="@{/follow1/{username}(username=${user.username})/{postId}(postId=${postId})}" method="post" style="display: inline;">
+            <a th:href="@{/posts/author/{username}(username=${author.username})}" th:text="${author.first_name + ' ' + author.last_name}" class="author-name" style="margin-right: 20px;"></a>
+
+            <form th:if="${loggedIn} and ${!isFollowed} and ${loggedIn.username} != ${user.username}" th:action="@{/follow1/{username}(username=${user.username})/{postId}(postId=${postId})}" method="post" style="display: inline;">
                 <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
                 <input type="hidden" name="followedId" th:value="${user.id}" />
-                <button type="submit" class="follow-button" style="background: none; height: 35px; width: 35px; border: 3px solid #494e49; margin-right: 10px;
-                        border-radius: 50%"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="left"
-                        title="Follow">
-                    <i class="fa-solid fa-user-plus" style="font-size: 16px"></i>
-                </button>
+                <button type="submit" class="follow-button btn btn-outline-success">Follow</button>
             </form>
 
-            <form th:if="${isFollowed}" th:action="@{/unfollow1/{username}(username=${user.username})/{postId}(postId=${postId})}" method="post"  style="display: inline;">
+            <form th:if="${loggedIn} and ${isFollowed} and ${loggedIn.username} != ${user.username}" th:action="@{/unfollow1/{username}(username=${user.username})/{postId}(postId=${postId})}" method="post"  style="display: inline;">
                 <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
                 <input type="hidden" name="followedId" th:value="${user.id}" />
-                <button type="submit" class="follow-button" style="background: none; height: 35px; width: 35px; border: 3px solid #494e49; margin-right: 10px;
-                        border-radius: 50%"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="left"
-                        title="unfollow"
-                >
-
-
-                    <i class="fa-solid fa-user-minus" style="font-size: 16px"></i>
+                <button type="submit" class="follow-button btn btn-outline-success">
+                    Unfollow
                 </button>
             </form>
-            <a th:href="@{/posts/author/{username}(username=${author.username})}" th:text="${author.first_name + ' ' + author.last_name}" class="author-name"></a>
         </div>
     </div>
 

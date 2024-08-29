@@ -37,7 +37,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             String password = rs.getString("password");
             boolean enabled = rs.getBoolean("enabled");
 
-            // Query to retrieve roles/authorities for the user
             String roleQuery = "SELECT role AS authority FROM role WHERE username = ?";
             List<SimpleGrantedAuthority> authorities = jdbcTemplate.query(roleQuery, new Object[]{username},
                     (rs1, rowNum1) -> new SimpleGrantedAuthority(rs1.getString("authority")));

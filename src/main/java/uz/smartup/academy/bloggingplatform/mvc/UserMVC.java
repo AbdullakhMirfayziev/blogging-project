@@ -23,9 +23,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uz.smartup.academy.bloggingplatform.dto.CategoryDto;
 import uz.smartup.academy.bloggingplatform.dto.UserDTO;
 import uz.smartup.academy.bloggingplatform.dto.UserDtoUtil;
 import uz.smartup.academy.bloggingplatform.entity.*;
+import uz.smartup.academy.bloggingplatform.service.CategoryService;
 import uz.smartup.academy.bloggingplatform.service.MailSenderService;
 import uz.smartup.academy.bloggingplatform.service.UserService;
 
@@ -51,13 +53,15 @@ public class UserMVC {
     private final MailSenderService mailSenderService;
     private final UserDtoUtil userDtoUtil;
     private static final Logger logger = LoggerFactory.getLogger(UserMVC.class);
+    private final CategoryService categoryService;
 
 
-    public UserMVC(UserService userService, PasswordEncoder passwordEncoder, MailSenderService mailSenderService, UserDtoUtil userDtoUtil) {
+    public UserMVC(UserService userService, PasswordEncoder passwordEncoder, MailSenderService mailSenderService, UserDtoUtil userDtoUtil, CategoryService categoryService) {
         this.service = userService;
         this.passwordEncoder = passwordEncoder;
         this.mailSenderService = mailSenderService;
         this.userDtoUtil = userDtoUtil;
+        this.categoryService = categoryService;
     }
 
     @PostConstruct
@@ -365,7 +369,7 @@ public class UserMVC {
         return "redirect:/posts/" + postId;
     }
 
-    @GetMapping("/{userId}/following")
+    @GetMapping("/following/{userId}")
     public String getFollowing(@PathVariable int userId, Model model) {
         List<UserDTO> following = service.getFollowing(userId);
 
@@ -378,7 +382,7 @@ public class UserMVC {
         return "following";
     }
 
-    @GetMapping("/{userId}/followers")
+    @GetMapping("/followers/{userId}")
     public String getFollowers(@PathVariable int userId, Model model) {
         List<UserDTO> followers = service.getFollowers(userId);
 
@@ -387,6 +391,17 @@ public class UserMVC {
                 userDTO.setHashedPhoto(service.encodePhotoToBase64(userDTO.getPhoto()));
 
         }
+        List<CategoryDto> categories = categoryService.getAllCategories();
+
+        String photo = "";
+        UserDTO userDTO = getLoggedUser() == null ? null : service.getUserByUsername(getLoggedUser().getUsername());
+        if (userDTO != null) {
+            photo = service.encodePhotoToBase64(userDTO.getPhoto());
+        }
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("loggedIn", userDTO);
+        model.addAttribute("photo", photo);
 
         model.addAttribute("followers", followers);
         return "followers";

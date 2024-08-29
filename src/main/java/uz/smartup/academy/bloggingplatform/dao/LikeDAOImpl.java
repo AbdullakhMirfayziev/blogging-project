@@ -25,7 +25,7 @@ public class LikeDAOImpl implements LikeDAO {
                 .setParameter("userId", userId)
                 .setParameter("postId", postId)
                 .getResultList();
-        return likes.isEmpty() ? null : likes.get(0);
+        return likes.isEmpty() ? null : likes.getFirst();
     }
 
     @Override
