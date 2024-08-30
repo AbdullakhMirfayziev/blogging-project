@@ -77,7 +77,7 @@ public class SecurityConfiguration{
                                 .requestMatchers(HttpMethod.POST, "/password/reset", "/password/reset/*").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/changePassword").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/password-change", "/profile/*").authenticated()
-                                .requestMatchers(HttpMethod.GET, "/notifications").hasAnyRole("EDITOR", "ADMIN")
+
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

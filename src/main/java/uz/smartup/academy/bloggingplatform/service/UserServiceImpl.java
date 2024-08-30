@@ -50,12 +50,12 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
     private final EmailVerificationService emailVerificationService;
-    private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
 //    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
-    public UserServiceImpl(UserDao userDao, UserDtoUtil dtoUtil, PostDao postDao, PostDtoUtil postDtoUtil, CategoryDtoUtil categoryDtoUtil, CategoryDao categoryDao, CommentDtoUtil commentDtoUtil, TagDao tagDao, TagDtoUtil tagDtoUtil, PasswordEncoder passwordEncoder, MailSenderService mailSenderService, EmailVerificationService emailVerificationService, UserRepository userRepository) {
+    public UserServiceImpl(UserDao userDao, UserDtoUtil dtoUtil, PostDao postDao, PostDtoUtil postDtoUtil, CategoryDtoUtil categoryDtoUtil, CategoryDao categoryDao, CommentDtoUtil commentDtoUtil, TagDao tagDao, TagDtoUtil tagDtoUtil, PasswordEncoder passwordEncoder, MailSenderService mailSenderService, EmailVerificationService emailVerificationService, NotificationService notificationService) {
         this.userDao = userDao;
         this.dtoUtil = dtoUtil;
         this.postDao = postDao;
@@ -69,7 +69,8 @@ public class UserServiceImpl implements UserService {
 //        this.mailSenderService = mailSenderService;
         this.mailSenderService = mailSenderService;
         this.emailVerificationService = emailVerificationService;
-        this.userRepository = userRepository;
+//        this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     @PostConstruct
@@ -142,6 +143,7 @@ public class UserServiceImpl implements UserService {
             String encodedPassword = passwordEncoder.encode(newPassword);
             user.setPassword(encodedPassword);
             userDao.update(user);
+            notificationService.addNotification(user.getId(), "your password changed successfully!", "/notifications", "password");
         } else {
             throw new RuntimeException("User not found");
         }
@@ -257,6 +259,12 @@ public class UserServiceImpl implements UserService {
         post.setStatus(Post.Status.PUBLISHED);
         post.setAuthor(user);
         post.setCreatedAt(LocalDateTime.now());
+        post.setNotification(true);
+        UserDTO author = getUserById(post.getAuthor().getId());
+        List<UserDTO> followers = getFollowers(author.getId());
+        for(int i = 0; i < followers.size(); ++i) {
+            notificationService.addNotification(followers.get(i).getId(), author.getUsername() + " added new post", "/posts/author/" + author.getUsername(), "post");
+        }
         postDao.save(post);
         userDao.update(user);
     }
@@ -343,7 +351,7 @@ public class UserServiceImpl implements UserService {
         User user = userDao.getUserById(userId);
         if (user != null) {
             user.setEnabled(null);
-            user.setRegistered(LocalDate.now());  // Ban qilingan vaqtni saqlaymiz
+            user.setRegistered(LocalDate.now());
             userDao.save(user);
         }
     }
@@ -354,14 +362,14 @@ public class UserServiceImpl implements UserService {
         User user = userDao.getUserById(userId);
         if (user != null) {
             user.setEnabled("1");
-            user.setRegistered(LocalDate.now());  // unBan qilingan vaqtni saqlaymiz
+            user.setRegistered(LocalDate.now());
             userDao.save(user);
         }
     }
 
     @Override
     @Transactional
-    @Scheduled(fixedRate = 3600000) // Har 1 soatda bir marta ishga tushadi
+    @Scheduled(fixedRate = 3600000)
     public void unbanUsers() {
 
 //        System.out.println("ishladi0000000000000000000000000000000000000");
@@ -372,7 +380,7 @@ public class UserServiceImpl implements UserService {
             User user = bannedUsers.get(i);
             if (user.getRegistered() != null && user.getRegistered().plusDays(1).isBefore(now)) {
                 user.setEnabled("1");
-                user.setRegistered(LocalDate.now());  // Tiklangandan vaqtini yangilaymiz
+                user.setRegistered(LocalDate.now());
                 userDao.update(user);
             }
         }
@@ -443,8 +451,9 @@ public class UserServiceImpl implements UserService {
     public void followUser(int followerId, int followedId) {
         User follower = userDao.getUserById(followerId);
         User followed = userDao.getUserById(followedId);
-
         follower.follow(followed);
+        notificationService.addNotification(followedId, follower.getUsername() + " started following you", "/profile/" + followed.getUsername(), "follow");
+
         userDao.update(follower);
     }
 

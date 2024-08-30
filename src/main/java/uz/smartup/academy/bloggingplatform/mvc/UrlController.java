@@ -106,7 +106,7 @@ public class UrlController {
         String rawPassword = form.getNewPassword();
 
         user.setPassword(passwordEncoder.encode(form.getNewPassword()));
-        userService.updateUser(userDtoUtil.toDTO(user)); // assuming updateUser saves the updated user
+        userService.updateUser(userDtoUtil.toDTO(user));
 
 
 
@@ -144,7 +144,7 @@ public class UrlController {
             String subject = "Job Application: Post Editor";
             String text = "Username: " + userDTO.getUsername() + "\n\nEmail: " + userDTO.getEmail() + "\n\nAttached is the CV.";
             mailSenderService.sendEmailWithAttachment(
-                    "greenwhitenews1@gmail.com",
+                    "greenwhitenews@gmail.com",
                     subject,
                     text,
                     cv.getOriginalFilename(),
