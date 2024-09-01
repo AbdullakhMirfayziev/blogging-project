@@ -112,6 +112,7 @@ public class IndexController {
         model.addAttribute("page", page);
         model.addAttribute("postsSize", postsSize);
         model.addAttribute("months", months);
+        model.addAttribute("users", userService.getAllUsers());
 
 
         return "index";

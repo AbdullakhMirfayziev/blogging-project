@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <title>404 - Page Not Found</title>
+    <title>GREEN WHITE NEWS</title>
     <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
     <link th:href="@{admin/css/font-awesome.min.css}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -61,9 +61,9 @@
 <body>
 <div class="container">
     <div class="error-box">
-        <h1 class="error-code">404</h1>
-        <h2 class="error-message">Page Not Found</h2>
-        <p class="error-description">The page you're looking for doesn't exist or has been moved.</p>
+        <h1 th:text="${errorStatus}" class="error-code"></h1>
+        <h2 th:text="${title}" class="error-message"></h2>
+        <p th:text="${message}" class="error-description"></p>
         <a class="home-button" th:href="@{/}">
             <i class="fa fa-home" style="margin-right: 5px;"></i> Take me home
         </a>

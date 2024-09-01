@@ -96,6 +96,45 @@
             line-height: 1;
         }
 
+        #userSuggestions {
+            position: absolute;
+            top: 100%;
+            left: 30%;
+            background-color: white;
+            border: 1px solid #ddd;
+            z-index: 1000;
+            width: 300px;
+            box-shadow: none;
+            max-height: 400px;
+            display: none;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #888 #f1f1f1;
+        }
+
+        #userSuggestions::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #userSuggestions::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        #userSuggestions::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        #userSuggestions::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .suggestion {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion:hover {
+            background-color: #f0f0f0;
+        }
+
     </style>
 </head>
 <body th:data-logged-in="${loggedIn != null}">
@@ -132,10 +171,19 @@
                     </li>
                 </ul>
             </div>
-            <form th:action="@{/(size = ${size}, page = ${page})}" method="get" class="d-flex me-auto">
-                <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search">
+            <form id="searchForm" th:action="@{/}" method="get" class="d-flex me-auto">
+                <input class="form-control me-2" id="searchInput" type="search" name="keyword"
+                       placeholder="Search"
+                       aria-label="Search"
+                       data-toggle="popover"
+                       data-trigger="hover"
+                       title="Search Tips. You can search posts by title or also you can search users with '@' + username.">
+
+                <div id="userSuggestions"></div>
                 <button class="btn btn-success" type="submit">Search</button>
             </form>
+
+
             <div th:if="${loggedIn != null}" style="display: flex;">
 
                 <div class="notification-container" style="display: inline-block;">
@@ -277,8 +325,8 @@
 <section id="News" th:if="${posts != null && !posts.isEmpty()}">
     <div class="post" th:each="post : ${posts}" th:if="${post != topPost}">
         <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
-        <a th:if="${post.title.length() > 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${#strings.substring(post.title, 0, 30)} + '...'"></a>
-        <a th:if="${post.title.length() <= 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${post.title}"></a>
+        <a class="title" th:if="${post.title.length() > 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${#strings.substring(post.title, 0, 30)} + '...'"></a>
+        <a class="title" th:if="${post.title.length() <= 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${post.title}"></a>
         <div class="date">
             <div class="calendar">
                 <i class="fa-solid fa-calendar-days"></i>
@@ -424,6 +472,60 @@
             var timestamp = element.getAttribute('data-timestamp');
             element.textContent = moment(timestamp).fromNow();
         });
+    });
+</script>
+
+<script th:inline="javascript">
+        const searchInput = document.getElementById('searchInput');
+        const userSuggestions = document.getElementById('userSuggestions');
+        const searchForm = document.getElementById('searchForm');
+
+        const users = /*[[${users}]]*/ [];
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                if (query.startsWith('@') && query.length > 1) {
+                    const keyword = query.substring(1).toLowerCase();
+                    const filteredUsers = users.filter(user =>
+                        user.username.toLowerCase().includes(keyword)
+                    );
+                    showSuggestions(filteredUsers);
+                } else {
+                    userSuggestions.style.display = 'none';
+                }
+            });
+        }
+
+        function showSuggestions(users) {
+        userSuggestions.innerHTML = '';
+        if (users.length > 0) {
+        users.forEach(user => {
+        const div = document.createElement('div');
+        div.className = 'suggestion';
+        div.textContent = `${user.first_name} ${user.last_name} (@${user.username})`;
+        div.onclick = function() {
+        window.location.href = `/profile/${user.username}`;
+    };
+        userSuggestions.appendChild(div);
+    });
+        userSuggestions.style.display = 'block';
+    } else {
+        userSuggestions.style.display = 'none';
+    }
+    }
+    // Close suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target !== searchInput && e.target !== userSuggestions) {
+            userSuggestions.style.display = 'none';
+        }
+    });
+
+        // Prevent form submission when selecting a user
+        searchForm.addEventListener('submit', function(e) {
+        if (searchInput.value.startsWith('@')) {
+        e.preventDefault();
+    }
     });
 </script>
 

@@ -384,12 +384,12 @@ public class AdminPanelController {
     }
 
     @RequestMapping("/access-denied")
-    public String accessDenied(HttpServletRequest request) {
+    public String accessDenied(HttpServletRequest request, Model model) {
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
 
-        if (statusCode == null) {
-            return "admin_zip/error";
-        }
+        model.addAttribute("title", "Access Denied");
+        model.addAttribute("message", "You do not have permission to view this page or perform this action");
+        model.addAttribute("errorStatus", 403);
 
         return "admin_zip/error";
     }
