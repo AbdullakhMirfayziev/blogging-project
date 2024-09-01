@@ -188,6 +188,29 @@ public class MailSenderServiceImpl implements MailSenderService {
         }
     }
 
+    @Override
+    public void sendPostNotificationToFollowers(String toEmail, String username, int postId, String author) {
+//        String postUrl = ServletUriComponentsBuilder.fromCurrentContextPath().path("/posts/{id}").buildAndExpand(postId).toUriString();
+        String postUrl = "http://localhost:8080/posts/author/" + author;
+        String subject = "New Post";
+        String content = "<p>Hi, " + username + "!</p>"
+                + author + " added new <a href='" + postUrl + "'>post</a>.";
+
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(toEmail);
+            helper.setSubject(subject);
+            helper.setText(content, true);
+
+            mailSender.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 

@@ -23,6 +23,29 @@
             color: #7c8688;
             font-size: 0.7em;
         }
+        .author-info {
+            display: flex;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .author-info i {
+            color: #494e49;
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        .author-name {
+            color: #494e49;
+            text-decoration: none;
+            font-size: 1.7em;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .author-name:hover {
+            color: #494e49;
+        }
     </style>
 </head>
 <body th:data-logged-in="${loggedIn != null}">
@@ -112,10 +135,10 @@
 
 <div class="author" style="margin-left: 4%; display: flex; align-items: center; justify-content: start">
     <img  th:src="'data:image/png;base64,' + ${photo}" style="width: 45px; height: 45px; border-radius: 90%; margin-right: 15px;">
+    <a th:href="@{/profile/{username}(username=${username})}" th:text="${firstName + ' ' + lastName}" class="author-name" ></a>
 
-    <h3  style="color: #2e2a2a; margin-right: 15px;">
-        <a style="color: #2e2a2a; text-decoration: none" th:text="${firstName} + ' ' + ${lastName}" th:href="@{/profile/{username}(username=${user.username})}"></a>
-    </h3>
+
+<!--    <h3 th:text="${firstName} + ' ' + ${lastName}" style="color: #2e2a2a; margin-right: 15px;"></h3>-->
 
     <form th:if="${loggedIn} and ${!isFollowed} and ${loggedIn.username} != ${user.username}" th:action="@{/follow2/{username}(username=${user.username})}" method="post" style="display: inline;">
         <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />

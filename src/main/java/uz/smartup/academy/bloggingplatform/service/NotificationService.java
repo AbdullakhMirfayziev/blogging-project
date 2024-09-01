@@ -8,6 +8,7 @@ import uz.smartup.academy.bloggingplatform.dao.CommentDao;
 import uz.smartup.academy.bloggingplatform.dao.LikeDAO;
 import uz.smartup.academy.bloggingplatform.dao.PostDao;
 import uz.smartup.academy.bloggingplatform.dao.UserDao;
+import uz.smartup.academy.bloggingplatform.dto.UserDTO;
 import uz.smartup.academy.bloggingplatform.entity.*;
 import uz.smartup.academy.bloggingplatform.repository.NotificationRepository;
 import org.slf4j.Logger;
@@ -91,6 +92,32 @@ public class NotificationService {
 
     }
 
+    @Scheduled(fixedRate = 60000)
+    @Transactional
+    public void sendPostNotificationsToFollowers() {
+
+        List<Post> posts = postDao.findPostsNeedingNotification();
+        for(Post post : posts){
+            User author = post.getAuthor();
+            List<User> followers = author.getFollowers().stream().toList();
+            for(User follower : followers){
+                mailSenderService.sendPostNotificationToFollowers(
+                        follower.getEmail(),
+                        follower.getUsername(),
+                        post.getId(),
+                        author.getUsername()
+                );
+            }
+            post.setNotification(false);
+            postDao.save(post);
+
+        }
+
+    }
+
+
+
+
     public List<Notification> getUnreadNotifications(int userId) {
         return notificationRepository.findByRecipientIdAndReadFalse(userId);
     }
@@ -121,6 +148,10 @@ public class NotificationService {
             logger.error("Error adding notification", e);
         }
     }
+
+
+
+
 //
 //    public List<Notification> findNotificationsByRecipientIdOrderByCreatedAtDesc(int recipientId) {
 //        return entityManager.createQuery(

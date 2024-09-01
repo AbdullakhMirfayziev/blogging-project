@@ -166,6 +166,12 @@ public class UserDaoImpl implements UserDao {
         return query.getResultList();
     }
 
+    @Override
+    public List<User> getUsersNeedingNotification() {
+        TypedQuery<User> query = entityManager.createQuery("FROM User u WHERE u.notification = true", User.class);
+        return  query.getResultList();
+    }
+
 
 }
 
