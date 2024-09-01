@@ -35,17 +35,17 @@ public class CustomErrorController {
         return "admin_zip/error";
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public String handle403(AccessDeniedException ex, Model model) {
-        System.err.println("An error occurred: " + ex.getMessage());
+//    @ExceptionHandler(AccessDeniedException.class)
+//    @ResponseStatus(HttpStatus.FORBIDDEN)
+//    public String handle403(AccessDeniedException ex, Model model) {
+//        System.err.println("An error occurred: " + ex.getMessage());
 
-        model.addAttribute("title", "Access Denied");
-        model.addAttribute("message", "You do not have permission to view this page or perform this action");
-        model.addAttribute("errorStatus", 403);
+//        model.addAttribute("title", "Access Denied");
+//        model.addAttribute("message", "You do not have permission to view this page or perform this action");
+//        model.addAttribute("errorStatus", 403);
 
-        return "admin_zip/error";
-    }
+//        return "admin_zip/error";
+//    }
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
