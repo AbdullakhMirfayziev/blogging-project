@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
             String encodedPassword = passwordEncoder.encode(newPassword);
             user.setPassword(encodedPassword);
             userDao.update(user);
-            notificationService.addNotification(user.getId(), "your password changed successfully!", "/notifications", "password");
+            notificationService.addNotification(user.getId(), user.getId(), 0, "your password changed successfully!", "/notifications", NotificationTypes.P);
         } else {
             throw new RuntimeException("User not found");
         }
@@ -259,11 +259,11 @@ public class UserServiceImpl implements UserService {
         post.setStatus(Post.Status.PUBLISHED);
         post.setAuthor(user);
         post.setCreatedAt(LocalDateTime.now());
-        post.setNotification(true);
+//        post.setNotification(true);
         UserDTO author = getUserById(post.getAuthor().getId());
         List<UserDTO> followers = getFollowers(author.getId());
         for(int i = 0; i < followers.size(); ++i) {
-            notificationService.addNotification(followers.get(i).getId(), author.getUsername() + " added new post", "/posts/author/" + author.getUsername(), "post");
+            notificationService.addNotification(followers.get(i).getId(), author.getId(), 0,author.getUsername() + " added new post", "/posts/author/" + author.getUsername(), NotificationTypes.N);
         }
         postDao.save(post);
         userDao.update(user);
@@ -451,8 +451,9 @@ public class UserServiceImpl implements UserService {
     public void followUser(int followerId, int followedId) {
         User follower = userDao.getUserById(followerId);
         User followed = userDao.getUserById(followedId);
-        follower.follow(followed);
-        notificationService.addNotification(followedId, follower.getUsername() + " started following you", "/profile/" + followed.getUsername(), "follow");
+        if(!followed.getUsername().contains("deleted_user")) follower.follow(followed);
+
+        notificationService.addNotification(followedId, follower.getId(), 0, follower.getUsername() + " started following you", "/profile/" + follower   .getUsername(), NotificationTypes.F);
 
         userDao.update(follower);
     }

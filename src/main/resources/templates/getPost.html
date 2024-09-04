@@ -203,25 +203,25 @@
         .author-info {
             display: flex;
             align-items: center;
-            font-family: Arial, sans-serif; /* Use your preferred font */
+            font-family: Arial, sans-serif;
         }
 
         .author-info i {
-            color: #494e49; /* Example color (green), match this with your icon color */
+            color: #494e49;
             margin-right: 8px;
-            font-size: 1.2em; /* Adjust the icon size if needed */
+            font-size: 1.2em;
         }
 
         .author-name {
-            color: #494e49; /* Match the color with the icon */
+            color: #494e49;
             text-decoration: none;
-            font-size: 1em; /* Adjust the font size if needed */
-            font-weight: bold; /* Bold text for emphasis */
+            font-size: 1em;
+            font-weight: bold;
             transition: color 0.3s;
         }
 
         .author-name:hover {
-            color: #494e49; /* Slightly darker shade on hover */
+            color: #494e49;
         }
 
 
@@ -332,10 +332,11 @@
                     <form th:action="@{/{postId}/likes/{username}(postId=${post.id}, username=${loggedIn.username})}"
                           method="post" class="like-form me-2">
                         <button th:if="${!post.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
-                            <i class="fa-regular fa-thumbs-up text-dark like-icon"></i>
+                            <i class="bi bi-heart" style="color: black"></i>
                         </button>
                         <button th:if="${post.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
-                            <i class="fa-solid fa-thumbs-up text-dark like-icon"></i>
+<!--                            <i class="bi bi-heart-fill" style="color: red"></i>-->
+                            <i class="bi bi-balloon-heart-fill" style="color: red"></i>
                         </button>
                         <input type="hidden" name="postId" th:value="${post.id}">
                     </form>
@@ -447,10 +448,10 @@
 
         </div>
         <div class="author-info">
-<!--            <i class="fa-regular fa-user-circle"></i>-->
+            <i class="bi bi-person-circle"></i>
             <a th:href="@{/posts/author/{username}(username=${author.username})}" th:text="${author.first_name + ' ' + author.last_name}" class="author-name" style="margin-right: 20px;"></a>
 
-            <form th:if="${loggedIn} and ${!isFollowed} and ${loggedIn.username} != ${user.username}" th:action="@{/follow1/{username}(username=${user.username})/{postId}(postId=${postId})}" method="post" style="display: inline;">
+            <form th:if="${loggedIn} and ${!isFollowed} and ${loggedIn.username} != ${user.username} and ${!user.username.startsWith('deleted_user')}" th:action="@{/follow1/{username}(username=${user.username})/{postId}(postId=${postId})}" method="post" style="display: inline;">
                 <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
                 <input type="hidden" name="followedId" th:value="${user.id}" />
                 <button type="submit" class="follow-button btn btn-outline-success">Follow</button>

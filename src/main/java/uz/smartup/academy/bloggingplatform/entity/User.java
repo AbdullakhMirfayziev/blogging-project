@@ -76,8 +76,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PasswordResetToken> passwordResetTokens;
 
-    @Column(name = "notification")
-    private Boolean notification;
+//    @Column(name = "notification")
+//    private Boolean notification;
 
     public void addFollower(User follower) {
         followers.add(follower);

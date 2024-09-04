@@ -52,19 +52,20 @@ public class NotificationService {
     @Transactional
     public void sendLikeNotifications() {
 
-        List<Like> likes = likeDAO.findNewLikes();
-        for(Like like : likes){
+        List<Notification> likes = likeDAO.findNewLikes();
+        for(Notification like : likes){
             User liker = like.getAuthor();
-            User postAuthor = like.getPost().getAuthor();
-            Post post = like.getPost();
+            int post = like.getPostId();
+            User postAuthor = postDao.getById(post).getAuthor();
             mailSenderService.sendPostLikedEmail(
                     postAuthor.getEmail(),
                     postAuthor.getUsername(),
-                    post.getId(),
+                    post,
                     liker.getUsername()
             );
-            like.setNewNotification(false);
-            postDao.save(post);
+            like.setNotify(false);
+            notificationRepository.save(like);
+//            postDao.save(post);
 
         }
 
@@ -74,19 +75,20 @@ public class NotificationService {
     @Transactional
     public void sendCommentNotifications() {
 
-        List<Comment> comments = commentDao.findNewComments();
-        for(Comment comment : comments){
+        List<Notification> comments = commentDao.findNewComments();
+        for(Notification comment : comments){
             User commenter = comment.getAuthor();
-            User postAuthor = comment.getPost().getAuthor();
-            Post post = comment.getPost();
+            int post = comment.getPostId();
+            User postAuthor = postDao.getById(post).getAuthor();
             mailSenderService.sendPostCommentEmail(
                     postAuthor.getEmail(),
                     postAuthor.getUsername(),
-                    post.getId(),
+                    post,
                     commenter.getUsername()
             );
-            comment.setNewNotification(false);
-            postDao.save(post);
+            comment.setNotify(false);
+            notificationRepository.save(comment);
+//            postDao.save(post);
 
         }
 
@@ -95,10 +97,9 @@ public class NotificationService {
     @Scheduled(fixedRate = 60000)
     @Transactional
     public void sendPostNotificationsToFollowers() {
-
-        List<Post> posts = postDao.findPostsNeedingNotification();
-        for(Post post : posts){
-            User author = post.getAuthor();
+        List<Notification> posts = postDao.findPostsNeedingNotification();
+        for(Notification post : posts){
+            User author = post.getRecipient();
             List<User> followers = author.getFollowers().stream().toList();
             for(User follower : followers){
                 mailSenderService.sendPostNotificationToFollowers(
@@ -108,12 +109,14 @@ public class NotificationService {
                         author.getUsername()
                 );
             }
-            post.setNotification(false);
-            postDao.save(post);
+            post.setNotify(false);
+            notificationRepository.save(post);
+//            postDao.save(post);
 
         }
 
     }
+
 
 
 
@@ -133,7 +136,7 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public void addNotification(int recipientId, String message, String redirectUrl, String type) {
+    public void addNotification(int recipientId, int authorId, int postId, String message, String redirectUrl, NotificationTypes type) {
         try {
             Notification notification = new Notification();
             notification.setRecipient(userDao.getUserById(recipientId));
@@ -141,7 +144,10 @@ public class NotificationService {
             notification.setRedirectUrl(redirectUrl);
             notification.setRead(false);
             notification.setType(type);
+            notification.setAuthor(userDao.getUserById(authorId));
             notification.setCreatedAt(LocalDateTime.now());
+            if(type.equals(NotificationTypes.L) || type.equals(NotificationTypes.C)) notification.setPostId(postId);
+            notification.setNotify(type.equals(NotificationTypes.L) || type.equals(NotificationTypes.C) || type.equals(NotificationTypes.N));
             notificationRepository.save(notification);
             logger.info("Notification added for user: {}", recipientId);
         } catch (Exception e) {

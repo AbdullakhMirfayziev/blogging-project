@@ -1,6 +1,7 @@
 package uz.smartup.academy.bloggingplatform.dao;
 
 import uz.smartup.academy.bloggingplatform.entity.Comment;
+import uz.smartup.academy.bloggingplatform.entity.Notification;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface CommentDao {
     List<Comment> getComments();
     List<Comment> getCommentsByPostId(int id);
 
-    List<Comment> findNewComments();
+    List<Notification> findNewComments();
 }
 
 /*

@@ -8,6 +8,7 @@ import uz.smartup.academy.bloggingplatform.dao.UserDao;
 import uz.smartup.academy.bloggingplatform.dto.CommentDTO;
 import uz.smartup.academy.bloggingplatform.dto.CommentDtoUtil;
 import uz.smartup.academy.bloggingplatform.entity.Comment;
+import uz.smartup.academy.bloggingplatform.entity.NotificationTypes;
 import uz.smartup.academy.bloggingplatform.entity.Post;
 import uz.smartup.academy.bloggingplatform.entity.User;
 
@@ -45,8 +46,8 @@ public class CommentServiceImpl implements CommentService {
 
         User commenter = userDao.getUserById(commentDTO.getAuthorId());
         Post post = postDao.getById(commentDTO.getPostId());
-          mailSenderServiceImpl.sendPostCommentEmail(post.getAuthor().getEmail(), post.getAuthor().getUsername(), post.getId(), commenter.getUsername());
-        notificationService.addNotification(post.getAuthor().getId(), commenter.getUsername() + " commented your post", "/posts/" + post.getId(), "like");
+//          mailSenderServiceImpl.sendPostCommentEmail(post.getAuthor().getEmail(), post.getAuthor().getUsername(), post.getId(), commenter.getUsername());
+        notificationService.addNotification(post.getAuthor().getId(), commenter.getId(), post.getId(), commenter.getUsername() + " commented your post", "/posts/" + post.getId(), NotificationTypes.C);
         System.out.println("ishladi shekilli");
 
         commentDao.save(comment);

@@ -130,7 +130,7 @@ public class MailSenderServiceImpl implements MailSenderService {
         helper.setText(text);
         helper.addAttachment(fileName, inputStreamSource);
 
-        mailSender.send(message);
+        if(!to.contains("deleted_user")) mailSender.send(message);
 
     }
 
@@ -141,7 +141,7 @@ public class MailSenderServiceImpl implements MailSenderService {
         simpleMailMessage.setSubject("New notification");
         simpleMailMessage.setText(message);
 
-        mailSender.send(simpleMailMessage);
+        if(!recipient.getUsername().contains("deleted_user")) mailSender.send(simpleMailMessage);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class MailSenderServiceImpl implements MailSenderService {
             helper.setSubject(subject);
             helper.setText(content, true);
 
-            mailSender.send(message);
+            if(!username.contains("deleted_user")) mailSender.send(message);
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -181,7 +181,7 @@ public class MailSenderServiceImpl implements MailSenderService {
             helper.setSubject(subject);
             helper.setText(content, true);
 
-            mailSender.send(message);
+            if(!username.contains("deleted_user"))  mailSender.send(message);
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -204,7 +204,11 @@ public class MailSenderServiceImpl implements MailSenderService {
             helper.setSubject(subject);
             helper.setText(content, true);
 
-            mailSender.send(message);
+           if(!toEmail.contains("deleted_user")) mailSender.send(message);
+
+           System.out.println("-".repeat(100));
+           System.out.println("message");
+           System.out.println("-".repeat(100));
 
         } catch (MessagingException e) {
             e.printStackTrace();

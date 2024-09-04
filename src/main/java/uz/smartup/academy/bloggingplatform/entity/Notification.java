@@ -20,6 +20,13 @@ public class Notification {
     @JoinColumn(name = "recipient_id")
     private User recipient;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private User author;
+
+    @Column(name = "post_id")
+    private int postId;
+
     @Column(name = "message")
     private String message;
 
@@ -32,8 +39,12 @@ public class Notification {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private String type;
+    private NotificationTypes type;
+
+    @Column(name = "notified")
+    private Boolean notify;
 
     @Override
     public String toString() {

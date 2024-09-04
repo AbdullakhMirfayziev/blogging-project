@@ -190,9 +190,13 @@
     <ul class="list-unstyled">
         <li th:each="user : ${followers}" class="follower-card">
             <img th:src="'data:image/png;base64,' + ${user.hashedPhoto}" alt="Profile Image">
-            <div class="follower-info">
+            <div class="follower-info" th:if="${!user.username.startsWith('deleted_user')}">
                 <a th:href="@{/profile/{id}(id=${user.id})}" th:text="${user.username}"></a>
                 <p th:text="${user.first_name + ' ' + user.last_name}"></p>
+            </div>
+            <div class="follower-info" th:if="${user.username.startsWith('deleted_user')}">
+                <p>Deleted User</p>
+                <p>This account has been deleted</p>
             </div>
         </li>
     </ul>

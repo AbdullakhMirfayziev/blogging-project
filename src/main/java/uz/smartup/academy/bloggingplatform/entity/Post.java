@@ -42,8 +42,8 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User author;
 
-    @Column(name = "new_notification")
-    private Boolean notification;
+//    @Column(name = "new_notification")
+//    private Boolean notification;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
