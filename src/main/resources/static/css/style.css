@@ -94,6 +94,7 @@
 
 
 
+
 .navbar-start .navbar-brand .image{
     width: 70px;
     height: 70px;
@@ -163,7 +164,9 @@ section#Home .post img{
 
 section#Home .post .post_content .date h5{
     font-family: "Baskervville SC", serif;
-    font-weight: 600;
+    /*font-family: sans-serif;*/
+    font-weight: 400;
+    /*font-size: 15px;*/
     color: rgb(74, 73, 73);
     margin-left: 5px;
 }
@@ -187,9 +190,10 @@ section#Home .post .post_content .like i{
 }
 
 section#Home .post .post_content .like h5{
-    font-family: "Work Sans", sans-serif;
+    font-family: "Baskervville SC", serif;
     color: gray;
-    font-size: medium;
+    font-size: 20px;
+    padding-top: 4.5px;
 }
 
 section#Home .post .post_content p{
@@ -229,6 +233,7 @@ section#News .post img {
 }
 
 section#News .post .date{
+    font-family: sans-serif;
     width: 100%;
     display: flex;
     justify-self: flex-start;
@@ -258,10 +263,11 @@ section#News .post .date .calendar h5{
     font-family: "Baskervville SC", serif;
     font-size: medium;
     margin-right: 10px;
+    /*margin-left: 20px;*/
 }
 
 section#News .post h5 {
-    font-family: "Playfair Display", serif;
+    font-family: "Baskervville SC", serif;
     color: gray;
 }
 

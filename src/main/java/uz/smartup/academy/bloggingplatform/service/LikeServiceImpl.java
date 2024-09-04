@@ -9,6 +9,7 @@ import uz.smartup.academy.bloggingplatform.dao.UserDao;
 import uz.smartup.academy.bloggingplatform.dto.LikeDTO;
 import uz.smartup.academy.bloggingplatform.dto.LikeDTOUtil;
 import uz.smartup.academy.bloggingplatform.entity.Like;
+import uz.smartup.academy.bloggingplatform.entity.NotificationTypes;
 import uz.smartup.academy.bloggingplatform.entity.Post;
 import uz.smartup.academy.bloggingplatform.entity.User;
 import java.util.List;
@@ -58,8 +59,8 @@ public class LikeServiceImpl implements LikeService {
             like.setPost(post);
             likeDAO.save(like);
             if(!Objects.equals(user.getUsername(), like.getPost().getAuthor().getUsername())) {
-                like.setNewNotification(true);
-                notificationService.addNotification(post.getAuthor().getId(), user.getUsername() + " liked your post", "/posts/" + postId, "like");
+//                like.setNewNotification(true);
+                notificationService.addNotification(post.getAuthor().getId(), like.getAuthor().getId(), like.getPost().getId(),user.getUsername() + " liked your post", "/posts/" + postId, NotificationTypes.L);
             }
         }
         return true;

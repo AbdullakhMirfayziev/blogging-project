@@ -193,8 +193,8 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public List<Post> findPostsNeedingNotification() {
-        TypedQuery<Post> query = entityManager.createQuery("FROM Post p WHERE p.notification=true", Post.class);
+    public List<Notification> findPostsNeedingNotification() {
+        TypedQuery<Notification> query = entityManager.createQuery("FROM Notification p WHERE p.notify=true AND p.type='N'", Notification.class);
         return query.getResultList();
     }
 

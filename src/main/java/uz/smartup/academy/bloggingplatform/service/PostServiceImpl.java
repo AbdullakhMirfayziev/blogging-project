@@ -251,8 +251,8 @@ public class PostServiceImpl implements PostService {
         post.addComments(comment);
         if(!Objects.equals(user.getUsername(), post.getAuthor().getUsername())) {
 //            mailSenderServiceImpl.sendPostCommentEmail(post.getAuthor().getEmail(), post.getAuthor().getUsername(), post.getId(), comment.getAuthor().getUsername());
-            comment.setNewNotification(true);
-            notificationService.addNotification(post.getAuthor().getId(), user.getUsername() + " commented your post", "/posts/" + post.getId(), "comment");
+//            comment.setNewNotification(true);
+            notificationService.addNotification(post.getAuthor().getId(), comment.getAuthor().getId(), postId,user.getUsername() + " commented your post", "/posts/" + post.getId(), NotificationTypes.C);
         }
         dao.save(post);
     }
@@ -271,11 +271,12 @@ public class PostServiceImpl implements PostService {
         if(postSchedule != null) {
             dao.deleteScheduleData(postSchedule);
         }
-        post.setNotification(true);
+//        post.setNotification(true);
         UserDTO author = userService.getUserById(post.getAuthor().getId());
         List<UserDTO> followers = userService.getFollowers(author.getId());
         for(int i = 0; i < followers.size(); ++i) {
-            notificationService.addNotification(followers.get(i).getId(), author.getUsername() + " added new post", "/posts/author/" + author.getUsername(), "post");
+            notificationService.addNotification(followers.get(i).getId(), author.getId(), 0, author.getUsername() + " added new post", "/posts/author/" + author.getUsername(), NotificationTypes.N);
+
         }
         dao.update(post);
     }

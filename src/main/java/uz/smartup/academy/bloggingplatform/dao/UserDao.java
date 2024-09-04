@@ -40,7 +40,7 @@ public interface UserDao {
 
     List<User> userFindByUserName(String username);
 
-    List<User> getUsersNeedingNotification();
+    List<Notification> getUsersNeedingEmailNotification();
 
 
 }

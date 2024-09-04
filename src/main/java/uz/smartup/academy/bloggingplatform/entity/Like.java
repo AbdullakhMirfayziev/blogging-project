@@ -28,6 +28,6 @@ public class Like {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @Column(name = "notification")
-    private boolean newNotification;
+//    @Column(name = "notification")
+//    private boolean newNotification;
 }

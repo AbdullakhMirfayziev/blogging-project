@@ -33,6 +33,6 @@ public class Comment {
     @JoinColumn(name = "post_id", updatable = false)
     private Post post;
 
-    @Column(name = "notification")
-    private boolean newNotification;
+//    @Column(name = "notification")
+//    private boolean newNotification;
 }

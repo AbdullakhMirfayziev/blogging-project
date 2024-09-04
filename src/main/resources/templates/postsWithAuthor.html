@@ -11,6 +11,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+
     <style>
         .contact .contacts li {
             list-style: none;
@@ -135,12 +138,13 @@
 
 <div class="author" style="margin-left: 4%; display: flex; align-items: center; justify-content: start">
     <img  th:src="'data:image/png;base64,' + ${photo}" style="width: 45px; height: 45px; border-radius: 90%; margin-right: 15px;">
-    <a th:href="@{/profile/{username}(username=${username})}" th:text="${firstName + ' ' + lastName}" class="author-name" ></a>
+    <a th:if="${user.username.startsWith('deleted_user')}"  th:text="${firstName + ' ' + lastName}" class="author-name" ></a>
+    <a th:if="${!user.username.startsWith('deleted_user')}"  th:href="@{/profile/{username}(username=${username})}" th:text="${firstName + ' ' + lastName}" class="author-name" ></a>
 
 
 <!--    <h3 th:text="${firstName} + ' ' + ${lastName}" style="color: #2e2a2a; margin-right: 15px;"></h3>-->
 
-    <form th:if="${loggedIn} and ${!isFollowed} and ${loggedIn.username} != ${user.username}" th:action="@{/follow2/{username}(username=${user.username})}" method="post" style="display: inline;">
+    <form th:if="${loggedIn} and ${!isFollowed} and ${loggedIn.username} != ${user.username} and ${!user.username.startsWith('deleted_user')}" th:action="@{/follow2/{username}(username=${user.username})}" method="post" style="display: inline;">
         <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
         <input type="hidden" name="followedId" th:value="${user.id}" />
         <button type="submit" class="follow-button btn btn-outline-secondary" >
@@ -176,10 +180,10 @@
                 <div th:if="${loggedIn!=null}">
                     <form th:action="@{/{authorUsername}/posts/{postId}/likes/{username}(authorUsername=${username},postId=${post.id}, username=${loggedIn.username})}" method="post" class="like-form">
                         <button th:if="${!post.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
-                            <i class="fa-regular fa-thumbs-up text-dark like-icon"></i>
+                            <i class="bi bi-heart" style="color: black"></i>
                         </button>
                         <button th:if="${post.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
-                            <i class="fa-solid fa-thumbs-up text-dark like-icon"></i>
+                            <i class="bi bi-heart-fill" style="color: red"></i>
                         </button>
                         <input type="hidden" name="postId" th:value="${post.id}">
                     </form>

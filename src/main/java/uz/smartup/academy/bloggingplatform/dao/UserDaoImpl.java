@@ -167,8 +167,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getUsersNeedingNotification() {
-        TypedQuery<User> query = entityManager.createQuery("FROM User u WHERE u.notification = true", User.class);
+    public List<Notification> getUsersNeedingEmailNotification() {
+        TypedQuery<Notification> query = entityManager.createQuery("FROM Notification n WHERE n.notify = true AND (n.type='L' OR n.type='C' OR n.type='F')", Notification.class);
         return  query.getResultList();
     }
 

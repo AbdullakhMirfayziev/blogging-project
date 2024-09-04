@@ -5,7 +5,6 @@ DROP VIEW IF EXISTS `post_comments_count`;
 
 
 
-
 DROP TABLE IF EXISTS `notification`;
 DROP TABLE IF EXISTS `like`;
 DROP TABLE IF EXISTS `comment`;
@@ -31,6 +30,7 @@ CREATE TABLE `user` (
                         `bio` VARCHAR(1500),
                         `web_push_token` VARCHAR(150),
                         `registered` DATE,
+#                         `notification` BOOLEAN,
                         PRIMARY KEY (`id`),
                         UNIQUE(`username`),
                         UNIQUE(`email`)
@@ -59,7 +59,7 @@ CREATE TABLE `post` (
                         `status` ENUM('DRAFT', 'PUBLISHED'),
                         `content` TEXT NOT NULL,
                         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                        `new_notification` BOOLEAN,
+#                         `new_notification` BOOLEAN,
                         FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
@@ -97,7 +97,7 @@ CREATE TABLE `comment` (
                            `user_id` INT NOT NULL,
                            `content` TEXT NOT NULL,
                            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                           `notification` BOOLEAN,
+#                            `notification` BOOLEAN,
                            FOREIGN KEY (`post_id`) REFERENCES `post`(`id`),
                            FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
@@ -107,7 +107,7 @@ CREATE TABLE `like` (
                         `post_id` INT NOT NULL,
                         `user_id` INT NOT NULL,
                         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                        `notification` BOOLEAN,
+#                         `notification` BOOLEAN,
                         UNIQUE (`post_id`, `user_id`),
                         FOREIGN KEY (`post_id`) REFERENCES `post`(`id`),
                         FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
@@ -116,11 +116,14 @@ CREATE TABLE `like` (
 CREATE TABLE `notification` (
                                 `id` INT AUTO_INCREMENT PRIMARY KEY,
                                 `recipient_id` INT NOT NULL,
+                                `author_id` INT NOT NULL,
+                                `post_id` INT,
                                 `message` VARCHAR(100) NOT NULL,
                                 `redirect_url` VARCHAR(100) NOT NULL,
                                 `read` BOOLEAN,
                                 `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                `type` VARCHAR(10) not null,
+                                `type` enum('L', 'C', 'F', 'P', 'N') not null,
+                                `notified` BOOLEAN,
                                 FOREIGN KEY(`recipient_id`) REFERENCES `user`(`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 

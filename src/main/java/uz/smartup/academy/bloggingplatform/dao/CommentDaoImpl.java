@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import uz.smartup.academy.bloggingplatform.entity.Comment;
+import uz.smartup.academy.bloggingplatform.entity.Notification;
 
 import java.util.List;
 
@@ -55,8 +56,8 @@ public class CommentDaoImpl implements CommentDao{
     }
 
     @Override
-    public List<Comment> findNewComments() {
-        TypedQuery<Comment> query = entityManager.createQuery("FROM Comment c WHERE c.newNotification=true", Comment.class);
+    public List<Notification> findNewComments() {
+        TypedQuery<Notification> query = entityManager.createQuery("FROM Notification n WHERE n.notify=true AND n.type='C'", Notification.class);
         return query.getResultList();
     }
 }
