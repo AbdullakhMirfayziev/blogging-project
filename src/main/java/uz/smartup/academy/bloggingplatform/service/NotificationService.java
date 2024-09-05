@@ -2,6 +2,10 @@ package uz.smartup.academy.bloggingplatform.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import uz.smartup.academy.bloggingplatform.dao.CommentDao;
@@ -34,7 +38,6 @@ public class NotificationService {
     private final EntityManager entityManager;
     private final CommentDao commentDao;
     private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
-
 //    private final Logger logger;
 
 
@@ -117,16 +120,16 @@ public class NotificationService {
 
     }
 
-
-
-
-
     public List<Notification> getUnreadNotifications(int userId) {
         return notificationRepository.findByRecipientIdAndReadFalse(userId);
     }
 
-    public List<Notification> getAllNotification(int userId) {
-        return notificationRepository.findAllByRecipientId(userId).reversed();
+    public Page<Notification> getAllNotification(int userId, int size, int page) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<Notification> notificationPage = userDao.getAllNotification(pageable, userId);
+
+        return notificationPage;
 
     }
 
@@ -154,6 +157,11 @@ public class NotificationService {
             logger.error("Error adding notification", e);
         }
     }
+
+    public List<Notification> getAllNotification(int userId) {
+        return notificationRepository.findAllByRecipientId(userId);
+    }
+
 
 
 

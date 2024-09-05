@@ -4,6 +4,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import uz.smartup.academy.bloggingplatform.entity.*;
 
@@ -167,10 +170,25 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<Notification> getUsersNeedingEmailNotification() {
-        TypedQuery<Notification> query = entityManager.createQuery("FROM Notification n WHERE n.notify = true AND (n.type='L' OR n.type='C' OR n.type='F')", Notification.class);
-        return  query.getResultList();
+    public Page<Notification> getAllNotification(Pageable pageable, int userId) {
+        String jpql = "SELECT n FROM Notification n WHERE n.recipient.id = :id";
+        String countJpql = "SELECT COUNT(n) FROM Notification n WHERE n.recipient.id = :id";
+
+        TypedQuery<Notification> query = entityManager.createQuery(jpql, Notification.class);
+        query.setParameter("id", userId);
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+
+        TypedQuery<Long> countQuery = entityManager.createQuery(countJpql, Long.class);
+        countQuery.setParameter("id", userId);
+
+        List<Notification> notifications = query.getResultList();
+        long total = countQuery.getSingleResult();
+
+        return new PageImpl<>(notifications, pageable, total);
     }
+
+
 
 
 }

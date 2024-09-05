@@ -1,5 +1,7 @@
 package uz.smartup.academy.bloggingplatform.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import uz.smartup.academy.bloggingplatform.entity.*;
 
 import java.util.List;
@@ -40,7 +42,9 @@ public interface UserDao {
 
     List<User> userFindByUserName(String username);
 
-    List<Notification> getUsersNeedingEmailNotification();
+    Page<Notification> getAllNotification(Pageable pageable, int userId);
+
+
 
 
 }

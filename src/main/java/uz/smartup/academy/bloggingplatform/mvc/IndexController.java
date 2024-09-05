@@ -498,10 +498,25 @@ public class IndexController {
     }
 
     @GetMapping("/notifications")
-    public String notifications(Model model){
+    public String notifications(Model model,
+                                @RequestParam(name ="size", defaultValue = "5") int size,
+                                @RequestParam(name = "page", defaultValue = "1") int page){
+
         UserDTO user = userService.getUserByUsername(Objects.requireNonNull(getLoggedUser()).getUsername());
-        List<Notification> notifications = notificationService.getAllNotification(user.getId());
+
+        int notificationSize = notificationService.getAllNotification(user.getId()).size();
+
+        if (notificationSize <= page * (size - 1)) {
+            page = notificationSize / size + 1;
+        }
+
+        Page<Notification> notificationsPage = notificationService.getAllNotification(user.getId(), size, page - 1);
+
+
+        List<Notification> notifications = notificationsPage.getContent();
         List<CategoryDto> categories = categoryService.getAllCategories();
+
+
 
         String photo = "";
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
@@ -513,7 +528,10 @@ public class IndexController {
         model.addAttribute("categories", categories);
         model.addAttribute("loggedIn", userDTO);
         model.addAttribute("photo", photo);
-
+        model.addAttribute("size", size);
+        model.addAttribute("page", page);
+        model.addAttribute("notificationSize", notificationSize);
+        model.addAttribute("notificationsPage", notificationsPage);
 
         return "notifications";
     }
