@@ -378,7 +378,15 @@ public class UserMVC {
                 userDTO.setHashedPhoto(service.encodePhotoToBase64(userDTO.getPhoto()));
 
         }
+
+        String photo = "";
+        UserDTO userDTO = getLoggedUser() == null ? null : service.getUserByUsername(getLoggedUser().getUsername());
+        if (userDTO != null)
+            photo = service.encodePhotoToBase64(userDTO.getPhoto());
+
         model.addAttribute("following", following);
+        model.addAttribute("loggedIn", userDTO);
+        model.addAttribute("photo", photo);
         return "following";
     }
 
@@ -402,7 +410,8 @@ public class UserMVC {
         model.addAttribute("categories", categories);
         model.addAttribute("loggedIn", userDTO);
         model.addAttribute("photo", photo);
-
+        model.addAttribute("loggedIn", getLoggedUser());
+        model.addAttribute("photo", photo);
         model.addAttribute("followers", followers);
         return "followers";
     }

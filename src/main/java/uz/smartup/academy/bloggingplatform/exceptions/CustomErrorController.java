@@ -45,16 +45,16 @@ public class CustomErrorController {
         return "admin_zip/error";
     }
 
-//    @ExceptionHandler(Exception.class)
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public String handle500(RuntimeException ex, Model model) {
-//        System.err.println("An error occurred: " + ex.getMessage());
-//
-//        model.addAttribute("title", "Something Went Wrong");
-//        model.addAttribute("message", "We encountered an unexpected error. Please try again later.");
-//        model.addAttribute("errorStatus", 500);
-//
-//        return "admin_zip/error";
-//    }
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handle500(RuntimeException ex, Model model) {
+        System.err.println("An error occurred: " + ex.getMessage());
+
+        model.addAttribute("title", "Something Went Wrong");
+        model.addAttribute("message", "We encountered an unexpected error. Please try again later.");
+        model.addAttribute("errorStatus", 500);
+
+        return "admin_zip/error";
+    }
 
 }
