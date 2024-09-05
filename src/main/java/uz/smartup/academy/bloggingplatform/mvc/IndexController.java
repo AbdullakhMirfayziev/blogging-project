@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uz.smartup.academy.bloggingplatform.dto.*;
 import uz.smartup.academy.bloggingplatform.entity.Notification;
 import uz.smartup.academy.bloggingplatform.entity.Post;
+import uz.smartup.academy.bloggingplatform.entity.Role;
 import uz.smartup.academy.bloggingplatform.service.*;
 
 import java.io.IOException;
@@ -98,6 +99,11 @@ public class IndexController {
             model.addAttribute("userRoles", userDTO.getRoles());
         }
 
+        List<UserDTO> users = userService.getAllUsers()
+                                            .stream()
+                                            .filter(userDTO1 -> !userDTO1.getUsername().contains("deleted"))
+                                            .toList();
+
 
         model.addAttribute("category", category);
         model.addAttribute("tag", tag);
@@ -112,7 +118,7 @@ public class IndexController {
         model.addAttribute("page", page);
         model.addAttribute("postsSize", postsSize);
         model.addAttribute("months", months);
-        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("users", users);
 
 
         return "index";
@@ -243,6 +249,12 @@ public class IndexController {
         model.addAttribute("loggedInUser", loged);
         List<CategoryDto> categories = categoryService.getAllCategories();
 
+        boolean isEditor = false;
+        for(Role role : user.getRoles()) {
+            if(role.getRole().equals("ROLE_EDITOR"))
+                isEditor = true;
+        }
+
         if(loged != null) {
             boolean isFollowed = false;
 
@@ -276,6 +288,7 @@ public class IndexController {
         model.addAttribute("followsSize", followsSize);
         model.addAttribute("followingsSize", followingsSize);
         model.addAttribute("postsSize", postsSize);
+        model.addAttribute("isEditor", isEditor);
 
         return "profile";
     }

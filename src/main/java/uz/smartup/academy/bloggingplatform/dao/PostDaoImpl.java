@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import jdk.jfr.Registered;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -188,6 +189,7 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
+    @Transactional
     public void deleteScheduleData(PostSchedule postSchedule) {
         entityManager.remove(postSchedule);
     }

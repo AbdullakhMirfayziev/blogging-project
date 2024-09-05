@@ -214,9 +214,10 @@ section#News{
 }
 
 section#News .post {
-    height: 350px;
+    height: 280px;
     /* border: 1px solid red; */
     /* padding-top: 25px; */
+    padding-bottom: 0;
 }
 
 section#News .post a {
@@ -275,6 +276,7 @@ section#News .post .line {
     height: 1px;
     width: 100%;
     background-color: gray;
+    margin-bottom: 0;
 }
 
 

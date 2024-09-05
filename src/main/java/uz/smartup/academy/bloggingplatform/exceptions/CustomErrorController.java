@@ -5,10 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-
-import java.nio.file.AccessDeniedException;
 
 @ControllerAdvice
 public class CustomErrorController {
@@ -23,17 +20,6 @@ public class CustomErrorController {
         return "admin_zip/error";
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handle500(RuntimeException ex, Model model) {
-        System.err.println("An error occurred: " + ex.getMessage());
-
-        model.addAttribute("title", "Something Went Wrong");
-        model.addAttribute("message", "We encountered an unexpected error. Please try again later.");
-        model.addAttribute("errorStatus", 500);
-
-        return "admin_zip/error";
-    }
 
 //    @ExceptionHandler(AccessDeniedException.class)
 //    @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -58,5 +44,17 @@ public class CustomErrorController {
 
         return "admin_zip/error";
     }
+
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public String handle500(RuntimeException ex, Model model) {
+//        System.err.println("An error occurred: " + ex.getMessage());
+//
+//        model.addAttribute("title", "Something Went Wrong");
+//        model.addAttribute("message", "We encountered an unexpected error. Please try again later.");
+//        model.addAttribute("errorStatus", 500);
+//
+//        return "admin_zip/error";
+//    }
 
 }

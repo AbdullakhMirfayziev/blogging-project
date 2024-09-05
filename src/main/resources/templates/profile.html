@@ -264,12 +264,12 @@
                         <h6 class="theme-color lead" style="margin-bottom: 20px" th:text="${user.first_name} + ' ' + ${user.last_name}"> </h6>
 
                         <div style="display: flex; justify-content: start; align-items: center; margin-bottom: 30px">
-                            <div style="margin-right: 20px; text-align: center; font-weight: 600;">
+                            <div th:if="${isEditor}" style="margin-right: 20px; text-align: center; font-weight: 600;">
                                 <p style="margin-bottom: 3px;" th:text="${postsSize}"></p>
                                 <a style="text-decoration: none; color: black" th:href="@{/posts/author/{username}(username=${user.username})}">Posts</a>
                             </div>
 
-                            <div style="text-align: center; font-weight: 600; margin-right: 20px;">
+                            <div th:if="${isEditor}" style="text-align: center; font-weight: 600; margin-right: 20px;">
                                 <p style="margin-bottom: 3px;" th:text="${followsSize}"></p>
                                 <a style="color: black; text-decoration: none;" th:href="@{/followers/{userId}(userId=${user.id})}">Followers</a>
                             </div>
@@ -280,7 +280,7 @@
                             </div>
 
 
-                            <form th:if="${loggedIn} and ${!isFollowed} and ${loggedIn.username} != ${user.username}  and ${!user.username.startsWith('deleted_user')}" th:action="@{/follow/{username}(username=${user.username})}" method="post" style="display: inline; margin-right: 20px;">
+                            <form th:if="${loggedIn} and ${isEditor} and ${!isFollowed} and ${loggedIn.username} != ${user.username}  and ${!user.username.startsWith('deleted_user')}" th:action="@{/follow/{username}(username=${user.username})}" method="post" style="display: inline; margin-right: 20px;">
                                 <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
                                 <input type="hidden" name="followedId" th:value="${user.id}" />
                                 <button type="submit" class="btn btn-outline-success">
@@ -288,7 +288,7 @@
                                 </button>
                             </form>
 
-                            <form th:if="${loggedIn} and ${isFollowed} and ${loggedIn.username} != ${user.username} and ${!user.username.startsWith('deleted_user')}" th:action="@{/unfollow/{username}(username=${user.username})}" method="post"  style="display: inline; margin-right: 20px;">
+                            <form th:if="${loggedIn} and ${isEditor} and ${isFollowed} and ${loggedIn.username} != ${user.username} and ${!user.username.startsWith('deleted_user')}" th:action="@{/unfollow/{username}(username=${user.username})}" method="post"  style="display: inline; margin-right: 20px;">
                                 <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
                                 <input type="hidden" name="followedId" th:value="${user.id}" />
                                 <button type="submit" class="btn btn-outline-success">

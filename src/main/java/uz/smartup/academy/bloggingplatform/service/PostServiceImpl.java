@@ -276,7 +276,6 @@ public class PostServiceImpl implements PostService {
         List<UserDTO> followers = userService.getFollowers(author.getId());
         for(int i = 0; i < followers.size(); ++i) {
             notificationService.addNotification(followers.get(i).getId(), author.getId(), 0, author.getUsername() + " added new post", "/posts/author/" + author.getUsername(), NotificationTypes.N);
-
         }
         dao.update(post);
     }
@@ -379,8 +378,13 @@ public class PostServiceImpl implements PostService {
         LocalDateTime now = LocalDateTime.now();
         List<Post> postsToPublish = dao.findDraftsScheduledForPublish(now, Post.Status.DRAFT);
 
+        System.out.println("-".repeat(100));
+        System.out.println("hello world");
+        System.out.println("-".repeat(100));
+
         for(int i = 0; i < postsToPublish.size(); i++) {
             switchPostDraftToPublished(postsToPublish.get(i).getId());
+            dao.deleteScheduleData(postsToPublish.get(i).getPostSchedule());
         }
     }
 
