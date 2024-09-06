@@ -1,10 +1,12 @@
 package uz.smartup.academy.bloggingplatform.mvc;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.jsoup.internal.StringUtil;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import uz.smartup.academy.bloggingplatform.dao.UserDaoImpl;
 import uz.smartup.academy.bloggingplatform.dto.*;
@@ -59,6 +61,7 @@ public class AdminPanelController {
         model.addAttribute("users",userDTOList.size());
         model.addAttribute("posts",postDtos.size());
         model.addAttribute("categories",categories);
+        model.addAttribute("tab", "viewer");
 
         return "admin_zip/admin_panel";
     }
@@ -105,7 +108,7 @@ public class AdminPanelController {
     }
 
     @GetMapping("/admin/user/search")
-    public String getUserUserName(@RequestParam(name = "search") String username, Model model){
+    public String getUserUserName(@RequestParam(name = "search") String username,Model model){
         model.addAttribute("userDTO", userService.userFindByUsername(username));
 
         List<CategoryDto> categories = categoryService.getAllCategories();
@@ -114,7 +117,7 @@ public class AdminPanelController {
     }
 
     @GetMapping("/admin/user/search/viewer")
-    public String getUserUserNameViewer(@RequestParam(name = "search") String username, Model model){
+    public String getUserUserNameViewer(@RequestParam(name = "search") String username, Model model, @RequestParam("tab") String tab){
 
         UserDTO user =  userService.getUserByUsername(getLoggedUser().getUsername());
         model.addAttribute("user",user);
@@ -123,85 +126,38 @@ public class AdminPanelController {
         List<User> userDTOS = dao.getUsersWithEditorRole();
         List<User> userDTOSs = dao.findAllByEnabledIsNull();
         List<PostDto> postDtos = postService.getAllPosts();
+        List<User> viewers = dao.getUsersWithoutEditorRole();
         List<CategoryDto> categories = categoryService.getAllCategories();
 
 
-        model.addAttribute("userEditor",userDTOS);
-        model.addAttribute("userBan",userDTOSs);
-        //model.addAttribute("userss",userss);
         model.addAttribute("users",userDTOList.size());
         model.addAttribute("posts",postDtos.size());
         model.addAttribute("categories",categories);
+        model.addAttribute("tab", tab);
 
 
         List<User> userViewer = dao.userFindByUserName(username);
 
-        model.addAttribute("userViewer", userViewer);
+        String tabResult = "user" + StringUtils.capitalize(tab);
+
+        if(tabResult.equals("userEditor")) {
+            model.addAttribute("userViewer", viewers);
+            model.addAttribute("userBan",userDTOSs);
+        } else if(tabResult.equals("userBan")) {
+            model.addAttribute("userEditor",userDTOS);
+            model.addAttribute("userViewer", viewers);
+        } else {
+            model.addAttribute("userEditor",userDTOS);
+            model.addAttribute("userBan",userDTOSs);
+        }
+
+        model.addAttribute(tabResult, userViewer);
 
         return "admin_zip/admin_panel";
     }
-
-    @GetMapping("/admin/user/search/editor")
-    public String getUserUserNameEditor(@RequestParam(name = "search") String username, Model model){
-
-        UserDTO user =  userService.getUserByUsername(getLoggedUser().getUsername());
-        model.addAttribute("user",user);
-
-        List<UserDTO> userDTOList = userService.getAllUsers();
-        //List<User> userDTOS = dao.getUsersWithEditorRole();
-        List<User> userDTOSs = dao.findAllByEnabledIsNull();
-        List<PostDto> postDtos = postService.getAllPosts();
-        List<CategoryDto> categories = categoryService.getAllCategories();
-
-        List<User> userss = dao.getUsersWithoutEditorRole();
-
-        //model.addAttribute("userEditor",userDTOS);
-        model.addAttribute("userBan",userDTOSs);
-        model.addAttribute("usersViewer",userss);
-        model.addAttribute("users",userDTOList.size());
-        model.addAttribute("posts",postDtos.size());
-        model.addAttribute("categories",categories);
-
-
-
-        model.addAttribute("userEditor", dao.userFindByUserName(username));
-
-        return "admin_zip/admin_panel";
-    }
-
-    @GetMapping("/admin/user/search/ban")
-    public String getUserUserNameBan(@RequestParam(name = "search") String username, Model model){
-
-        UserDTO user =  userService.getUserByUsername(getLoggedUser().getUsername());
-        model.addAttribute("user",user);
-
-        List<UserDTO> userDTOList = userService.getAllUsers();
-        List<User> userDTOS = dao.getUsersWithEditorRole();
-        //List<User> userDTOSs = dao.findAllByEnabledIsNull();
-        List<PostDto> postDtos = postService.getAllPosts();
-        List<CategoryDto> categories = categoryService.getAllCategories();
-
-        List<User> userss = dao.getUsersWithoutEditorRole();
-
-        model.addAttribute("userEditor",userDTOS);
-        //model.addAttribute("userDTOs",userDTOSs);
-        model.addAttribute("userViewer",userss);
-        model.addAttribute("users",userDTOList.size());
-        model.addAttribute("posts",postDtos.size());
-        model.addAttribute("categories",categories);
-
-
-
-        model.addAttribute("userBan", dao.userFindByUserName(username));
-
-        return "admin_zip/admin_panel";
-    }
-
-
 
     @GetMapping("/admin/user/{userId}/edit")
     public String editProfile(Model model, @PathVariable("userId") String  username) {
-
         UserDTO user = userService.getUserByUsername(username);
         List<CategoryDto> categories = categoryService.getAllCategories();
 
@@ -216,8 +172,6 @@ public class AdminPanelController {
     @GetMapping("/admin/user/{username}/ban")
     public String banUser(@PathVariable("username") String username, Model model) {
         UserDTO userDTO = userService.getUserByUsername(username);
-
-        //System.out.println(userDTO);
 
         userService.banUser(userDTO.getId());
 
