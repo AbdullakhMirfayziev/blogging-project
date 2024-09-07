@@ -268,9 +268,6 @@ public class PostServiceImpl implements PostService {
 
         PostSchedule postSchedule = dao.getScheduleByPostId(id);
 
-        if(postSchedule != null) {
-            dao.deleteScheduleData(postSchedule);
-        }
 //        post.setNotification(true);
         UserDTO author = userService.getUserById(post.getAuthor().getId());
         List<UserDTO> followers = userService.getFollowers(author.getId());
