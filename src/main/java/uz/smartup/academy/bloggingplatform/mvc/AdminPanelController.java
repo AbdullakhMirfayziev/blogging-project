@@ -119,12 +119,9 @@ public class AdminPanelController {
     @GetMapping("/admin/user/search/viewer")
     public String getUserUserNameViewer(@RequestParam(name = "search") String username, Model model, @RequestParam("tab") String tab){
 
-        UserDTO user =  userService.getUserByUsername(getLoggedUser().getUsername());
-        model.addAttribute("user",user);
-
         List<UserDTO> userDTOList = userService.getAllUsers();
-        List<User> userDTOS = dao.getUsersWithEditorRole();
-        List<User> userDTOSs = dao.findAllByEnabledIsNull();
+        List<User> editors = dao.getUsersWithEditorRole();
+        List<User> bans = dao.findAllByEnabledIsNull();
         List<PostDto> postDtos = postService.getAllPosts();
         List<User> viewers = dao.getUsersWithoutEditorRole();
         List<CategoryDto> categories = categoryService.getAllCategories();
@@ -136,22 +133,23 @@ public class AdminPanelController {
         model.addAttribute("tab", tab);
 
 
-        List<User> userViewer = dao.userFindByUserName(username);
-
-        String tabResult = "user" + StringUtils.capitalize(tab);
-
-        if(tabResult.equals("userEditor")) {
-            model.addAttribute("userViewer", viewers);
-            model.addAttribute("userBan",userDTOSs);
-        } else if(tabResult.equals("userBan")) {
-            model.addAttribute("userEditor",userDTOS);
-            model.addAttribute("userViewer", viewers);
+        if(tab.equals("editor")) {
+            editors = editors.stream()
+                                .filter(editor -> editor.getUsername().contains(username))
+                                .toList();
+        } else if(tab.equals("ban")) {
+            bans = bans.stream()
+                    .filter(ban -> ban.getUsername().contains(username))
+                    .toList();
         } else {
-            model.addAttribute("userEditor",userDTOS);
-            model.addAttribute("userBan",userDTOSs);
+            viewers = viewers.stream()
+                    .filter(viewer -> viewer.getUsername().contains(username))
+                    .toList();
         }
 
-        model.addAttribute(tabResult, userViewer);
+        model.addAttribute("userViewer",viewers);
+        model.addAttribute("userEditor",editors);
+        model.addAttribute("userBan",bans);
 
         return "admin_zip/admin_panel";
     }
