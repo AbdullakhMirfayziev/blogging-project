@@ -193,8 +193,27 @@
 <script>
     const tagInput = document.getElementById('tagInput');
     const tagsContainer = document.getElementById('tagsContainer');
-    const publishButton = document.getElementById('publishButton');
     const saveDraftButton = document.getElementById('saveDraftButton');
+
+    const scheduleCheckbox = document.getElementById('scheduleCheckbox');
+    const scheduleTimeInput = document.getElementById('scheduleTime');
+    const publishButton = document.getElementById('publishButton');
+
+    scheduleTimeInput.disabled = true;
+
+    scheduleCheckbox.addEventListener('change', function() {
+        scheduleTimeInput.disabled = !this.checked;
+
+        publishButton.disabled = this.checked;
+
+        if (this.checked) {
+            publishButton.style.backgroundColor = 'rgb(39, 97, 68)';
+            publishButton.style.cursor = 'not-allowed';
+        } else {
+            publishButton.style.backgroundColor = ''; // Reset to default
+            publishButton.style.cursor = 'pointer';
+        }
+    });
 
     document.getElementById('scheduleCheckbox').addEventListener('change', function() {
         const publishButton = document.getElementById('publishButton');
@@ -206,6 +225,8 @@
             publishButton.disabled = false;
         }
     });
+
+
 
 
     tagInput.addEventListener('keydown', function(event) {

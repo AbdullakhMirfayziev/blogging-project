@@ -250,8 +250,6 @@ public class PostServiceImpl implements PostService {
 
         post.addComments(comment);
         if(!Objects.equals(user.getUsername(), post.getAuthor().getUsername())) {
-//            mailSenderServiceImpl.sendPostCommentEmail(post.getAuthor().getEmail(), post.getAuthor().getUsername(), post.getId(), comment.getAuthor().getUsername());
-//            comment.setNewNotification(true);
             notificationService.addNotification(post.getAuthor().getId(), comment.getAuthor().getId(), postId,user.getUsername() + " commented your post", "/posts/" + post.getId(), NotificationTypes.C);
         }
         dao.save(post);
@@ -268,7 +266,6 @@ public class PostServiceImpl implements PostService {
 
         PostSchedule postSchedule = dao.getScheduleByPostId(id);
 
-//        post.setNotification(true);
         UserDTO author = userService.getUserById(post.getAuthor().getId());
         List<UserDTO> followers = userService.getFollowers(author.getId());
         for(int i = 0; i < followers.size(); ++i) {
@@ -374,10 +371,6 @@ public class PostServiceImpl implements PostService {
     public void autoPublishPosts() {
         LocalDateTime now = LocalDateTime.now();
         List<Post> postsToPublish = dao.findDraftsScheduledForPublish(now, Post.Status.DRAFT);
-
-        System.out.println("-".repeat(100));
-        System.out.println("hello world");
-        System.out.println("-".repeat(100));
 
         for(int i = 0; i < postsToPublish.size(); i++) {
             switchPostDraftToPublished(postsToPublish.get(i).getId());

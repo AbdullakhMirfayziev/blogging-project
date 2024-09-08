@@ -372,8 +372,6 @@ public class UserServiceImpl implements UserService {
     @Scheduled(fixedRate = 3600000)
     public void unbanUsers() {
 
-//        System.out.println("ishladi0000000000000000000000000000000000000");
-
         List<User> bannedUsers = userDao.findAllByEnabledIsNull();
         LocalDate now = LocalDate.now();
         for (int i = 0; i < bannedUsers.size(); i++) {

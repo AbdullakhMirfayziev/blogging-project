@@ -126,12 +126,14 @@ public class AdminPanelController {
         List<PostDto> postDtos = postService.getAllPosts();
         List<User> viewers = dao.getUsersWithoutEditorRole();
         List<CategoryDto> categories = categoryService.getAllCategories();
+        UserDTO userDTO = userService.getUserByUsername(getLoggedUser().getUsername());
 
 
         model.addAttribute("users", userDTOList.size());
         model.addAttribute("posts", postDtos.size());
         model.addAttribute("categories", categories);
         model.addAttribute("tab", tab);
+        model.addAttribute("user", userDTO);
 
 
         if (tab.equals("editor")) {

@@ -345,13 +345,13 @@
 <section th:if="${!posts.isEmpty()}" class="posts">
     <ul class="nav nav-tabs nav-justified nav-bordered mb-3">
         <li class="nav-item">
-            <a href="#home-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+            <a href="#home-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
                 <i class="mdi mdi-home-variant d-md-none d-block"></i>
                 <span class="d-md-block" th:text="'All posts ' + '(' + ${posts.size()} + ')'"></span>
             </a>
         </li>
         <li class="nav-item">
-            <a href="#profile-b2" data-bs-toggle="tab" aria-expanded="true" class="nav-link active">
+            <a href="#profile-b2" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
                 <i class="mdi mdi-account-circle d-md-none d-block"></i>
                 <span class="d-md-block" th:text="'Published posts ' + '(' + ${publishedPosts.size()} + ')'"></span>
             </a>
@@ -365,7 +365,7 @@
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane p" id="home-b2">
+        <div class="tab-pane p active" id="home-b2">
 
             <div class="post-container">
                 <div th:each="post : ${posts}" class="post">
@@ -424,7 +424,7 @@
             </div>
         </div>
 
-        <div class="tab-pane p show active" id="profile-b2">
+        <div class="tab-pane p show" id="profile-b2">
 
             <div class="post-container">
                 <div th:each="post : ${publishedPosts}" class="post">
