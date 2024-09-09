@@ -60,24 +60,18 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void update(PostDto postDto) {
-        Post post = dtoUtil.toEntity(postDto);
+        Post post = dao.getById(postDto.getId());
+
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
+//        post.setStatus(postDto.getStatus());
 
         post.setComments(dao.getPostComments(post.getId()));
         post.setAuthor(dao.getAuthorById(post.getId()));
-        post.setStatus(dao.findPostStatusById(post.getId()));
         post.setCreatedAt(dao.getById(post.getId()).getCreatedAt());
 
         PostSchedule postSchedule = dao.getScheduleByPostId(post.getId());
 
-
-
-        List<CategoryDto> categories = categoryService.getCategoriesByPostId(post.getId());
-
-        if (categories != null) {
-            for (CategoryDto category : categories) {
-                removeCategoryFromPost(post.getId(), category.getId());
-            }
-        }
 
         List<Category> categories1 = new ArrayList<>();
         List<String> tagTitle = separateString(postDto.getTagsString());
@@ -104,17 +98,16 @@ public class PostServiceImpl implements PostService {
             }
         }
 
+        post.getCategories().clear();
         if (postDto.getCategories() != null) {
             for (int categoryId : postDto.getCategories()) {
-                userService.addExistCategoriesToPost(categoryId, post.getId());
+                Category category = categoryDao.findCategoryById(categoryId);
+                post.addCategories(category);
             }
         }
 
         if(!tags.isEmpty())
             post.setTags(tags);
-
-        if(!categories1.isEmpty())
-            post.setCategories(categories1);
 
 
         if(postDto.getScheduleTime() != null) {

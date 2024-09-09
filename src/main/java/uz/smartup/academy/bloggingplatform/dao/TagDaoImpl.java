@@ -50,7 +50,9 @@ public class TagDaoImpl implements TagDao {
 
             query.setParameter("title", title);
 
-            return query.getSingleResult();
+            List<Tag> results = query.getResultList();
+
+            return results.getFirst();
         } catch (NoResultException e) {
             return null;
         }

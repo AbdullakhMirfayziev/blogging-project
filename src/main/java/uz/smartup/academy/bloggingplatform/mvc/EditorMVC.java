@@ -279,8 +279,8 @@ public class EditorMVC {
 
 
         postService.update(postDto);
+        attributes.addAttribute("username", username);
 
-        return "redirect:/editor/" + username + "/posts";
-
+        return "redirect:/editor/{username}/posts";
     }
 }
