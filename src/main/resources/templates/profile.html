@@ -96,20 +96,6 @@
         position: relative;
     }
 
-    .about-list label:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 11px;
-        width: 1px;
-        height: 12px;
-        background: rgba(0, 166, 81, 1);
-        transform: rotate(15deg);
-        margin: auto;
-        opacity: 0.5;
-    }
-
     .about-list p {
         margin: 0;
         font-size: 15px;
@@ -364,7 +350,7 @@
                     <div class="row about-list">
                         <div class="col-md-6">
                             <div class="media">
-                                <label>First name </label>
+                                <label>First name</label>
                                 <p th:text="${user.first_name}"></p>
                             </div>
                             <div class="media">
@@ -375,7 +361,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="media">
-                                <label>Username </label>
+                                <label>Username</label>
                                 <p th:text="${user.username}"></p>
                             </div>
                             <div class="media">

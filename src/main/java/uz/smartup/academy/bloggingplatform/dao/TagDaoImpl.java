@@ -52,7 +52,7 @@ public class TagDaoImpl implements TagDao {
 
             List<Tag> results = query.getResultList();
 
-            return results.getFirst();
+            return results.isEmpty() ? null : results.getFirst();
         } catch (NoResultException e) {
             return null;
         }
