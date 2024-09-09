@@ -36,8 +36,8 @@ public class EmailVerificationService {
                 String token = verificationToken.getToken();
                 Context context = new Context();
                 context.setVariable("title", "Verify your Email!");
-//                context.setVariable("link", ServletUriComponentsBuilder.fromCurrentContextPath().path("email-confirmation?token=").toUriString() + token);
-                context.setVariable("link", "http://localhost:8080/email-confirmation?token=" + token);
+                context.setVariable("link", ServletUriComponentsBuilder.fromCurrentContextPath().path("email-confirmation").toUriString() + "?token=" + token);
+//                context.setVariable("link", "http://localhost:8080/email-confirmation?token=" + token);
 
                 String body = templateEngine.process("emailConfirmation", context);
 

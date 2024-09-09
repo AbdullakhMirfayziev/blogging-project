@@ -101,23 +101,23 @@ public class NotificationService {
     @Transactional
     public void sendPostNotificationsToFollowers() {
         List<Notification> posts = postDao.findPostsNeedingNotification();
-        for(Notification post : posts){
-            User author = post.getRecipient();
-            List<User> followers = author.getFollowers().stream().toList();
-            for(User follower : followers){
-                mailSenderService.sendPostNotificationToFollowers(
-                        follower.getEmail(),
-                        follower.getUsername(),
-                        post.getId(),
-                        author.getUsername()
-                );
-            }
+        for(Notification post : posts) {
+            User author = post.getAuthor();
+
+            mailSenderService.sendPostNotificationToFollowers(
+                    post.getRecipient().getEmail(),
+                    post.getRecipient().getUsername(),
+                    post.getId(),
+                    author.getUsername()
+            );
+//            List<User> followers = author.getFollowers().stream().toList();
+//            for(User follower : followers) {
+//            }
             post.setNotify(false);
             notificationRepository.save(post);
 //            postDao.save(post);
 
         }
-
     }
 
     public List<Notification> getUnreadNotifications(int userId) {

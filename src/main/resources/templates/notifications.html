@@ -287,7 +287,6 @@
         <button th:text="${size} + ' / page'" type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="height: min-content; background-color: rgb(0, 166, 81); border: none;">
         </button>
         <ul class="dropdown-menu" >
-            <li th:if="${notificationSize >= 3}"><a class="dropdown-item" th:href="@{'/notifications?page=' + ${notificationsPage.number + 1} + '&size=3'}">3 / page</a></li>
             <li th:if="${notificationSize >= 5}"><a class="dropdown-item" th:href="@{'/notifications?page=' + ${notificationsPage.number + 1} + '&size=5'}">5 / page</a></li>
             <li th:if="${notificationSize >= 10}"><a class="dropdown-item" th:href="@{'/notifications?page=' + ${notificationsPage.number + 1} + '&size=10'}">10 / page</a></li>
             <li th:if="${notificationSize >= 15}"><a class="dropdown-item" th:href="@{'/notifications?page=' + ${notificationsPage.number + 1} + '&size=15'}">15 / page</a></li>
