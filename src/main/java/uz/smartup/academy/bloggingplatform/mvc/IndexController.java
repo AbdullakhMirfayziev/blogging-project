@@ -506,7 +506,7 @@ public class IndexController {
         int notificationSize = notificationService.getAllNotification(user.getId()).size();
 
         if (notificationSize <= page * (size - 1)) {
-            page = notificationSize / size + 1;
+            page = notificationSize / size + (notificationSize % size == 0 ? 0 : 1);
         }
 
         Page<Notification> notificationsPage = notificationService.getAllNotification(user.getId(), size, page - 1);

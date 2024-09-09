@@ -84,8 +84,8 @@ public class MailSenderServiceImpl implements MailSenderService {
     }
 
     private String generateResetLink(String token) {
-        String endpointUrl = ServletUriComponentsBuilder.fromCurrentContextPath().path("/password/reset").toUriString();
-//        String endpointUrl = "http://localhost:8080/password/reset";
+//        String endpointUrl = ServletUriComponentsBuilder.fromCurrentContextPath().path("/password/reset").toUriString();
+        String endpointUrl = "http://localhost:8080/password/reset";
         return endpointUrl + "/" + token;
     }
 
