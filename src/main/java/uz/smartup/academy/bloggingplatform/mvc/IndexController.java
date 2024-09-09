@@ -3,6 +3,7 @@ package uz.smartup.academy.bloggingplatform.mvc;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -538,6 +539,12 @@ public class IndexController {
     public String markAsRead(@PathVariable int id) {
         notificationService.markAsRead(id);
         return "redirect:/notifications";
+    }
+
+    @PostMapping("/notification/markAsRead/{id}")
+    public ResponseEntity<?> markAsReadNotification(@PathVariable int id) {
+        notificationService.markAsRead(id);
+        return ResponseEntity.ok().build();
     }
 
 }
