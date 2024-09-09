@@ -9,12 +9,15 @@ public class TagDto {
     private int id;
     private String title;
 
-    public TagDto(){}
+    public TagDto() {
+    }
+
     public TagDto(TagDto.Builder builder) {
         this.id = builder.id;
         this.title = builder.title;
     }
-    public static class Builder{
+
+    public static class Builder {
         private int id;
         private String title;
 
@@ -27,6 +30,7 @@ public class TagDto {
             this.title = title;
             return this;
         }
+
         public TagDto build() {
             return new TagDto(this);
         }

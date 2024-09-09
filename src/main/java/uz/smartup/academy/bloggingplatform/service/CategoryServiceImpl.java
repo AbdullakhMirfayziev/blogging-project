@@ -18,16 +18,16 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryDtoUtil categoryDtoUtil;
     private final CategoryDao categoryDao;
 
-    public CategoryServiceImpl(CategoryDtoUtil categoryDtoUtil, CategoryDao categoryDao,PostDao postDao) {
+    public CategoryServiceImpl(CategoryDtoUtil categoryDtoUtil, CategoryDao categoryDao, PostDao postDao) {
         this.categoryDtoUtil = categoryDtoUtil;
         this.categoryDao = categoryDao;
-        this.postDao=postDao;
+        this.postDao = postDao;
     }
 
     @Transactional
     @Override
     public void createCategory(CategoryDto categoryDto) {
-        Category category=categoryDtoUtil.toEntity(categoryDto);
+        Category category = categoryDtoUtil.toEntity(categoryDto);
         categoryDao.save(category);
 
     }

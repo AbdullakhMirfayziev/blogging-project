@@ -18,11 +18,12 @@ import uz.smartup.academy.bloggingplatform.repository.PasswordResetTokenReposito
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
 @Service
 public class MailSenderServiceImpl implements MailSenderService {
 
     private final JavaMailSender mailSender;
-//    private final UserService userService;
+    //    private final UserService userService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private static final int EXPIRATION_TIME_IN_MINUTES = 60 * 24;
 
@@ -65,9 +66,6 @@ public class MailSenderServiceImpl implements MailSenderService {
     }
 
 
-
-
-
     @Override
     @Transactional
     public String createPasswordResetTokenForUser(User user) {
@@ -86,8 +84,8 @@ public class MailSenderServiceImpl implements MailSenderService {
     }
 
     private String generateResetLink(String token) {
-        String endpointUrl = ServletUriComponentsBuilder.fromCurrentContextPath().path("/password/reset").toUriString();
-//        String endpointUrl = "http://localhost:8080/password/reset";
+//        String endpointUrl = ServletUriComponentsBuilder.fromCurrentContextPath().path("/password/reset").toUriString();
+        String endpointUrl = "http://localhost:8080/password/reset";
         return endpointUrl + "/" + token;
     }
 
@@ -104,7 +102,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
     @Override
     @Transactional
-    public void save(User user, String token){
+    public void save(User user, String token) {
         PasswordResetToken verificationToken = new PasswordResetToken(token, user);
         verificationToken.setExpiryDate(calculateExpiryDate());
         passwordResetTokenRepository.save(verificationToken);
@@ -130,18 +128,18 @@ public class MailSenderServiceImpl implements MailSenderService {
         helper.setText(text);
         helper.addAttachment(fileName, inputStreamSource);
 
-        if(!to.contains("deleted_user")) mailSender.send(message);
+        if (!to.contains("deleted_user")) mailSender.send(message);
 
     }
 
     @Override
     public void sendEmailNotification(User recipient, String message) {
-        SimpleMailMessage  simpleMailMessage = new SimpleMailMessage();
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(recipient.getEmail());
         simpleMailMessage.setSubject("New notification");
         simpleMailMessage.setText(message);
 
-        if(!recipient.getUsername().contains("deleted_user")) mailSender.send(simpleMailMessage);
+        if (!recipient.getUsername().contains("deleted_user")) mailSender.send(simpleMailMessage);
     }
 
     @Override
@@ -160,12 +158,13 @@ public class MailSenderServiceImpl implements MailSenderService {
             helper.setSubject(subject);
             helper.setText(content, true);
 
-            if(!username.contains("deleted_user")) mailSender.send(message);
+            if (!username.contains("deleted_user")) mailSender.send(message);
 
         } catch (MessagingException e) {
             e.printStackTrace();
         }
     }
+
     public void sendPostCommentEmail(String toEmail, String username, int postId, String commenter) {
 //        String postUrl = ServletUriComponentsBuilder.fromCurrentContextPath().path("/posts/{id}").buildAndExpand(postId).toUriString();
         String postUrl = "http://localhost:8080/posts/" + postId;
@@ -181,7 +180,7 @@ public class MailSenderServiceImpl implements MailSenderService {
             helper.setSubject(subject);
             helper.setText(content, true);
 
-            if(!username.contains("deleted_user"))  mailSender.send(message);
+            if (!username.contains("deleted_user")) mailSender.send(message);
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -204,19 +203,16 @@ public class MailSenderServiceImpl implements MailSenderService {
             helper.setSubject(subject);
             helper.setText(content, true);
 
-           if(!toEmail.contains("deleted_user")) mailSender.send(message);
+            if (!toEmail.contains("deleted_user")) mailSender.send(message);
 
-           System.out.println("-".repeat(100));
-           System.out.println("message");
-           System.out.println("-".repeat(100));
+            System.out.println("-".repeat(100));
+            System.out.println("message");
+            System.out.println("-".repeat(100));
 
         } catch (MessagingException e) {
             e.printStackTrace();
         }
     }
-
-
-
 
 
 }

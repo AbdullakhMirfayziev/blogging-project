@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements CommentService {
-   private final CommentDtoUtil dtoUtil;
-   private final CommentDao commentDao;
-   private final UserDao userDao;
-   private final PostDao postDao;
-   private final NotificationService notificationService;
+    private final CommentDtoUtil dtoUtil;
+    private final CommentDao commentDao;
+    private final UserDao userDao;
+    private final PostDao postDao;
+    private final NotificationService notificationService;
     private final MailSenderServiceImpl mailSenderServiceImpl;
 
     public CommentServiceImpl(CommentDtoUtil dtoUtil, CommentDao commentDao, UserDao userDao, PostDao postDao, NotificationService notificationService, MailSenderServiceImpl mailSenderServiceImpl) {
@@ -61,10 +61,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDTO> getAllComments() {
         List<Comment> comments = commentDao.getComments();
-            return dtoUtil.toDTOs(comments).stream()
-                    .sorted((c1, c2) -> c2.getCreatedAt().compareTo(c1.getCreatedAt()))
-                    .collect(Collectors.toList());
+        return dtoUtil.toDTOs(comments).stream()
+                .sorted((c1, c2) -> c2.getCreatedAt().compareTo(c1.getCreatedAt()))
+                .collect(Collectors.toList());
     }
+
     @Transactional
     @Override
     public void deleteComment(int id) {

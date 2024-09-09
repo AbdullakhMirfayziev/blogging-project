@@ -16,7 +16,9 @@ public interface CommentDao {
     Comment getById(int id);
 
     Comment getComment(int id);
+
     List<Comment> getComments();
+
     List<Comment> getCommentsByPostId(int id);
 
     List<Notification> findNewComments();

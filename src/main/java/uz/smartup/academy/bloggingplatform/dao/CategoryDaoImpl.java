@@ -33,13 +33,13 @@ public class CategoryDaoImpl implements CategoryDao {
 
     @Override
     public List<Category> getAllCategories() {
-        TypedQuery<Category> query = entityManager.createQuery("FROM Category",Category.class);
+        TypedQuery<Category> query = entityManager.createQuery("FROM Category", Category.class);
         return query.getResultList();
     }
 
     @Override
     public Category findCategoryById(int id) {
-        return entityManager.find(Category.class,id);
+        return entityManager.find(Category.class, id);
     }
 
     @Override

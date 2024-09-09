@@ -262,8 +262,8 @@ public class UserServiceImpl implements UserService {
 //        post.setNotification(true);
         UserDTO author = getUserById(post.getAuthor().getId());
         List<UserDTO> followers = getFollowers(author.getId());
-        for(int i = 0; i < followers.size(); ++i) {
-            notificationService.addNotification(followers.get(i).getId(), author.getId(), 0,author.getUsername() + " added new post", "/posts/author/" + author.getUsername(), NotificationTypes.N);
+        for (int i = 0; i < followers.size(); ++i) {
+            notificationService.addNotification(followers.get(i).getId(), author.getId(), 0, author.getUsername() + " added new post", "/posts/author/" + author.getUsername(), NotificationTypes.N);
         }
         postDao.save(post);
         userDao.update(user);
@@ -372,8 +372,6 @@ public class UserServiceImpl implements UserService {
     @Scheduled(fixedRate = 3600000)
     public void unbanUsers() {
 
-//        System.out.println("ishladi0000000000000000000000000000000000000");
-
         List<User> bannedUsers = userDao.findAllByEnabledIsNull();
         LocalDate now = LocalDate.now();
         for (int i = 0; i < bannedUsers.size(); i++) {
@@ -451,9 +449,9 @@ public class UserServiceImpl implements UserService {
     public void followUser(int followerId, int followedId) {
         User follower = userDao.getUserById(followerId);
         User followed = userDao.getUserById(followedId);
-        if(!followed.getUsername().contains("deleted_user")) follower.follow(followed);
+        if (!followed.getUsername().contains("deleted_user")) follower.follow(followed);
 
-        notificationService.addNotification(followedId, follower.getId(), 0, follower.getUsername() + " started following you", "/profile/" + follower   .getUsername(), NotificationTypes.F);
+        notificationService.addNotification(followedId, follower.getId(), 0, follower.getUsername() + " started following you", "/profile/" + follower.getUsername(), NotificationTypes.F);
 
         userDao.update(follower);
     }
@@ -504,8 +502,6 @@ public class UserServiceImpl implements UserService {
 //
 //        userFollowsRepository.save(userFollows);
 //    }
-
-
 
 
 }

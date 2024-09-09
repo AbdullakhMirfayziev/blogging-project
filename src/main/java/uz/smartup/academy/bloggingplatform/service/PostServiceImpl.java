@@ -1,7 +1,5 @@
 package uz.smartup.academy.bloggingplatform.service;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,11 +13,8 @@ import uz.smartup.academy.bloggingplatform.entity.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -85,7 +80,7 @@ public class PostServiceImpl implements PostService {
         }
 
         List<Category> categories1 = new ArrayList<>();
-        List<String> tagTitle = separate_string(postDto.getTagsString());
+        List<String> tagTitle = separateString(postDto.getTagsString());
 
         postDto.getCategories().forEach(categoryId -> {
             categories1.add(categoryDao.findCategoryById(categoryId));
@@ -124,7 +119,6 @@ public class PostServiceImpl implements PostService {
 
         if(postDto.getScheduleTime() != null) {
             if(postSchedule != null) {
-                System.out.println("-1".repeat(100));
                 postSchedule.setPostScheduleDate(postDto.getScheduleTime());
             }
             else {
@@ -135,7 +129,6 @@ public class PostServiceImpl implements PostService {
             }
         }else if(postSchedule != null) {
             post.setPostSchedule(postSchedule);
-            System.out.println("-3".repeat(100));
         }
 
         dao.update(post);
@@ -250,8 +243,6 @@ public class PostServiceImpl implements PostService {
 
         post.addComments(comment);
         if(!Objects.equals(user.getUsername(), post.getAuthor().getUsername())) {
-//            mailSenderServiceImpl.sendPostCommentEmail(post.getAuthor().getEmail(), post.getAuthor().getUsername(), post.getId(), comment.getAuthor().getUsername());
-//            comment.setNewNotification(true);
             notificationService.addNotification(post.getAuthor().getId(), comment.getAuthor().getId(), postId,user.getUsername() + " commented your post", "/posts/" + post.getId(), NotificationTypes.C);
         }
         dao.save(post);
@@ -268,10 +259,6 @@ public class PostServiceImpl implements PostService {
 
         PostSchedule postSchedule = dao.getScheduleByPostId(id);
 
-        if(postSchedule != null) {
-            dao.deleteScheduleData(postSchedule);
-        }
-//        post.setNotification(true);
         UserDTO author = userService.getUserById(post.getAuthor().getId());
         List<UserDTO> followers = userService.getFollowers(author.getId());
         for(int i = 0; i < followers.size(); ++i) {
@@ -318,7 +305,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<String> separate_string(String s) {
+    public List<String> separateString(String s) {
         List<String> list = new ArrayList<>();
         String  word = "";
 
@@ -331,6 +318,12 @@ public class PostServiceImpl implements PostService {
         }
 
         if(!word.isEmpty()) list.add(word);
+
+        for (int i = 0; i < list.size(); i++) {
+            if(list.get(i).charAt(0) == '#') {
+                list.set(i, list.get(i).substring(1));
+            }
+        }
 
         return list;
     }
@@ -377,10 +370,6 @@ public class PostServiceImpl implements PostService {
     public void autoPublishPosts() {
         LocalDateTime now = LocalDateTime.now();
         List<Post> postsToPublish = dao.findDraftsScheduledForPublish(now, Post.Status.DRAFT);
-
-        System.out.println("-".repeat(100));
-        System.out.println("hello world");
-        System.out.println("-".repeat(100));
 
         for(int i = 0; i < postsToPublish.size(); i++) {
             switchPostDraftToPublished(postsToPublish.get(i).getId());

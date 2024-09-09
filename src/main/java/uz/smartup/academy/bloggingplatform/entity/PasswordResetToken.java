@@ -3,6 +3,7 @@ package uz.smartup.academy.bloggingplatform.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "PasswordResetToken")
 public class PasswordResetToken {
 
-    public static final int EXPIRATION = 24 * 60 ;
+    public static final int EXPIRATION = 24 * 60;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +27,8 @@ public class PasswordResetToken {
     private LocalDateTime expiryDate;
 
 
-    public PasswordResetToken() {}
+    public PasswordResetToken() {
+    }
 
     public PasswordResetToken(String token, User user) {
         this.token = token;

@@ -13,6 +13,7 @@ import uz.smartup.academy.bloggingplatform.entity.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringJoiner;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -165,7 +166,7 @@ public class UserDaoImpl implements UserDao {
     public List<User> userFindByUserName(String username) {
         TypedQuery<User> query = entityManager.createQuery(
                 "SELECT u FROM User u WHERE u.username LIKE :username", User.class);
-        query.setParameter("username","%" + username + "%");
+        query.setParameter("username", "%" + username + "%");
         return query.getResultList();
     }
 
@@ -173,6 +174,15 @@ public class UserDaoImpl implements UserDao {
     public Page<Notification> getAllNotification(Pageable pageable, int userId) {
         String jpql = "SELECT n FROM Notification n WHERE n.recipient.id = :id";
         String countJpql = "SELECT COUNT(n) FROM Notification n WHERE n.recipient.id = :id";
+
+        if (pageable.getSort().isSorted()) {
+            jpql += " ORDER BY ";
+            StringJoiner joiner = new StringJoiner(", ");
+            pageable.getSort().forEach(order ->
+                    joiner.add("n." + order.getProperty() + " " + order.getDirection().name())
+            );
+            jpql += joiner.toString();
+        }
 
         TypedQuery<Notification> query = entityManager.createQuery(jpql, Notification.class);
         query.setParameter("id", userId);
@@ -187,8 +197,6 @@ public class UserDaoImpl implements UserDao {
 
         return new PageImpl<>(notifications, pageable, total);
     }
-
-
 
 
 }

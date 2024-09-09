@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 public interface MailSenderService {
     String sendMail(User user);
+
     String createPasswordResetTokenForUser(User user);
 
 
@@ -30,7 +31,8 @@ public interface MailSenderService {
     void sendEmailNotification(User recipient, String message);
 
     void sendPostLikedEmail(String toEmail, String username, int postId, String liker);
-   void sendPostCommentEmail(String toEmail, String username, int postId, String commenter);
+
+    void sendPostCommentEmail(String toEmail, String username, int postId, String commenter);
 
     void sendPostNotificationToFollowers(String toEmail, String username, int postId, String author);
 }

@@ -6,13 +6,18 @@
     <title>GREEN WHITE NEWS</title>
     <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+          rel="stylesheet">
 </head>
 <body>
 <style>
@@ -20,64 +25,77 @@
         color: #28531f;
         margin-top: 20px;
     }
+
     .section {
         padding: 100px 0;
         position: relative;
     }
+
     .gray-bg {
         background-color: #f5f5f5;
     }
+
     img {
         max-width: 100%;
     }
+
     img {
         vertical-align: middle;
         border-style: none;
     }
+
     .about-text h3 {
         font-size: 45px;
         font-weight: 700;
         margin: 0 0 6px;
         color: #38772d;
     }
+
     @media (max-width: 767px) {
         .about-text h3 {
             font-size: 35px;
         }
     }
+
     .about-text h6 {
         font-weight: 600;
         margin-bottom: 15px;
         color: #11cb2a;
     }
+
     @media (max-width: 767px) {
         .about-text h6 {
             font-size: 18px;
         }
     }
+
     .about-text p {
         font-size: 18px;
         max-width: 450px;
         color: #333;
     }
+
     .about-text p mark {
         font-weight: 600;
-        color: rgba(0,166,81,1);
+        color: rgba(0, 166, 81, 1);
     }
 
     .about-list {
         padding-top: 10px;
     }
+
     .about-list .media {
         padding: 5px 0;
     }
+
     .about-list label {
-        color: rgba(0,166,81,1);
+        color: rgba(0, 166, 81, 1);
         font-weight: 600;
         width: 88px;
         margin: 0;
         position: relative;
     }
+
     .about-list label:after {
         content: "";
         position: absolute;
@@ -86,11 +104,12 @@
         right: 11px;
         width: 1px;
         height: 12px;
-        background: rgba(0,166,81,1);
+        background: rgba(0, 166, 81, 1);
         transform: rotate(15deg);
         margin: auto;
         opacity: 0.5;
     }
+
     .about-list p {
         margin: 0;
         font-size: 15px;
@@ -109,19 +128,23 @@
         border-radius: 10px;
         box-shadow: 0 0 30px rgba(31, 45, 61, 0.125);
     }
+
     .about-section .counter .count-data {
         margin-top: 10px;
         margin-bottom: 10px;
     }
+
     .about-section .counter .count {
         font-weight: 700;
-        color: rgba(0,166,81,1);
+        color: rgba(0, 166, 81, 1);
         margin: 0 0 5px;
     }
+
     .about-section .counter p {
         font-weight: 600;
         margin: 0;
     }
+
     .about-avatar .image {
         height: 200px;
         border-radius: 50%;
@@ -132,6 +155,7 @@
         height: 100%;
         border-radius: 50%;
     }
+
     mark {
         background-size: 100% 3px;
         background-repeat: no-repeat;
@@ -140,23 +164,28 @@
         padding: 0;
         color: currentColor;
     }
+
     .theme-color {
-        color: rgba(0,166,81,1);
+        color: rgba(0, 166, 81, 1);
     }
+
     .dark-color {
-        color: rgba(0,166,81,1);
+        color: rgba(0, 166, 81, 1);
     }
+
     .about-avatar p {
         text-align: -moz-left;
         font-weight: bold;
         /*padding-left: 70px;*/
     }
+
     .contact .contacts li {
         list-style: none;
         margin-bottom: 10px;
         font-family: serif;
         font-size: 0.8em;
     }
+
     .faq {
         text-align: left;
         color: #7c8688;
@@ -164,7 +193,6 @@
 
 
     }
-
 
 
 </style>
@@ -180,12 +208,15 @@
         </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <div class="dropdown me-2">
-                <button class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                     Categories
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li th:each="category : ${categories}">
-                        <a class="dropdown-item text-success" th:href="@{/(size = ${size}, page = ${page}, category=${category.title})}" th:text="${category.title}"> ></a>
+                        <a class="dropdown-item text-success"
+                           th:href="@{/(size = ${size}, page = ${page}, category=${category.title})}"
+                           th:text="${category.title}"> ></a>
                     </li>
                 </ul>
             </div>
@@ -195,20 +226,28 @@
             </form>
 
             <div th:if="${loggedIn != null}" style="display: flex;">
-                <button class="open" type="button" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas" aria-controls="profileOffcanvas">
-                    <img th:src="'data:image/png;base64,' + ${loggedInPhoto}" alt="Profile Image" >
+                <button class="open" type="button" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas"
+                        aria-controls="profileOffcanvas">
+                    <img th:src="'data:image/png;base64,' + ${loggedInPhoto}" alt="Profile Image">
                 </button>
-                <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas" aria-labelledby="profileOffcanvasLabel">
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas"
+                     aria-labelledby="profileOffcanvasLabel">
                     <div class="offcanvas-header">
                         <h5 class="offcanvas-title" id="profileOffcanvasLabel">Profile Menu</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
-                        <form th:if="${loggedIn.username} != *{user.username}" th:action="@{/profile/{username}(username=${loggedIn.username})}" method="GET">
+                        <form th:action="@{/admin}" sec:authorize="hasRole('ROLE_ADMIN')" method="GET">
+                            <i class="fa-regular fa-circle-user"></i>
+                            <button class="w-100 mb-2" type="submit">Admin panel</button>
+                        </form>
+                        <form th:if="${loggedIn.username} != *{user.username}"
+                              th:action="@{/profile/{username}(username=${loggedIn.username})}" method="GET">
                             <i class="fa-regular fa-circle-user"></i>
                             <button class="w-100 mb-2" type="submit">Profile</button>
                         </form>
-                        <form th:if="${loggedIn.username} != *{user.username}" th:action="@{/profile/{username}/edit(username=${loggedIn.username})}">
+                        <form th:if="${loggedIn.username} != *{user.username}"
+                              th:action="@{/profile/{username}/edit(username=${loggedIn.username})}">
                             <i class="fa-regular fa-pen-to-square"></i>
                             <button class="w-100 mb-2" type="submit">Edit Profile</button>
                         </form>
@@ -219,7 +258,8 @@
                             <button class="w-100 mb-2">Your Posts</button>
                         </form>
 
-                        <form th:action="@{/editor/{username}/posts/new(username=${loggedIn.username})}" method="GET" sec:authorize="hasRole('ROLE_EDITOR')">
+                        <form th:action="@{/editor/{username}/posts/new(username=${loggedIn.username})}" method="GET"
+                              sec:authorize="hasRole('ROLE_EDITOR')">
                             <i class="fa-regular fa-square-plus"></i>
                             <button type="submit" class="w-100 mb-2">Create New Post</button>
                         </form>
@@ -261,36 +301,44 @@
                 <div class="about-text go-to">
                     <div>
                         <h3 class="dark-color" style="font-size: 30px">About Me</h3>
-                        <h6 class="theme-color lead" style="margin-bottom: 20px" th:text="${user.first_name} + ' ' + ${user.last_name}"> </h6>
+                        <h6 class="theme-color lead" style="margin-bottom: 20px"
+                            th:text="${user.first_name} + ' ' + ${user.last_name}"></h6>
 
                         <div style="display: flex; justify-content: start; align-items: center; margin-bottom: 30px">
-                            <div th:if="${isEditor}" style="margin-right: 20px; text-align: center; font-weight: 600;">
+                            <div style="margin-right: 20px; text-align: center; font-weight: 600;">
                                 <p style="margin-bottom: 3px;" th:text="${postsSize}"></p>
-                                <a style="text-decoration: none; color: black" th:href="@{/posts/author/{username}(username=${user.username})}">Posts</a>
+                                <a style="text-decoration: none; color: black"
+                                   th:href="@{/posts/author/{username}(username=${user.username})}">Posts</a>
                             </div>
 
-                            <div th:if="${isEditor}" style="text-align: center; font-weight: 600; margin-right: 20px;">
+                            <div style="text-align: center; font-weight: 600; margin-right: 20px;">
                                 <p style="margin-bottom: 3px;" th:text="${followsSize}"></p>
-                                <a style="color: black; text-decoration: none;" th:href="@{/followers/{userId}(userId=${user.id})}">Followers</a>
+                                <a style="color: black; text-decoration: none;"
+                                   th:href="@{/followers/{userId}(userId=${user.id})}">Followers</a>
                             </div>
 
                             <div style="margin-right: 20px; text-align: center; font-weight: 600;">
                                 <p style="margin-bottom: 3px;" th:text="${followingsSize}"></p>
-                                <a style="text-decoration: none; color: black" th:href="@{/following/{userId}(userId=${user.id})}">Following</a>
+                                <a style="text-decoration: none; color: black"
+                                   th:href="@{/following/{userId}(userId=${user.id})}">Following</a>
                             </div>
 
 
-                            <form th:if="${loggedIn} and ${isEditor} and ${!isFollowed} and ${loggedIn.username} != ${user.username}  and ${!user.username.startsWith('deleted_user')}" th:action="@{/follow/{username}(username=${user.username})}" method="post" style="display: inline; margin-right: 20px;">
-                                <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
-                                <input type="hidden" name="followedId" th:value="${user.id}" />
+                            <form th:if="${loggedIn} and ${!isFollowed} and ${loggedIn.username} != ${user.username}  and ${!user.username.startsWith('deleted_user')}"
+                                  th:action="@{/follow/{username}(username=${user.username})}" method="post"
+                                  style="display: inline; margin-right: 20px;">
+                                <input type="hidden" name="followerId" th:value="${loggedInUser.id}"/>
+                                <input type="hidden" name="followedId" th:value="${user.id}"/>
                                 <button type="submit" class="btn btn-outline-success">
                                     Follow
                                 </button>
                             </form>
 
-                            <form th:if="${loggedIn} and ${isEditor} and ${isFollowed} and ${loggedIn.username} != ${user.username} and ${!user.username.startsWith('deleted_user')}" th:action="@{/unfollow/{username}(username=${user.username})}" method="post"  style="display: inline; margin-right: 20px;">
-                                <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
-                                <input type="hidden" name="followedId" th:value="${user.id}" />
+                            <form th:if="${loggedIn} and ${isFollowed} and ${loggedIn.username} != ${user.username} and ${!user.username.startsWith('deleted_user')}"
+                                  th:action="@{/unfollow/{username}(username=${user.username})}" method="post"
+                                  style="display: inline; margin-right: 20px;">
+                                <input type="hidden" name="followerId" th:value="${loggedInUser.id}"/>
+                                <input type="hidden" name="followedId" th:value="${user.id}"/>
                                 <button type="submit" class="btn btn-outline-success">
                                     Unfollow
                                 </button>
@@ -299,12 +347,11 @@
                     </div>
 
 
-
                     <p th:text="${user.bio}" style="margin-bottom: 0"></p>
                     <div class="row about-list">
                         <div class="col-md-6">
                             <div class="media">
-                                <label>First name  </label>
+                                <label>First name </label>
                                 <p th:text="${user.first_name}"></p>
                             </div>
                             <div class="media">
@@ -315,7 +362,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="media">
-                                <label>Username  </label>
+                                <label>Username </label>
                                 <p th:text="${user.username}"></p>
                             </div>
                             <div class="media">
@@ -324,19 +371,20 @@
                             </div>
 
                         </div>
-                      <div style="justify-content: space-between; display: inline-flex"  >
-                          <form th:if="${loggedIn != null and loggedIn.username == user.username}" th:action="@{/profile/{username}/edit(username=${user.username})}" class="edit mt-3">
-                              <button class="btn btn-success">Edit profile</button>
-                          </form>
+                        <div style="justify-content: space-between; display: inline-flex">
+                            <form th:if="${loggedIn != null and loggedIn.username == user.username}"
+                                  th:action="@{/profile/{username}/edit(username=${user.username})}" class="edit mt-3">
+                                <button class="btn btn-success">Edit profile</button>
+                            </form>
 
-                          <form th:if="${loggedIn != null and loggedIn.username == user.username}"
-                                th:action="@{/users/{username}/delete(username=${user.username})}"
-                                class="edit mt-3"
-                                method="post"
-                                onsubmit="return confirm('Are you sure you want to delete your profile? This action cannot be undone.');">
-                              <button type="submit" class="btn btn-outline-danger">Delete profile</button>
-                          </form>
-                      </div>
+                            <form th:if="${loggedIn != null and loggedIn.username == user.username}"
+                                  th:action="@{/users/{username}/delete(username=${user.username})}"
+                                  class="edit mt-3"
+                                  method="post"
+                                  onsubmit="return confirm('Are you sure you want to delete your profile? This action cannot be undone.');">
+                                <button type="submit" class="btn btn-outline-danger">Delete profile</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -345,19 +393,24 @@
             <div class="col-lg-6">
                 <div class="about-avatar">
                     <div class="image">
-                        <img th:src="'data:image/png;base64,' + ${photo}" alt="Profile Image" style="width: 100%; max-width: 200px; margin-bottom: 10px">
+                        <img th:src="'data:image/png;base64,' + ${photo}" alt="Profile Image"
+                             style="width: 100%; max-width: 200px; margin-bottom: 10px">
                     </div>
                     <p th:text="'🗓️ With us since: ' + ${user.registered}"></p>
-                    <form th:if="${loggedIn != null and loggedIn.username == user.username}" th:action="@{{username}/uploadPhoto(username=${user.username})}" class="upload" method="POST" enctype="multipart/form-data">
+                    <form th:if="${loggedIn != null and loggedIn.username == user.username}"
+                          th:action="@{{username}/uploadPhoto(username=${user.username})}" class="upload" method="POST"
+                          enctype="multipart/form-data">
                         <input type="hidden" name="_method" value="put">
                         <h5 class="text-success">Upload photo: </h5>
                         <div class="col-sm-6" style="display: flex; align-items: center;">
-                            <input class="form-control me-2" type="file" id="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" name="file" >
+                            <input class="form-control me-2" type="file" id="file"
+                                   accept=".jpg,.jpeg,.png,image/jpeg,image/png" name="file">
                             <input type="submit" class="btn btn-success" value="Upload">
                         </div>
                     </form>
 
-                    <form th:if="${loggedIn != null and loggedIn.username == user.username}" th:action="@{/deletePhoto/{userId}(userId=${user.id})}" method="POST" style="display:inline;">
+                    <form th:if="${loggedIn != null and loggedIn.username == user.username}"
+                          th:action="@{/deletePhoto/{userId}(userId=${user.id})}" method="POST" style="display:inline;">
                         <input type="hidden" name="_method" value="put">
                         <button type="submit" class="btn btn-danger mt-2">Delete Current Photo</button>
                     </form>
@@ -366,9 +419,8 @@
         </div>
 
 
-
     </div>
-<!--    <button type="submit" class="btn btn-danger" style="right: 20px; bottom: 140px;"  >Delete account</button>-->
+    <!--    <button type="submit" class="btn btn-danger" style="right: 20px; bottom: 140px;"  >Delete account</button>-->
 </section>
 
 <section id="Contact" class="mt-5">
@@ -393,7 +445,7 @@
         </div>
     </div>
     <div class="line"></div>
-    <div class="faq" >
+    <div class="faq">
         <p><i class="bi bi-c-circle"></i> LLC Green White Solutions. All rights reserved 2024</p>
     </div>
 </section>
@@ -415,7 +467,9 @@
 
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 
 </body>
 </html>

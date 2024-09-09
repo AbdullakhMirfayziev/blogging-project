@@ -12,6 +12,7 @@ import uz.smartup.academy.bloggingplatform.entity.Like;
 import uz.smartup.academy.bloggingplatform.entity.NotificationTypes;
 import uz.smartup.academy.bloggingplatform.entity.Post;
 import uz.smartup.academy.bloggingplatform.entity.User;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -52,15 +53,14 @@ public class LikeServiceImpl implements LikeService {
 
         if (like1 != null) {
             likeDAO.delete(like1);
-        }
-        else {
+        } else {
             Like like = new Like();
             like.setAuthor(user);
             like.setPost(post);
             likeDAO.save(like);
-            if(!Objects.equals(user.getUsername(), like.getPost().getAuthor().getUsername())) {
+            if (!Objects.equals(user.getUsername(), like.getPost().getAuthor().getUsername())) {
 //                like.setNewNotification(true);
-                notificationService.addNotification(post.getAuthor().getId(), like.getAuthor().getId(), like.getPost().getId(),user.getUsername() + " liked your post", "/posts/" + postId, NotificationTypes.L);
+                notificationService.addNotification(post.getAuthor().getId(), like.getAuthor().getId(), like.getPost().getId(), user.getUsername() + " liked your post", "/posts/" + postId, NotificationTypes.L);
             }
         }
         return true;

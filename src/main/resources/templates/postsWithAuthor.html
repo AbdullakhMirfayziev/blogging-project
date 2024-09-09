@@ -59,6 +59,15 @@
             outline: none;
             box-shadow: none;
         }
+
+        .post {
+            border: 4px solid transparent;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .post:hover {
+            box-shadow: 0 0 15px 5px rgba(92, 92, 92, 0.7);
+        }
     </style>
 </head>
 <body th:data-logged-in="${loggedIn != null}">
@@ -199,9 +208,9 @@
                     </form>
                 </div>
                 <div th:if="${loggedIn==null}">
-                    <form action="" method="post" class="like-form">
+                    <form action="#" method="post" class="like-form me-2">
                         <button type="submit" class="btn btn-link p-0 like-btn">
-                            <i class="fa-regular fa-thumbs-up text-dark like-icon"></i>
+                            <i class="bi bi-heart like-icon" style="color: black"></i>
                         </button>
                         <input type="hidden" name="postId" th:value="${post.id}">
                     </form>

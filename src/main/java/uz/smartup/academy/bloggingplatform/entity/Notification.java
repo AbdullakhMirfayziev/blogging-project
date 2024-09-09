@@ -31,7 +31,7 @@ public class Notification {
     private String message;
 
     @Column(name = "`read`")
-    private Boolean  read;
+    private Boolean read;
 
     @Column(name = "redirect_url")
     private String redirectUrl;

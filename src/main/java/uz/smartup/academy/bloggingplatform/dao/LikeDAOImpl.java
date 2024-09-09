@@ -75,11 +75,11 @@ public class LikeDAOImpl implements LikeDAO {
         return query.getResultList();
     }
 
-        @Override
-        public List<Notification> findNewLikes() {
-            TypedQuery<Notification> query = entityManager.createQuery("SELECT l FROM Notification l WHERE l.notify = true AND l.type='L'", Notification.class);
-            return query.getResultList();
-        }
+    @Override
+    public List<Notification> findNewLikes() {
+        TypedQuery<Notification> query = entityManager.createQuery("SELECT l FROM Notification l WHERE l.notify = true AND l.type='L'", Notification.class);
+        return query.getResultList();
+    }
 
 
 }

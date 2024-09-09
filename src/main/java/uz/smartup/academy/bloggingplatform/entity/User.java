@@ -41,7 +41,7 @@ public class User {
     private LocalDate registered;
 
     @Column(name = "enabled")
-    private String enabled ;
+    private String enabled;
 
     @Column(name = "password", length = 100)
     private String password;
@@ -60,7 +60,7 @@ public class User {
     @ManyToMany(mappedBy = "following", fetch = FetchType.LAZY)
     private Set<User> followers;
 
-    @OneToMany(  cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "username", referencedColumnName = "username", updatable = false)
     private List<Role> roles;
 
@@ -95,18 +95,19 @@ public class User {
         following.remove(userToUnfollow);
     }
 
-    public void addPostToAuthor(Post post){
-        if(posts == null) posts = new ArrayList<>();
+    public void addPostToAuthor(Post post) {
+        if (posts == null) posts = new ArrayList<>();
         posts.add(post);
         post.setAuthor(this);
     }
-    public  void removeAuthorsPost(Post post){
-        if(posts != null) posts.remove(post);
+
+    public void removeAuthorsPost(Post post) {
+        if (posts != null) posts.remove(post);
         post.setAuthor(null);
     }
 
     public void addRole(Role role) {
-        if(roles.isEmpty()) {
+        if (roles.isEmpty()) {
             roles = new ArrayList<>();
         }
 
@@ -114,7 +115,7 @@ public class User {
     }
 
     public void removeRole(Role role) {
-        if(!roles.isEmpty())
+        if (!roles.isEmpty())
             roles.remove(role);
     }
 }

@@ -9,12 +9,15 @@ public class CategoryDto {
     private int id;
     private String title;
 
-    public CategoryDto(){}
+    public CategoryDto() {
+    }
+
     public CategoryDto(Builder builder) {
         this.id = builder.id;
         this.title = builder.title;
     }
-    public static class Builder{
+
+    public static class Builder {
         private int id;
         private String title;
 
@@ -27,6 +30,7 @@ public class CategoryDto {
             this.title = title;
             return this;
         }
+
         public CategoryDto build() {
             return new CategoryDto(this);
         }

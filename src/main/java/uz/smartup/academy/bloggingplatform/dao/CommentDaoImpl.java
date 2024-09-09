@@ -9,7 +9,7 @@ import uz.smartup.academy.bloggingplatform.entity.Notification;
 import java.util.List;
 
 @Repository
-public class CommentDaoImpl implements CommentDao{
+public class CommentDaoImpl implements CommentDao {
 
     private final EntityManager entityManager;
 

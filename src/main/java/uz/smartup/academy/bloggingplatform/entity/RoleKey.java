@@ -14,7 +14,8 @@ public class RoleKey {
         this.role = role;
     }
 
-    public RoleKey() {}
+    public RoleKey() {
+    }
 
     public String getUsername() {
         return username;

@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import org.springframework.validation.FieldError;
 import org.slf4j.Logger;
 
@@ -86,10 +87,10 @@ public class UserMVC {
                     ));
             return ResponseEntity.badRequest().body(errors);
         }
-        
-        
+
+
         if (request.getHeader("X-Requested-With") != null && request.getHeader("X-Requested-With").equals("XMLHttpRequest")) {
-            if(service.userExists(user.getUsername(), user.getEmail())) {
+            if (service.userExists(user.getUsername(), user.getEmail())) {
                 return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Username or email is already taken"));
             }
 
@@ -127,29 +128,24 @@ public class UserMVC {
     }
 
 
-
-
     @GetMapping("/email-confirmation")
-    public String activation(@RequestParam("token") String token, Model model){
+    public String activation(@RequestParam("token") String token, Model model) {
         PasswordResetToken verificationToken = mailSenderService.findByToken(token);
-        if(verificationToken == null){
+        if (verificationToken == null) {
             model.addAttribute("message", "Your verification token is invalid!");
 
-        }
-        else{
+        } else {
             User user = verificationToken.getUser();
-            if(user.getEnabled().equals("0")){
-                if(verificationToken.isExpired()){
+            if (user.getEnabled().equals("0")) {
+                if (verificationToken.isExpired()) {
                     model.addAttribute("message", "Token is expired!");
-                }
-                else{
+                } else {
                     user.setEnabled("1");
                     UserDTO userDTO = userDtoUtil.toDTO(user);
                     service.updateUser(userDTO);
                     model.addAttribute("message", "Account is successfully activated!");
                 }
-            }
-            else {
+            } else {
                 model.addAttribute("message", "Your account is already activated!");
             }
         }
@@ -326,6 +322,7 @@ public class UserMVC {
             return "redirect:/profile/" + username;
         }
     }
+
     @PostMapping("/follow/{username}")
     public String followUser(@RequestParam int followerId, @RequestParam int followedId, @PathVariable String username) {
         service.followUser(followerId, followedId);
@@ -341,7 +338,6 @@ public class UserMVC {
     }
 
 
-
     @PostMapping("/follow1/{username}/{postsId}")
     public String followUserGetPost(@RequestParam int followerId, @RequestParam int followedId, @PathVariable String username, @PathVariable int postsId) {
         service.followUser(followerId, followedId);
@@ -355,6 +351,7 @@ public class UserMVC {
 
         return "redirect:/posts/author/" + username;
     }
+
     @PostMapping("/follow2/{username}")
     public String followUserAuthorPost(@RequestParam int followerId, @RequestParam int followedId, @PathVariable String username) {
         service.followUser(followerId, followedId);
@@ -373,7 +370,7 @@ public class UserMVC {
     public String getFollowing(@PathVariable int userId, Model model) {
         List<UserDTO> following = service.getFollowing(userId);
 
-        if(!following.isEmpty()) {
+        if (!following.isEmpty()) {
             for (UserDTO userDTO : following)
                 userDTO.setHashedPhoto(service.encodePhotoToBase64(userDTO.getPhoto()));
 
@@ -394,7 +391,7 @@ public class UserMVC {
     public String getFollowers(@PathVariable int userId, Model model) {
         List<UserDTO> followers = service.getFollowers(userId);
 
-        if(!followers.isEmpty()) {
+        if (!followers.isEmpty()) {
             for (UserDTO userDTO : followers)
                 userDTO.setHashedPhoto(service.encodePhotoToBase64(userDTO.getPhoto()));
 
@@ -428,8 +425,6 @@ public class UserMVC {
 //        service.unfollowUser(followerId, followedId);
 //        return ResponseEntity.ok("You have unfollowed the user.");
 //    }
-
-
 
 
 }

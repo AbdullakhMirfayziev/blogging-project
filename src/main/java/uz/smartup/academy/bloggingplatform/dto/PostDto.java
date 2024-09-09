@@ -38,7 +38,8 @@ public class PostDto {
 
     private LocalDateTime scheduleTime;
 
-    public PostDto() {}
+    public PostDto() {
+    }
 
     public PostDto(Builder builder) {
         this.id = builder.id;

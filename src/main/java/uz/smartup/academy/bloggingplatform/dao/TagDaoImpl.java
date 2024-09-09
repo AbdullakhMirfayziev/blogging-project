@@ -10,7 +10,7 @@ import uz.smartup.academy.bloggingplatform.entity.Tag;
 import java.util.List;
 
 @Repository
-public class TagDaoImpl implements TagDao{
+public class TagDaoImpl implements TagDao {
     private final EntityManager entityManager;
 
     public TagDaoImpl(EntityManager entityManager) {
@@ -34,13 +34,13 @@ public class TagDaoImpl implements TagDao{
 
     @Override
     public List<Tag> getAllTags() {
-        TypedQuery<Tag> query = entityManager.createQuery("FROM Tag",Tag.class);
+        TypedQuery<Tag> query = entityManager.createQuery("FROM Tag", Tag.class);
         return query.getResultList();
     }
 
     @Override
     public Tag findTagById(int id) {
-        return entityManager.find(Tag.class,id);
+        return entityManager.find(Tag.class, id);
     }
 
     @Override

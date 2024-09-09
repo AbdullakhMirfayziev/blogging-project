@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
     List<Notification> findByRecipientIdAndReadFalse(int recipientId);
+
     List<Notification> findAllByRecipientId(int recipient_id);
 
 //    List<Notification> finfAllByRecipenetsId(int recipient_id);
