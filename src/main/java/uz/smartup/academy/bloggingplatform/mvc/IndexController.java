@@ -180,6 +180,12 @@ public class IndexController {
             model.addAttribute("isFollowed", isFollowed);
         }
 
+        System.out.println("-".repeat(100));
+        for(CommentDTO commentDTO : comments) {
+            System.out.println(commentDTO.getPostId() + " " + commentDTO.getEdited());
+        }
+        System.out.println("-".repeat(100));
+
         if (userDTO != null)
             model.addAttribute("loggedInId", userDTO.getId());
         model.addAttribute("photo", photo);
@@ -196,6 +202,7 @@ public class IndexController {
         model.addAttribute("months", months);
         model.addAttribute("user", user);
         model.addAttribute("loggedInUser", loged);
+        model.addAttribute("one", "1");
 
 
         return "getPost";
@@ -400,6 +407,7 @@ public class IndexController {
     @PostMapping("/{commentId}/updateComment/{postId}")
     public String updateComment(@PathVariable("commentId") int commentId, @PathVariable("postId") int postId, @ModelAttribute("comment") CommentDTO comment, RedirectAttributes attributes) {
         comment.setId(commentId);
+        comment.setEdited("1");
         commentService.updateComment(comment);
 
         attributes.addAttribute("postId", postId);

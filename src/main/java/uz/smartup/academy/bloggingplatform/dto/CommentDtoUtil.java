@@ -14,12 +14,14 @@ public class CommentDtoUtil {
         comment.setId(commentDTO.getId());
         comment.setContent(commentDTO.getContent());
         comment.setCreatedAt(commentDTO.getCreatedAt());
+        comment.setEdited(commentDTO.getEdited());
         return comment;
     }
 
     public CommentDTO toDto(Comment comment) {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setId(comment.getId());
+        commentDTO.setEdited(comment.getEdited());
         commentDTO.setAuthorId(comment.getAuthor().getId());
         commentDTO.setContent(comment.getContent());
         commentDTO.setPostId(comment.getPost().getId());

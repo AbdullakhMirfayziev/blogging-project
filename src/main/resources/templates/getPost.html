@@ -559,6 +559,10 @@
                             <i class="fa-solid fa-trash-can text-danger"></i>
                         </button>
                     </form>
+
+                    <p th:if="${comment.edited} == ${one}">
+                        edited
+                    </p>
                 </div>
                 <h4 th:text="${comment.content}"></h4>
             </div>

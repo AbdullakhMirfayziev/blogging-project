@@ -77,8 +77,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void updateComment(CommentDTO comment) {
         Comment comment1 = commentDao.getComment(comment.getId());
-        System.out.println(comment.getId());
         comment1.setContent(comment.getContent());
+        comment1.setEdited(comment.getEdited());
+
+
         commentDao.update(comment1);
     }
 }
