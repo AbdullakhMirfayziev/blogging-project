@@ -20,6 +20,7 @@ import uz.smartup.academy.bloggingplatform.service.CategoryService;
 import uz.smartup.academy.bloggingplatform.service.PostService;
 import uz.smartup.academy.bloggingplatform.service.TagService;
 import uz.smartup.academy.bloggingplatform.service.UserService;
+
 import java.lang.Integer;
 
 import java.io.IOException;
@@ -53,18 +54,18 @@ public class EditorMVC {
                     .toList();
 
 
-
-            for(PostDto postDto : posts) {
-                if(postDto.getPhoto() == null) postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
+            for (PostDto postDto : posts) {
+                if (postDto.getPhoto() == null)
+                    postDto.setHashedPhoto(userService.encodePhotoToBase64(userService.getDefaultPostPhoto()));
                 else postDto.setHashedPhoto(userService.encodePhotoToBase64(postDto.getPhoto()));
             }
 
             for (PostDto postDto : posts)
-                if(postDto.getTitle().length() > 30)
+                if (postDto.getTitle().length() > 30)
                     postDto.setTitle(postDto.getTitle().substring(0, 30) + "...");
 
             for (PostDto post : posts)
-                if(post.getContent().length() > 100)
+                if (post.getContent().length() > 100)
                     post.setContent(post.getContent().substring(0, 100) + "...");
 
             List<PostDto> draftPosts = posts.stream()
@@ -72,7 +73,7 @@ public class EditorMVC {
                     .sorted((post1, post2) -> post2.getCreatedAt().compareTo(post1.getCreatedAt()))
                     .toList();
 
-            for(int i = 0; i < draftPosts.size(); i ++) {
+            for (int i = 0; i < draftPosts.size(); i++) {
                 draftPosts.get(i).setScheduleTime(postService.scheduleDatePost(draftPosts.get(i).getId()));
             }
 
@@ -87,10 +88,9 @@ public class EditorMVC {
         }
 
 
-
         String photo = "";
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
-        if(userDTO != null){
+        if (userDTO != null) {
             photo = userService.encodePhotoToBase64(userDTO.getPhoto());
         }
 
@@ -109,7 +109,7 @@ public class EditorMVC {
         String photo = "";
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
 
-        if(userDTO != null){
+        if (userDTO != null) {
             photo = userService.encodePhotoToBase64(userDTO.getPhoto());
         }
 
@@ -121,8 +121,9 @@ public class EditorMVC {
 
         return "createPost";
     }
+
     @RequestMapping("/editor/{username}/posts/next")
-    public String nextCreatePost(@PathVariable("username") String username,@ModelAttribute("post") PostDto postDto, @RequestParam("file") MultipartFile photo, Model model) throws IOException {
+    public String nextCreatePost(@PathVariable("username") String username, @ModelAttribute("post") PostDto postDto, @RequestParam("file") MultipartFile photo, Model model) throws IOException {
         byte[] photoBytes = photo.getBytes();
         postDto.setPhoto(photoBytes);
 
@@ -163,13 +164,13 @@ public class EditorMVC {
                 .reversed()
                 .getFirst();
 
-        List<String> tags = postService.separate_string(postDto.getTagsString());
+        List<String> tags = postService.separateString(postDto.getTagsString());
 
-        for(String tag : tags) {
+        for (String tag : tags) {
             tag = tag.toLowerCase();
             TagDto tagDto = tagService.getTagByName(tag);
 
-            if(tagDto == null) {
+            if (tagDto == null) {
                 tagDto = new TagDto();
                 tagDto.setTitle(tag);
                 userService.addNewTagToPost(tagDto, post.getId());
@@ -189,10 +190,8 @@ public class EditorMVC {
     }
 
 
-
-
     @RequestMapping("/editor/posts/{username}/delete/{postId}")
-    public String deletePost(@PathVariable("postId") int postId, @PathVariable("username") String username , RedirectAttributes attributes) {
+    public String deletePost(@PathVariable("postId") int postId, @PathVariable("username") String username, RedirectAttributes attributes) {
         postService.delete(postId);
 
         attributes.addAttribute("username", username);
@@ -229,7 +228,6 @@ public class EditorMVC {
     }
 
 
-
     @GetMapping("/editor/posts/{username}/edit/{postId}")
     public String editPost(@PathVariable("username") String username, @PathVariable("postId") int postId, Model model) {
         PostDto postDto = postService.getById(postId);
@@ -247,7 +245,7 @@ public class EditorMVC {
         List<TagDto> tags = tagService.getTagsByPostId(postId);
 
         String tagsString = "";
-        for(TagDto tag : tags) {
+        for (TagDto tag : tags) {
             tagsString += tag.getTitle() + " ";
         }
 
@@ -267,7 +265,7 @@ public class EditorMVC {
 
 
     @PostMapping("/editor/posts/{username}/edit/{postId}")
-    public String updatePost(@PathVariable("postId") int postId, @PathVariable("username") String username, @ModelAttribute("post") PostDto postDto, Model model, RedirectAttributes attributes,@RequestParam(value = "file", required = false) MultipartFile photo) throws IOException {
+    public String updatePost(@PathVariable("postId") int postId, @PathVariable("username") String username, @ModelAttribute("post") PostDto postDto, Model model, RedirectAttributes attributes, @RequestParam(value = "file", required = false) MultipartFile photo) throws IOException {
 
         if (photo.isEmpty() || photo == null) {
             postDto.setPhoto(postService.getById(postId).getPhoto());

@@ -25,6 +25,7 @@ public interface UserService {
     void deleteUser(int id);
 
     void registerUser(UserDTO userDTO, List<Role> roles);
+
     void registerUserWithConfirmation(UserDTO userDTO, List<Role> roles);
 
     List<PostDao> getAllPostsOfUser(int id);
@@ -64,6 +65,7 @@ public interface UserService {
     void unBanUser(int userId);
 
     void unbanUsers();
+
     boolean userExists(String email, String userEmail);
 
     List<UserDTO> userFindByUsername(String username);

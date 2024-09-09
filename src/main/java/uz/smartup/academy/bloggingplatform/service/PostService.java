@@ -53,7 +53,7 @@ public interface PostService {
 
     void removeCategoryFromPost(int postId, int categoryId);
 
-    List<String> separate_string(String s);
+    List<String> separateString(String s);
 
     void addExistCategoriesToPost(int categoryId, int postId);
 

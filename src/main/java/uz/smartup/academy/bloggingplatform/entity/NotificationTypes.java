@@ -5,5 +5,5 @@ public enum NotificationTypes {
     C, //comment
     F, // follow
     P, //password change
-     N // new post
+    N // new post
 }

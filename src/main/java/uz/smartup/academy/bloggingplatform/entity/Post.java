@@ -1,7 +1,9 @@
 package uz.smartup.academy.bloggingplatform.entity;
 
 import jakarta.persistence.*;
+
 import java.sql.Timestamp;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -50,9 +52,9 @@ public class Post {
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
-        name = "category_post",
-        joinColumns = @JoinColumn(name = "post_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id")
+            name = "category_post",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categories;
 
@@ -71,19 +73,19 @@ public class Post {
     @Transient
     private long commentsCount;
 
-    @OneToOne(mappedBy = "post",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL)
     private PostSchedule postSchedule;
 
 
     public void addCategories(Category category) {
-        if(categories == null || categories.isEmpty())
+        if (categories == null || categories.isEmpty())
             categories = new ArrayList<>();
 
         categories.add(category);
     }
 
     public void addComments(Comment comment) {
-        if(comments.isEmpty())
+        if (comments.isEmpty())
             comments = new ArrayList<>();
 
         comments.add(comment);
@@ -91,24 +93,24 @@ public class Post {
     }
 
     public void removeComment(Comment comment) {
-        if(!comments.isEmpty())
+        if (!comments.isEmpty())
             comments.remove(comment);
     }
 
     public void removeCategory(Category category) {
-        if(!categories.isEmpty())
+        if (!categories.isEmpty())
             categories.remove(category);
     }
 
     public void addTag(Tag tag) {
-        if(tags == null || tags.isEmpty())
+        if (tags == null || tags.isEmpty())
             tags = new ArrayList<>();
 
         tags.add(tag);
     }
 
     public void removeTag(Tag tag) {
-        if(!tags.isEmpty() || tag != null)
+        if (!tags.isEmpty() || tag != null)
             tags.remove(tag);
 
     }

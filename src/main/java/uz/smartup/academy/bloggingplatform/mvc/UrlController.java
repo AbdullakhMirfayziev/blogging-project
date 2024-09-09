@@ -1,4 +1,5 @@
 package uz.smartup.academy.bloggingplatform.mvc;
+
 import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +32,7 @@ public class UrlController {
     private final MailSenderService mailSenderService;
     private final UserDtoUtil userDtoUtil;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
-    private final PasswordEncoder  passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final CategoryService categoryService;
 
 
@@ -109,10 +110,9 @@ public class UrlController {
         userService.updateUser(userDtoUtil.toDTO(user));
 
 
-
         attributes.addFlashAttribute("success", "Password changed successfully.");
 
-        if(getLoggedUser() == null)
+        if (getLoggedUser() == null)
             request.login(user.getUsername(), rawPassword);
 
         return "redirect:/";
@@ -123,7 +123,7 @@ public class UrlController {
 
         String photo = "";
         UserDTO userDTO = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
-        if(userDTO != null){
+        if (userDTO != null) {
             photo = userService.encodePhotoToBase64(userDTO.getPhoto());
         }
 
@@ -166,9 +166,6 @@ public class UrlController {
 
         return null;
     }
-
-
-
 
 
 }

@@ -30,14 +30,14 @@ public class Tag {
     private List<Post> posts;
 
     public void addPost(Post post) {
-        if(posts.isEmpty())
+        if (posts.isEmpty())
             posts = new ArrayList<>();
 
         posts.add(post);
     }
 
     public void removePost(Post post) {
-        if(!posts.isEmpty())
+        if (!posts.isEmpty())
             posts.remove(post);
     }
 }

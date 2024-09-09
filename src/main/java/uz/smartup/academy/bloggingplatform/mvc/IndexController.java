@@ -93,16 +93,16 @@ public class IndexController {
             String safeContent = Jsoup.clean(topPost.getContent(), Safelist.basic());
             topPost.setContent(safeContent);
         }
-        if(userDTO != null) {
+        if (userDTO != null) {
             List<Notification> unreadNotifications = notificationService.getUnreadNotifications(userDTO.getId());
             model.addAttribute("unreadNotifications", unreadNotifications);
             model.addAttribute("userRoles", userDTO.getRoles());
         }
 
         List<UserDTO> users = userService.getAllUsers()
-                                            .stream()
-                                            .filter(userDTO1 -> !userDTO1.getUsername().contains("deleted"))
-                                            .toList();
+                .stream()
+                .filter(userDTO1 -> !userDTO1.getUsername().contains("deleted"))
+                .toList();
 
 
         model.addAttribute("category", category);
@@ -164,13 +164,13 @@ public class IndexController {
         comments = comments.reversed();
         UserDTO loged = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
 
-        if(loged != null) {
+        if (loged != null) {
             boolean isFollowed = false;
 
             List<UserDTO> followers = userService.getFollowers(user.getId());
 
-            for(UserDTO userDTO1 : followers) {
-                if(loged.getUsername().equals(userDTO1.getUsername())) {
+            for (UserDTO userDTO1 : followers) {
+                if (loged.getUsername().equals(userDTO1.getUsername())) {
                     isFollowed = true;
                     break;
                 }
@@ -250,18 +250,18 @@ public class IndexController {
         List<CategoryDto> categories = categoryService.getAllCategories();
 
         boolean isEditor = false;
-        for(Role role : user.getRoles()) {
-            if(role.getRole().equals("ROLE_EDITOR"))
+        for (Role role : user.getRoles()) {
+            if (role.getRole().equals("ROLE_EDITOR"))
                 isEditor = true;
         }
 
-        if(loged != null) {
+        if (loged != null) {
             boolean isFollowed = false;
 
             List<UserDTO> followers = userService.getFollowers(user.getId());
 
-            for(UserDTO userDTO : followers) {
-                if(loged.getUsername().equals(userDTO.getUsername())) {
+            for (UserDTO userDTO : followers) {
+                if (loged.getUsername().equals(userDTO.getUsername())) {
                     isFollowed = true;
                     break;
                 }
@@ -456,13 +456,13 @@ public class IndexController {
         }
 
         UserDTO loged = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
-        if(loged != null) {
+        if (loged != null) {
             boolean isFollowed = false;
 
             List<UserDTO> followers = userService.getFollowers(author.getId());
 
-            for(UserDTO userDTO : followers) {
-                if(loged.getUsername().equals(userDTO.getUsername())) {
+            for (UserDTO userDTO : followers) {
+                if (loged.getUsername().equals(userDTO.getUsername())) {
                     isFollowed = true;
                     break;
                 }
@@ -470,7 +470,6 @@ public class IndexController {
 
             model.addAttribute("isFollowed", isFollowed);
         }
-
 
 
         model.addAttribute("posts", posts);
@@ -499,8 +498,8 @@ public class IndexController {
 
     @GetMapping("/notifications")
     public String notifications(Model model,
-                                @RequestParam(name ="size", defaultValue = "5") int size,
-                                @RequestParam(name = "page", defaultValue = "1") int page){
+                                @RequestParam(name = "size", defaultValue = "5") int size,
+                                @RequestParam(name = "page", defaultValue = "1") int page) {
 
         UserDTO user = userService.getUserByUsername(Objects.requireNonNull(getLoggedUser()).getUsername());
 
@@ -515,7 +514,6 @@ public class IndexController {
 
         List<Notification> notifications = notificationsPage.getContent();
         List<CategoryDto> categories = categoryService.getAllCategories();
-
 
 
         String photo = "";

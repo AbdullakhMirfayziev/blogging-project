@@ -8,7 +8,7 @@ import java.util.List;
 
 @Component
 public class UserDtoUtil {
-    public User toEntity(UserDTO userDTO){
+    public User toEntity(UserDTO userDTO) {
         User user = new User();
         user.setId(userDTO.getId());
         user.setFirstName(userDTO.getFirst_name());
@@ -25,7 +25,7 @@ public class UserDtoUtil {
     }
 
     public UserDTO toDTO(User user) {
-        if(user == null) return null;
+        if (user == null) return null;
 
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
@@ -42,7 +42,7 @@ public class UserDtoUtil {
         return userDTO;
     }
 
-    public List<UserDTO> toDTOs(List<User> users){
+    public List<UserDTO> toDTOs(List<User> users) {
         return users.stream().map(this::toDTO).toList();
     }
 
@@ -62,7 +62,6 @@ public class UserDtoUtil {
 //        user.setRegistered(LocalDate.now());
         return user;
     }
-
 
 
 }

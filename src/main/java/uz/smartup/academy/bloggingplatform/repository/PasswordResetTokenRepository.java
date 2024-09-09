@@ -6,6 +6,7 @@ import uz.smartup.academy.bloggingplatform.entity.PasswordResetToken;
 
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
     PasswordResetToken findByUser(uz.smartup.academy.bloggingplatform.entity.User user);
+
     PasswordResetToken findByToken(String token);
 }
 

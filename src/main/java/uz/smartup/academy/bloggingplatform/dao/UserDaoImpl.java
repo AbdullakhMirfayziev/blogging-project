@@ -165,7 +165,7 @@ public class UserDaoImpl implements UserDao {
     public List<User> userFindByUserName(String username) {
         TypedQuery<User> query = entityManager.createQuery(
                 "SELECT u FROM User u WHERE u.username LIKE :username", User.class);
-        query.setParameter("username","%" + username + "%");
+        query.setParameter("username", "%" + username + "%");
         return query.getResultList();
     }
 
@@ -187,8 +187,6 @@ public class UserDaoImpl implements UserDao {
 
         return new PageImpl<>(notifications, pageable, total);
     }
-
-
 
 
 }

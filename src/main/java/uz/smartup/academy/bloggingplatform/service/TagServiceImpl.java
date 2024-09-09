@@ -19,7 +19,7 @@ public class TagServiceImpl implements TagService {
     private final TagDtoUtil tagDtoUtil;
     private final TagDao tagDao;
 
-    public TagServiceImpl(TagDtoUtil tagDtoUtil, TagDao tagDao,PostDao postDao) {
+    public TagServiceImpl(TagDtoUtil tagDtoUtil, TagDao tagDao, PostDao postDao) {
         this.tagDtoUtil = tagDtoUtil;
         this.tagDao = tagDao;
         this.postDao = postDao;
@@ -28,7 +28,7 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public void createTag(TagDto tagDto) {
-        Tag tag=tagDtoUtil.toEntity(tagDto);
+        Tag tag = tagDtoUtil.toEntity(tagDto);
         tagDao.save(tag);
 
     }
@@ -36,8 +36,8 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public void update(TagDto tagDto) {
-        Tag tag=tagDtoUtil.toEntity(tagDto);
-        List<Post> posts =postDao.getPostsByTag(tag);
+        Tag tag = tagDtoUtil.toEntity(tagDto);
+        List<Post> posts = postDao.getPostsByTag(tag);
         tag.setPosts(posts);
         tagDao.update(tag);
     }

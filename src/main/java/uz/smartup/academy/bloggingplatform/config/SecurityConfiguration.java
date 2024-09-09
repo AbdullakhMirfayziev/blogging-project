@@ -25,7 +25,7 @@ import org.springframework.security.web.firewall.HttpFirewall;
 import javax.sql.DataSource;
 
 @Configuration
-public class SecurityConfiguration{
+public class SecurityConfiguration {
 
     @Autowired
     private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
@@ -61,14 +61,14 @@ public class SecurityConfiguration{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authManager ->
                         authManager
-                                .requestMatchers(HttpMethod.GET, "/?page=*", "/?page=**","/?size=**", "/?keyword=**", "/following/**", "/followers/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/?page=*", "/?page=**", "/?size=**", "/?keyword=**", "/following/**", "/followers/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/admin", "/admin/**").hasAnyRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/admin", "/admin/**").hasAnyRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/editor", "/editor/**").hasAnyRole("EDITOR")
                                 .requestMatchers(HttpMethod.POST, "/editor", "/editor/**").hasAnyRole("EDITOR")
-                                .requestMatchers(HttpMethod.GET, "/password/reset", "/auto-login","/password/reset/*", "/login?success=true").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/password/reset", "/auto-login", "/password/reset/*", "/login?success=true").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/password/reset", "/password/reset/*").permitAll()
-                                .requestMatchers(HttpMethod.GET,  "/", "/register", "/register/*", "/posts/*", "/profile/*", "/categories/*", "/profile", "/search", "/posts/tags/*", "/posts/author/*").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/", "/register", "/register/*", "/posts/*", "/profile/*", "/categories/*", "/profile", "/search", "/posts/tags/*", "/posts/author/*").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/register-user").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/css/**", "/js/**", "/photos/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/changePassword").authenticated()

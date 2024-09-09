@@ -8,9 +8,14 @@ import java.util.List;
 
 public interface CategoryService {
     void createCategory(CategoryDto category);
+
     void update(CategoryDto category);
-    void delete( int id);
+
+    void delete(int id);
+
     List<CategoryDto> getAllCategories();
+
     CategoryDto findCategoryById(int id);
+
     List<CategoryDto> getCategoriesByPostId(int postId);
 }

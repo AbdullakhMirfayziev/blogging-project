@@ -25,7 +25,7 @@ public interface UserDao {
     void update(User user);
 
     void delete(User user);
-  
+
     List<Post> getUserAllPosts(int userId);
 
     List<Role> userFindByRoles(String userName);
@@ -43,8 +43,6 @@ public interface UserDao {
     List<User> userFindByUserName(String username);
 
     Page<Notification> getAllNotification(Pageable pageable, int userId);
-
-
 
 
 }

@@ -8,9 +8,13 @@ import java.util.List;
 
 public interface CommentService {
     void save(CommentDTO comment);
+
     CommentDTO getComment(int id);
+
     List<CommentDTO> getAllComments();
+
     void deleteComment(int id);
+
     void updateComment(CommentDTO comment);
 
 

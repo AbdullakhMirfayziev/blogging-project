@@ -56,7 +56,7 @@ public class NotificationService {
     public void sendLikeNotifications() {
 
         List<Notification> likes = likeDAO.findNewLikes();
-        for(Notification like : likes){
+        for (Notification like : likes) {
             User liker = like.getAuthor();
             int post = like.getPostId();
             User postAuthor = postDao.getById(post).getAuthor();
@@ -79,7 +79,7 @@ public class NotificationService {
     public void sendCommentNotifications() {
 
         List<Notification> comments = commentDao.findNewComments();
-        for(Notification comment : comments){
+        for (Notification comment : comments) {
             User commenter = comment.getAuthor();
             int post = comment.getPostId();
             User postAuthor = postDao.getById(post).getAuthor();
@@ -101,10 +101,10 @@ public class NotificationService {
     @Transactional
     public void sendPostNotificationsToFollowers() {
         List<Notification> posts = postDao.findPostsNeedingNotification();
-        for(Notification post : posts){
+        for (Notification post : posts) {
             User author = post.getRecipient();
             List<User> followers = author.getFollowers().stream().toList();
-            for(User follower : followers){
+            for (User follower : followers) {
                 mailSenderService.sendPostNotificationToFollowers(
                         follower.getEmail(),
                         follower.getUsername(),
@@ -149,7 +149,7 @@ public class NotificationService {
             notification.setType(type);
             notification.setAuthor(userDao.getUserById(authorId));
             notification.setCreatedAt(LocalDateTime.now());
-            if(type.equals(NotificationTypes.L) || type.equals(NotificationTypes.C)) notification.setPostId(postId);
+            if (type.equals(NotificationTypes.L) || type.equals(NotificationTypes.C)) notification.setPostId(postId);
             notification.setNotify(type.equals(NotificationTypes.L) || type.equals(NotificationTypes.C) || type.equals(NotificationTypes.N));
             notificationRepository.save(notification);
             logger.info("Notification added for user: {}", recipientId);
@@ -161,9 +161,6 @@ public class NotificationService {
     public List<Notification> getAllNotification(int userId) {
         return notificationRepository.findAllByRecipientId(userId);
     }
-
-
-
 
 
 //
