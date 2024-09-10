@@ -214,7 +214,7 @@ section#News{
 }
 
 section#News .post {
-    height: 280px;
+    height: 279px;
     /* border: 1px solid red; */
     /* padding-top: 25px; */
     padding-bottom: 0;
@@ -230,7 +230,7 @@ section#News .post a {
 
 section#News .post img {
     width: 100%;
-    height: 60%;
+    height: 70%;
 }
 
 section#News .post .date{
