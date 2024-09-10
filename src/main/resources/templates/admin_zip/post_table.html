@@ -34,7 +34,7 @@
 
             <ul class="dropdown-menu drop_2" style="left:auto; right:0; min-width:200px;">
                 <li class="small" style="padding: 0.25rem 1rem;">Welcome !</li>
-                <li><a class="dropdown-item" th:href="@{@{/profile/{username}(username=${user.username})}}"><i class="fa fa-user"></i> My Account</a></li>
+                <li><a class="dropdown-item" th:href="@{/profile/{username}(username=${user.username})}"><i class="fa fa-user"></i> My Account</a></li>
                 <li><a class="dropdown-item" th:href="@{/logout}"><i class="fa fa-sign-out"></i> Logout</a></li>
             </ul>
         </li>
@@ -128,16 +128,42 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each = "post: ${postDTO}">
-                                            <td th:text = "${post.id}"></td>
-                                            <!--     <td th:text = "${post.user_id}"></td>-->
-                                            <td th:text = "${post.title}"></td>
-                                            <td th:text = "${post.status}"></td>
-                                            <td th:utext = "${post.content}"></td>
-                                            <td th:text = "${post.createdAt}"></td>
+                                        <tr th:each="post: ${postDTO}">
+                                            <td th:text="${post.id}"></td>
+                                            <td th:text="${post.title}"></td>
+                                            <td th:text="${post.status}"></td>
                                             <td>
-                                                <h6 data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Edit" class="d-inline-block mb-0"><a th:href="@{/editor/posts/{username}/edit/{postId}(postId=${post.id}, username=${userDTO.username})}"><i style="vertical-align:middle; margin-left:5px;margin-right:5px;" class="fa fa-edit col_3"></i></a></h6>
-                                                <h6 data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Delete" class="d-inline-block mb-0"><a th:href="@{/admin/post/delete/{id}(id=${post.id})}"><i class="fa fa-trash col_3"></i></a></h6>
+                                                <div>
+<!--                                                    <span th:text="${contentPreview}"></span>-->
+                                                    <a href="#" data-bs-toggle="modal" th:data-bs-target="'#contentModal' + ${post.id}">Read content</a>
+                                                </div>
+
+                                                <div class="modal fade" th:id="'contentModal' + ${post.id}" tabindex="-1" th:aria-labelledby="'contentModalLabel' + ${post.id}" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" th:id="'contentModalLabel' + ${post.id}" th:text="${post.title}"></h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div th:utext="${post.content}"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td th:text="${post.createdAt}"></td>
+                                            <td>
+                                                <h6 data-bs-toggle="tooltip" data-bs-placement="left" title="Edit" class="d-inline-block mb-0">
+                                                    <a th:href="@{/editor/posts/{username}/edit/{postId}(postId=${post.id}, username=${userDTO.username})}">
+                                                        <i class="fa fa-edit col_3" style="vertical-align:middle; margin-left:5px;margin-right:5px;"></i>
+                                                    </a>
+                                                </h6>
+                                                <h6 data-bs-toggle="tooltip" data-bs-placement="right" title="Delete" class="d-inline-block mb-0">
+                                                    <a th:href="@{/admin/post/delete/{id}(id=${post.id})}">
+                                                        <i class="fa fa-trash col_3"></i>
+                                                    </a>
+                                                </h6>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -156,9 +182,14 @@
 <script th:src="@{/admin/js/bootstrap.bundle.min.js}" ></script>
 <script th:src="@{/admin/js/global.js}"></script>
 <script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+        var myModalEl = document.getElementById('myModal')
+        var modal = new bootstrap.Modal(myModalEl)
     })
 </script>
 

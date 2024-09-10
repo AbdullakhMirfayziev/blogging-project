@@ -255,6 +255,35 @@
             outline: none;
             box-shadow: none;
         }
+
+        section.posts .post {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 5px 5px 5px 5px gray;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        section.posts .post .post-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        section.posts .post .post-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        section.posts .post.has-schedule {
+            height: 420px;
+        }
+
+        .countdown-timer {
+            margin-top: auto;
+        }
     </style>
 
 
@@ -571,28 +600,19 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var loggedIn = document.body.getAttribute("data-logged-in") === "true";
+    document.addEventListener('DOMContentLoaded', function() {
+        const posts = document.querySelectorAll('.post');
 
-        var likeForms = document.querySelectorAll('.like-form');
+        posts.forEach(post => {
+            const countdownElement = post.querySelector('[id^="countdown_"]');
+            if (countdownElement) {
+                const scheduleTime = countdownElement.dataset.scheduleTime;
 
-        likeForms.forEach(function(form) {
-            form.addEventListener('submit', function(event) {
-                if (!loggedIn) {
-                    event.preventDefault();
-
-                    var popover = new bootstrap.Popover(form.querySelector('.like-icon'), {
-                        trigger: 'manual', // Manual trigger so we can control when to show it
-                        content: "Please log in or sign up to like.",
-                        placement: 'top'
-                    });
-
-                    popover.show();
-                    setTimeout(function() {
-                        popover.hide();
-                    }, 3000);
+                if (scheduleTime) {
+                    post.classList.add('has-schedule');
+                    startCountdown(countdownElement, new Date(scheduleTime));
                 }
-            });
+            }
         });
     });
 </script>
@@ -631,8 +651,8 @@
             }
         }
 
-        updateCountdown(); // Run once immediately
-        const intervalId = setInterval(updateCountdown, 1000); // Then update every second
+        updateCountdown();
+        const intervalId = setInterval(updateCountdown, 1000);
     }
 
 </script>
