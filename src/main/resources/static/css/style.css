@@ -157,16 +157,19 @@ section#Home .post .title{
 }
 
 section#Home .post img{
-    width: 50%;
-    margin-right: 20px;
+    width: 100%;
     height: 450px;
+}
+
+section#Home .post .post_content .date {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 section#Home .post .post_content .date h5{
     font-family: "Baskervville SC", serif;
-    /*font-family: sans-serif;*/
     font-weight: 400;
-    /*font-size: 15px;*/
     color: rgb(74, 73, 73);
     margin-left: 5px;
 }
@@ -196,8 +199,14 @@ section#Home .post .post_content .like h5{
     padding-top: 4.5px;
 }
 
+
+
 section#Home .post .post_content p{
     color: gray;
+}
+
+section#Home .post .post_content .hover-text {
+    color: white;
 }
 
 section#News{
@@ -205,18 +214,11 @@ section#News{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 40px;
-    margin-top: 50px;
-    margin-left: 4%;
-    margin-right: 4%;
-    /* height: 1250px; */
-    /* border: 1px solid black; */
-    /* align-items: center; */
+    margin: 50px 4%;
 }
 
 section#News .post {
     height: 279px;
-    /* border: 1px solid red; */
-    /* padding-top: 25px; */
     padding-bottom: 0;
 }
 

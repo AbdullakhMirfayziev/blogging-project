@@ -51,6 +51,29 @@ public class IndexController {
                         @RequestParam(defaultValue = "") String tag,
                         @RequestParam(defaultValue = "") String keyword) {
 
+        int topPostId = -1;
+
+        PostDto topPost;
+
+        if(category.isEmpty() && tag.isEmpty() && keyword.isEmpty()) {
+            topPost = postService.getPublishedPost()
+                    .stream()
+                    .sorted((post1, post2) -> post2.getCreatedAt().compareTo(post1.getCreatedAt()))
+                    .toList()
+                    .getFirst();
+
+            if (topPost != null) {
+                String safeContent = Jsoup.clean(topPost.getContent(), Safelist.basic());
+                topPost.setContent(safeContent);
+
+                topPost.setHashedPhoto(userService.encodePhotoToBase64(topPost.getPhoto()));
+                topPostId = topPost.getId();
+            }
+
+//            size = size - size%4;
+            model.addAttribute("topPost", topPost);
+        }
+
 
         List<String> months = new ArrayList<>(List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
 
@@ -60,8 +83,15 @@ public class IndexController {
             page = postsSize / size + 1;
         }
 
-        Page<PostDto> postPage = postService.getPosts(page - 1, size, category, tag, keyword);
+        Page<PostDto> postPage = postService.getPosts(page - 1, size, category, tag, keyword, topPostId);
         List<PostDto> posts = postPage.getContent();
+
+        if(topPostId == -1 && !posts.isEmpty()) {
+            topPost = posts.getFirst();
+            String safeContent = Jsoup.clean(topPost.getContent(), Safelist.basic());
+            topPost.setContent(safeContent);
+            model.addAttribute("topPost", topPost);
+        }
 
 
         if (posts != null && !posts.isEmpty()) {
@@ -89,11 +119,7 @@ public class IndexController {
 
         List<CategoryDto> categories = categoryService.getAllCategories();
 
-        PostDto topPost = !posts.isEmpty() ? posts.getFirst() : null;
-        if (topPost != null) {
-            String safeContent = Jsoup.clean(topPost.getContent(), Safelist.basic());
-            topPost.setContent(safeContent);
-        }
+
         if (userDTO != null) {
             List<Notification> unreadNotifications = notificationService.getUnreadNotifications(userDTO.getId());
             model.addAttribute("unreadNotifications", unreadNotifications);
@@ -109,7 +135,6 @@ public class IndexController {
         model.addAttribute("category", category);
         model.addAttribute("tag", tag);
         model.addAttribute("keyword", keyword);
-        model.addAttribute("topPost", topPost);
         model.addAttribute("posts", posts);
         model.addAttribute("photo", photo);
         model.addAttribute("categories", categories);
@@ -120,6 +145,7 @@ public class IndexController {
         model.addAttribute("postsSize", postsSize);
         model.addAttribute("months", months);
         model.addAttribute("users", users);
+        model.addAttribute("topPostId", topPostId);
 
 
         return "index";

@@ -333,10 +333,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostDto> getPosts(int page, int size, String category, String tag, String keyword) {
+    public Page<PostDto> getPosts(int page, int size, String category, String tag, String keyword, int topPostId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
-        Page<Post> postPage = dao.findPosts(pageable, Post.Status.PUBLISHED, category, tag, keyword);
+        Page<Post> postPage = dao.findPosts(pageable, Post.Status.PUBLISHED, category, tag, keyword, topPostId);
 
         return postPage.map(dtoUtil::toDto);
     }

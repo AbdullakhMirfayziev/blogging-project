@@ -156,6 +156,82 @@
             box-shadow: none;
         }
 
+        .pin {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            /*cursor: pointer;*/
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            background-color: gray;
+            transition: border-radius 0.5s ease, background-color 0.5s ease;
+            margin-left: 120px;
+        }
+
+        .fa-thumbtack {
+            font-size: 15px;
+            z-index: 3;
+            transform: rotate(45deg);
+            color: white;
+        }
+
+        .hover-text {
+            position: absolute;
+            padding-top: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: 0;
+            opacity: 0;
+            height: 30px;
+            line-height: 30px;
+            background-color: transparent;
+            color: white;
+            z-index: 2;
+            /*left: 0;*/
+            left: 10px;
+            transition: max-width 1.5s ease, opacity 1s ease, left 1s ease;
+        }
+
+        .pin:hover {
+            background-color: rgb(0, 166, 81);
+            border-radius: 0 15px 15px 0;
+        }
+
+        .pin::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 100%;
+            height: 100%;
+            width: 0;
+            background-color: rgb(0, 166, 81);
+            transition: width 2s ease;
+            z-index: 1;
+            border-radius: 15px 0 0 15px;
+        }
+
+        .pin:hover::before {
+            width: 80px;
+            justify-content: space-between;
+        }
+
+        .pin:hover .hover-text {
+            text-align: center;
+            max-width: 60px;
+            opacity: 1;
+            left: -60px;
+        }
+
+        .category {
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-item.clicked {
+            background-color: #ffffff;
+            color: rgb(0, 166, 81);
+        }
 
 
     </style>
@@ -182,15 +258,15 @@
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li>
-                        <a class="dropdown-item text-success" th:href="@{/(size = ${size}, page = ${page})}">All posts</a>
+                        <a onclick="changeBackground(this)" class="dropdown-item text-success category" th:href="@{/}">All posts</a>
                     </li>
                     <li th:each="category : ${categories}">
-                        <a class="dropdown-item text-success" th:href="@{/(size = ${size}, page = ${page}, category=${category.title})}" th:text="${category.title}"> ></a>
+                        <a onclick="changeBackground(this)" class="dropdown-item text-success category" th:href="@{/(category=${category.title})}" th:text="${category.title}"> ></a>
                     </li>
                 </ul>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                     <li th:each="category : ${categories}">
-                        <a class="dropdown-item text-success" th:href="@{/(size = ${size}, page = ${page}, category=${category.title})}" th:text="${category.title}"></a>
+                        <a class="dropdown-item text-success category" onclick="changeBackground(this)" th:href="@{/(category=${category.title})}" th:text="${category.title}"></a>
                     </li>
                 </ul>
             </div>
@@ -294,7 +370,9 @@
 
 <section id="Home" th:if="${topPost != null}">
     <div class="post">
-        <img th:src="'data:image/png;base64,' + ${topPost.hashedPhoto}" alt="Post Image" class="flash">
+        <a th:href="@{/posts/{postId}(postId=${topPost.id})}" style="text-decoration: none; width: 50%; margin-right: 20px;">
+            <img th:src="'data:image/png;base64,' + ${topPost.hashedPhoto}" alt="Post Image" class="flash">
+        </a>
         <div class="post_content">
             <div class="date">
                 <i class="fa-solid fa-calendar-days"></i>
@@ -304,6 +382,10 @@
 
                 <h5 th:if="${topPost.createdAt.toLocalDate().isEqual(T(java.time.LocalDate).now())}"  th:attr="data-timestamp=${topPost.createdAt}" class="timeago"></h5>
 
+                <div th:if="${topPostId > -1}" class="pin">
+                    <p class="hover-text">Newest</p>
+                    <i class="fa-solid fa-thumbtack"></i>
+                </div>
             </div>
             <a th:href="@{/posts/{postId}(postId=${topPost.id})}" class="title" th:text="${topPost.title}"></a>
 
@@ -349,7 +431,9 @@
 
 <section id="News" th:if="${posts != null && !posts.isEmpty()}">
     <div class="post flash" th:each="post : ${posts}" th:if="${post != topPost}" style="padding-bottom: 0">
-        <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
+        <a th:href="@{/posts/{postId}(postId=${post.id})}" style="text-decoration: none;">
+            <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
+        </a>
         <a class="title" th:if="${post.title.length() > 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${#strings.substring(post.title, 0, 30)} + '...'"></a>
         <a class="title" th:if="${post.title.length() <= 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${post.title}"></a>
         <div class="date">
@@ -399,7 +483,7 @@
         <button th:text="${size} + ' / page'" type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="height: min-content; background-color: rgb(0, 166, 81); border: none;">
         </button>
         <ul class="dropdown-menu" >
-            <li th:if="${postsSize >= 3}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=3'(category=${category}, tag=${tag}, keyword=${keyword})}">3 / page</a></li>
+<!--            <li th:if="${postsSize >= 3}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=3'(category=${category}, tag=${tag}, keyword=${keyword})}">3 / page</a></li>-->
             <li th:if="${postsSize >= 5}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=5'(category=${category}, tag=${tag}, keyword=${keyword})}">5 / page</a></li>
             <li th:if="${postsSize >= 10}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=10'(category=${category}, tag=${tag}, keyword=${keyword})}">10 / page</a></li>
             <li th:if="${postsSize >= 15}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=15'(category=${category}, tag=${tag}, keyword=${keyword})}">15 / page</a></li>
@@ -494,6 +578,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -502,6 +588,13 @@
             element.textContent = moment(timestamp).fromNow();
         });
     });
+
+    function changeBackground(element) {
+        const dropdownItems = element.closest('.dropdown-menu').querySelectorAll('.dropdown-item');
+        dropdownItems.forEach(item => item.classList.remove('clicked'));
++
+        element.classList.add('clicked');
+    }
 </script>
 
 <script th:inline="javascript">

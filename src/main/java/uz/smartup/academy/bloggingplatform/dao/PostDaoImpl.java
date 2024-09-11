@@ -72,13 +72,18 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public Page<Post> findPosts(Pageable pageable, Post.Status status, String category, String tag, String keyword) {
+    public Page<Post> findPosts(Pageable pageable, Post.Status status, String category, String tag, String keyword, int topPostId) {
         StringBuilder jpql = new StringBuilder("SELECT p FROM Post p WHERE p.status = :status");
         StringBuilder countJpql = new StringBuilder("SELECT COUNT(p) FROM Post p WHERE p.status = :status");
 
         if (keyword != null && !keyword.isEmpty()) {
             jpql.append(" AND LOWER(p.title) LIKE LOWER(:likeKeyword) OR (CAST(LEVENSHTEIN(LOWER(p.title), LOWER(:keyword)) AS DOUBLE) / GREATEST(LENGTH(p.title), LENGTH(:keyword))) <= 0.2 ");
             countJpql.append(" AND LOWER(p.title) LIKE LOWER(:likeKeyword) OR (CAST(LEVENSHTEIN(LOWER(p.title), LOWER(:keyword)) AS DOUBLE) / GREATEST(LENGTH(p.title), LENGTH(:keyword))) <= 0.2");
+        }
+
+        if(topPostId > 0) {
+            jpql.append(" AND p.id != :topPostId");
+            countJpql.append(" AND p.id != :topPostId");
         }
 
         Category category1 = null;
@@ -109,6 +114,9 @@ public class PostDaoImpl implements PostDao {
             jpql.append(joiner.toString());
         }
 
+
+
+
         TypedQuery<Post> query = entityManager.createQuery(jpql.toString(), Post.class);
         query.setParameter("status", status);
         query.setFirstResult((int) pageable.getOffset());
@@ -116,6 +124,11 @@ public class PostDaoImpl implements PostDao {
 
         TypedQuery<Long> countQuery = entityManager.createQuery(countJpql.toString(), Long.class);
         countQuery.setParameter("status", status);
+
+        if(topPostId > 0) {
+            countQuery.setParameter("topPostId", topPostId);
+            query.setParameter("topPostId", topPostId);
+        }
 
         if (category != null && !category.isEmpty()) {
             query.setParameter("category1", category1);

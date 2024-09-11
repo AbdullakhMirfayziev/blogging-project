@@ -36,7 +36,7 @@ public interface PostDao {
 
     List<Post> searchPosts(String keyword);
 
-    Page<Post> findPosts(Pageable pageable, Post.Status status, String category, String tag, String keyword);
+    Page<Post> findPosts(Pageable pageable, Post.Status status, String category, String tag, String keyword, int topPostId);
 
     List<Post> findDraftsScheduledForPublish(LocalDateTime now, Post.Status status);
 
