@@ -14,12 +14,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uz.smartup.academy.bloggingplatform.dto.UserDTO;
 import uz.smartup.academy.bloggingplatform.dto.UserDtoUtil;
+import uz.smartup.academy.bloggingplatform.entity.NotificationTypes;
 import uz.smartup.academy.bloggingplatform.entity.PasswordChangeForm;
 import uz.smartup.academy.bloggingplatform.entity.PasswordResetToken;
 import uz.smartup.academy.bloggingplatform.entity.User;
 import uz.smartup.academy.bloggingplatform.repository.PasswordResetTokenRepository;
 import uz.smartup.academy.bloggingplatform.service.CategoryService;
 import uz.smartup.academy.bloggingplatform.service.MailSenderService;
+import uz.smartup.academy.bloggingplatform.service.NotificationService;
 import uz.smartup.academy.bloggingplatform.service.UserService;
 
 import java.io.IOException;
@@ -34,15 +36,17 @@ public class UrlController {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final CategoryService categoryService;
+    private final NotificationService notificationService;
 
 
-    public UrlController(UserService userService, MailSenderService mailSenderService, UserDtoUtil userDtoUtil, PasswordResetTokenRepository passwordResetTokenRepository, PasswordEncoder passwordEncoder, CategoryService categoryService) {
+    public UrlController(UserService userService, MailSenderService mailSenderService, UserDtoUtil userDtoUtil, PasswordResetTokenRepository passwordResetTokenRepository, PasswordEncoder passwordEncoder, CategoryService categoryService, NotificationService notificationService) {
         this.userService = userService;
         this.mailSenderService = mailSenderService;
         this.userDtoUtil = userDtoUtil;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.categoryService = categoryService;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/password/reset")
@@ -107,6 +111,7 @@ public class UrlController {
         String rawPassword = form.getNewPassword();
 
         user.setPassword(passwordEncoder.encode(form.getNewPassword()));
+        notificationService.addNotification(user.getId(), user.getId(), 0, "your password changed successfully!", "/notifications", NotificationTypes.P);
         userService.updateUser(userDtoUtil.toDTO(user));
 
 
