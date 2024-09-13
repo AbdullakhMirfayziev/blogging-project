@@ -228,9 +228,8 @@
             transition: background-color 0.3s;
         }
 
-        .dropdown-item.clicked {
-            background-color: #ffffff;
-            color: rgb(0, 166, 81);
+        .dropdown-item:focus {
+            background-color: white;
         }
 
 
@@ -249,7 +248,7 @@
         </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <div class="dropdown me-2">
-                <button th:if="${!category.isEmpty()}" th:text="${category}" class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                <button th:if="${!category.isEmpty() or category == null}" th:text="${category}" class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                 </button>
 
                 <button th:if="${category.isEmpty()}" class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
@@ -258,15 +257,15 @@
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <li>
-                        <a onclick="changeBackground(this)" class="dropdown-item text-success category" th:href="@{/}">All posts</a>
+                        <a class="dropdown-item text-success category" th:href="@{/}">All posts</a>
                     </li>
                     <li th:each="category : ${categories}">
-                        <a onclick="changeBackground(this)" class="dropdown-item text-success category" th:href="@{/(category=${category.title})}" th:text="${category.title}"> ></a>
+                        <a class="dropdown-item text-success category" th:href="@{/(category=${category.title})}" th:text="${category.title}"> ></a>
                     </li>
                 </ul>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                     <li th:each="category : ${categories}">
-                        <a class="dropdown-item text-success category" onclick="changeBackground(this)" th:href="@{/(category=${category.title})}" th:text="${category.title}"></a>
+                        <a class="dropdown-item text-success category" th:href="@{/(category=${category.title})}" th:text="${category.title}"></a>
                     </li>
                 </ul>
             </div>
@@ -440,7 +439,7 @@
             <div class="calendar">
                 <i class="fa-solid fa-calendar-days"></i>
                 <h5 th:if="${post.createdAt.toLocalDate().isBefore(T(java.time.LocalDate).now())}"
-                    th:text="${#temporals.format(post.createdAt, 'dd')} + ' ' + ${months[post.createdAt.monthValue - 1]} + ' ' + ${#temporals.format(post.createdAt, 'yyyy HH:mm')}">
+                    th:text="${months[post.createdAt.monthValue - 1]} + ' ' + ${#temporals.format(post.createdAt, 'dd')} + ', ' + ${#temporals.format(post.createdAt, 'yyyy HH:mm')}">
                 </h5>
 
                 <h5 th:if="${post.createdAt.toLocalDate().isEqual(T(java.time.LocalDate).now())}"  th:attr="data-timestamp=${post.createdAt}" class="timeago"></h5>
@@ -485,10 +484,9 @@
         <ul class="dropdown-menu" >
 <!--            <li th:if="${postsSize >= 3}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=3'(category=${category}, tag=${tag}, keyword=${keyword})}">3 / page</a></li>-->
             <li th:if="${postsSize >= 5}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=5'(category=${category}, tag=${tag}, keyword=${keyword})}">5 / page</a></li>
-            <li th:if="${postsSize >= 10}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=10'(category=${category}, tag=${tag}, keyword=${keyword})}">10 / page</a></li>
-            <li th:if="${postsSize >= 15}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=15'(category=${category}, tag=${tag}, keyword=${keyword})}">15 / page</a></li>
             <li th:if="${postsSize >= 20}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=20'(category=${category}, tag=${tag}, keyword=${keyword})}">20 / page</a></li>
-            <li th:if="${postsSize >= 50}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=50'(category=${category}, tag=${tag}, keyword=${keyword})}">50 / page</a></li>
+            <li th:if="${postsSize >= 40}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=20'(category=${category}, tag=${tag}, keyword=${keyword})}">40 / page</a></li>
+            <li th:if="${postsSize >= 60}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=50'(category=${category}, tag=${tag}, keyword=${keyword})}">60 / page</a></li>
             <li th:if="${postsSize >= 100}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=100'(category=${category}, tag=${tag}, keyword=${keyword})}">100 / page</a></li>
         </ul>
     </div>
@@ -589,11 +587,33 @@
         });
     });
 
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all dropdown items
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+        // Add click event listener to each dropdown item
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function(event) {
+                // Prevent the default action
+                event.preventDefault();
+
+                // Remove 'clicked' class from all items
+                dropdownItems.forEach(item => item.classList.remove('clicked'));
+
+                // Add 'clicked' class to the clicked item
+                this.classList.add('hello');
+
+                // If you want to navigate to the href, uncomment the next line
+                window.location.href = this.getAttribute('href');
+            });
+        });
+    });
+
     function changeBackground(element) {
         const dropdownItems = element.closest('.dropdown-menu').querySelectorAll('.dropdown-item');
         dropdownItems.forEach(item => item.classList.remove('clicked'));
-+
-        element.classList.add('clicked');
+        element.classList.add('hello');
     }
 </script>
 

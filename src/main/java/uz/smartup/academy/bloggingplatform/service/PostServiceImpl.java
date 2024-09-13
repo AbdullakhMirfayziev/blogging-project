@@ -72,9 +72,10 @@ public class PostServiceImpl implements PostService {
 
         PostSchedule postSchedule = dao.getScheduleByPostId(post.getId());
 
-
+        System.out.println(postDto.getTagsString());
         List<Category> categories1 = new ArrayList<>();
         List<String> tagTitle = separateString(postDto.getTagsString());
+
 
         postDto.getCategories().forEach(categoryId -> {
             categories1.add(categoryDao.findCategoryById(categoryId));
@@ -303,7 +304,7 @@ public class PostServiceImpl implements PostService {
         String  word = "";
 
         for(int i = 0; i < s.length(); i++) {
-            if(s.charAt(i) != ' ') word += s.charAt(i);
+            if(s.charAt(i) != ' ' && s.charAt(i) != '\n') word += s.charAt(i);
             else {
                 list.add(word);
                 word = "";
@@ -311,6 +312,10 @@ public class PostServiceImpl implements PostService {
         }
 
         if(!word.isEmpty()) list.add(word);
+
+        System.out.println("-".repeat(100));
+        System.out.println(list);
+        System.out.println("-".repeat(100));
 
         for (int i = 0; i < list.size(); i++) {
             if(list.get(i).charAt(0) == '#') {

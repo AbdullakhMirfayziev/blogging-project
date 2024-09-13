@@ -244,12 +244,15 @@ public class EditorMVC {
 
         List<TagDto> tags = tagService.getTagsByPostId(postId);
 
-        String tagsString = "";
+        StringBuilder tagsString = new StringBuilder();
         for (TagDto tag : tags) {
-            tagsString += tag.getTitle() + " ";
+            tagsString.append(tag.getTitle()).append(' ');
         }
 
-        postDto.setTagsString(tagsString);
+        String stringTags = tagsString.toString();
+        stringTags = stringTags.replaceAll("\\s+", " ");
+
+        postDto.setTagsString(stringTags);
 
 
         model.addAttribute("photo", userPhoto);

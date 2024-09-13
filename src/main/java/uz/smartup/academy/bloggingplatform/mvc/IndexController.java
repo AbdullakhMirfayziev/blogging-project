@@ -53,6 +53,10 @@ public class IndexController {
 
         int topPostId = -1;
 
+        int originalSize = size;
+
+        if(size == 5) size --;
+
         PostDto topPost;
 
         if(category.isEmpty() && tag.isEmpty() && keyword.isEmpty()) {
@@ -70,7 +74,6 @@ public class IndexController {
                 topPostId = topPost.getId();
             }
 
-//            size = size - size%4;
             model.addAttribute("topPost", topPost);
         }
 
@@ -140,7 +143,7 @@ public class IndexController {
         model.addAttribute("categories", categories);
         model.addAttribute("loggedIn", userDTO);
         model.addAttribute("postPage", postPage);
-        model.addAttribute("size", size);
+        model.addAttribute("size", originalSize);
         model.addAttribute("page", page);
         model.addAttribute("postsSize", postsSize);
         model.addAttribute("months", months);
