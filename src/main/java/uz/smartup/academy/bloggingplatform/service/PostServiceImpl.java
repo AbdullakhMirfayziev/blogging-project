@@ -64,6 +64,7 @@ public class PostServiceImpl implements PostService {
 
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
+        post.setPhoto(postDto.getPhoto());
 //        post.setStatus(postDto.getStatus());
 
         post.setComments(dao.getPostComments(post.getId()));
@@ -266,9 +267,15 @@ public class PostServiceImpl implements PostService {
     public void switchPublishedToDraft(int id) {
         Post post = dao.getById(id);
 
+        PostSchedule postSchedule = dao.getScheduleByPostId(id);
+
         post.setStatus(Post.Status.DRAFT);
 
         dao.update(post);
+
+        if(postSchedule != null) {
+            dao.deleteScheduleData(postSchedule);
+        }
     }
 
     @Override

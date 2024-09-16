@@ -59,7 +59,7 @@ public class IndexController {
 
         PostDto topPost;
 
-        if(category.isEmpty() && tag.isEmpty() && keyword.isEmpty()) {
+        if(category.isEmpty() && tag.isEmpty() && keyword.isEmpty() && !postService.getPublishedPost().isEmpty()) {
             topPost = postService.getPublishedPost()
                     .stream()
                     .sorted((post1, post2) -> post2.getCreatedAt().compareTo(post1.getCreatedAt()))
