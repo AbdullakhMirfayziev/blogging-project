@@ -74,6 +74,16 @@ public class IndexController {
                 topPostId = topPost.getId();
             }
 
+            topPost.setLikesCount(likeService.countLikesByPostId(topPost.getId()));
+
+            if (getLoggedUser() != null) {
+                topPost.setLiked(likeService.findByUserAndPost(
+                        userService.getUserByUsername(getLoggedUser().getUsername()).getId(),
+                        topPost.getId()) != null);
+            } else {
+                topPost.setLiked(false);
+            }
+
             model.addAttribute("topPost", topPost);
         }
 
