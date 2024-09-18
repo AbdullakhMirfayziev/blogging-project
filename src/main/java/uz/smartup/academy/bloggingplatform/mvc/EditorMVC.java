@@ -271,10 +271,8 @@ public class EditorMVC {
     public String updatePost(@PathVariable("postId") int postId, @PathVariable("username") String username, @ModelAttribute("post") PostDto postDto, Model model, RedirectAttributes attributes, @RequestParam(value = "file", required = false) MultipartFile photo) throws IOException {
 
         if (photo.isEmpty() || photo == null) {
-            System.out.println("1".repeat(100));
             postDto.setPhoto(postService.getById(postId).getPhoto());
         } else {
-            System.out.println("2".repeat(100));
             byte[] bytes = photo.getBytes();
             postDto.setPhoto(bytes);
         }

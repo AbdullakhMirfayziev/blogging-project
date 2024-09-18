@@ -130,7 +130,7 @@ public class IndexController {
             photo = userService.encodePhotoToBase64(userDTO.getPhoto());
         }
 
-        List<CategoryDto> categories = categoryService.getAllCategories();
+        List<CategoryDto> categories = categoryService.getAllCategories().stream().sorted(Comparator.comparing(CategoryDto::getTitle)).toList();
 
 
         if (userDTO != null) {
@@ -177,7 +177,7 @@ public class IndexController {
 
         post.setLikesCount(likeService.countLikesByPostId(postId));
         List<CommentDTO> comments = postService.getPostComments(postId);
-        List<CategoryDto> categories = categoryService.getAllCategories();
+        List<CategoryDto> categories = categoryService.getAllCategories().stream().sorted(Comparator.comparing(CategoryDto::getTitle)).toList();
         post.setLikesCount(likeService.countLikesByPostId(postId));
 
         List<TagDto> tags = tagService.getTagsByPostId(postId);
@@ -294,7 +294,7 @@ public class IndexController {
         UserDTO user = userService.getUserByUsername(username);
         UserDTO loged = getLoggedUser() == null ? null : userService.getUserByUsername(getLoggedUser().getUsername());
         model.addAttribute("loggedInUser", loged);
-        List<CategoryDto> categories = categoryService.getAllCategories();
+        List<CategoryDto> categories = categoryService.getAllCategories().stream().sorted(Comparator.comparing(CategoryDto::getTitle)).toList();
 
         boolean isEditor = false;
         for (Role role : user.getRoles()) {
@@ -324,7 +324,7 @@ public class IndexController {
 
         int followsSize = userService.getFollowers(user.getId()).size();
         int followingsSize = userService.getFollowing(user.getId()).size();
-        int postsSize = postService.getPostsByAuthor(user.getId()).size();
+        int postsSize = postService.getPublishedPostsByAuthorId(user.getId()).size();
 
         String base64EncodedPhoto = userService.encodePhotoToBase64(user.getPhoto());
         model.addAttribute("loggedIn", getLoggedUser());
@@ -368,8 +368,7 @@ public class IndexController {
         }
 
         UserDTO user = userService.getUserByUsername(username);
-        List<CategoryDto> categories = categoryService.getAllCategories();
-
+        List<CategoryDto> categories = categoryService.getAllCategories().stream().sorted(Comparator.comparing(CategoryDto::getTitle)).toList();
         String base64EncodedPhoto = userService.encodePhotoToBase64(user.getPhoto());
         model.addAttribute("loggedIn", getLoggedUser());
         model.addAttribute("base64EncodedPhoto", base64EncodedPhoto);
@@ -523,7 +522,7 @@ public class IndexController {
         model.addAttribute("posts", posts);
         model.addAttribute("firstName", firstName);
         model.addAttribute("lastName", lastName);
-        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("categories", categoryService.getAllCategories().stream().sorted(Comparator.comparing(CategoryDto::getTitle)).toList());
         model.addAttribute("loggedIn", getLoggedUser());
         model.addAttribute("username", username);
         model.addAttribute("photo", photo);
@@ -553,7 +552,7 @@ public class IndexController {
 
         int notificationSize = notificationService.getAllNotification(user.getId()).size();
 
-        if (notificationSize <= page * (size - 1)) {
+        if (notificationSize > 0 && notificationSize <= page * (size - 1)) {
             page = notificationSize / size + (notificationSize % size == 0 ? 0 : 1);
         }
 
@@ -561,7 +560,7 @@ public class IndexController {
 
 
         List<Notification> notifications = notificationsPage.getContent();
-        List<CategoryDto> categories = categoryService.getAllCategories();
+        List<CategoryDto> categories = categoryService.getAllCategories().stream().sorted(Comparator.comparing(CategoryDto::getTitle)).toList();
 
 
         String photo = "";
