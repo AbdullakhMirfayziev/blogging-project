@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>Admin Console</title>
+    <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/admin/css/bootstrap.min.css}" rel="stylesheet" >
+    <link th:href="@{/admin/css/font-awesome.min.css}" rel="stylesheet" >
+    <link th:href="@{/admin/css/style.css}" rel="stylesheet">
+    <link th:href="@{/admin/css/nav.css}" rel="stylesheet">
+    <link th:href="@{/admin/css/global.css}" rel="stylesheet">
+    <link th:href="@{/admin/css/dashboard.css}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <link th:href="@{/admin/css/table.css}" rel="stylesheet">
+
+</head>
+<body onLoad="doOnLoad();">
+
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" th:href="@{/admin}"><h4>ADMINISTRATOR</h4></a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <ul class="nav hide">
+
+        <li class="nav-item sign_box dropdown" th:each = "user: ${user}">
+            <a th:text="${user.first_name}" class="nav-link dropdown-toggle text-white border-0" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+            </a>
+
+            <ul class="dropdown-menu drop_2" style="left:auto; right:0; min-width:200px;">
+                <li class="small" style="padding: 0.25rem 1rem;">Welcome !</li>
+                <li><a class="dropdown-item" th:href="@{@{/profile/{username}(username=${user.username})}}"><i class="fa fa-user"></i> My Account</a></li>
+                <li><a class="dropdown-item" th:href="@{/logout}"><i class="fa fa-sign-out"></i> Logout</a></li>
+            </ul>
+        </li>
+
+    </ul>
+</header>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Yonbosh menyu-->
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="overflow-y: auto; max-height:inherit;">
+            <div class="position-sticky">
+                <ul class="nav flex-column mb-2 list-unstyled ps-0">
+                    <li class="nav-item">
+                        <a th:href="@{/admin}" class="btn btn-toggle align-items-center rounded w-100 tag_m  no_drop active_tab"><i class="fa fa-dashboard icon-before"></i><span class="btn">Dashboard</span></a>
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a href="javascript:void(0);" class="btn btn-toggle align-items-center rounded collapsed w-100 tag_m" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false"><i class="fa fa-briefcase icon-before"></i><span class="btn">Categories</span><i class="fa fa-chevron-right"></i></a>
+                        <div class="collapse" id="account-collapse" style="">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li th:each="category : ${categories}">
+                                    <a th:href="@{/admin/category/{title}(title=${category.title})}" class="link-dark rounded w-100">
+							<span>
+								<i style="font-size:8px; vertical-align:middle; margin-right:10px;" class="fa fa-circle-o"></i>
+								<span th:text="${category.title}"></span>
+							</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="javascript:void(0);" class="btn btn-toggle align-items-center rounded collapsed w-100 tag_m" data-bs-toggle="collapse" data-bs-target="#table-collapse" aria-expanded="false"><i class="fa fa-table icon-before"></i><span class="btn">Table</span><i class="fa fa-chevron-right"></i></a>
+                        <div class="collapse" id="table-collapse" style="">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a th:href="@{/admin/user}" class="link-dark rounded w-100"><span><i style="font-size:8px; vertical-align:middle; margin-right:10px;" class="fa fa-circle-o"></i> User </span></a></li>
+                                <li><a th:href="@{/admin/post}" class="link-dark rounded w-100"><span><i style="font-size:8px; vertical-align:middle; margin-right:10px;" class="fa fa-circle-o"></i> Post </span></a></li>
+                                <li><a th:href="@{/admin/comment}" class="link-dark rounded w-100"><span><i style="font-size:8px; vertical-align:middle; margin-right:10px;" class="fa fa-circle-o"></i> Comment </span></a></li>
+                                <li><a th:href="@{/admin/like}" class="link-dark rounded w-100"><span><i style="font-size:8px; vertical-align:middle; margin-right:10px;" class="fa fa-circle-o"></i> Like </span></a></li>
+                                <li><a th:href="@{/admin/category}" class="link-dark rounded w-100"><span><i style="font-size:8px; vertical-align:middle; margin-right:10px;" class="fa fa-circle-o"></i> Category </span></a></li>
+                                <li><a th:href="@{/admin/tag}" class="link-dark rounded w-100"><span><i style="font-size:8px; vertical-align:middle; margin-right:10px;" class="fa fa-circle-o"></i> Tag </span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                </ul>
+
+            </div>
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto common col-lg-10 px-md-4">
+            <div class="row analytic_1">
+                <div class="col-md-3">
+                    <div class="analytic_1l">
+                        <h5 class="mb-0">Like Manager</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row analytic_2 mt-4">
+                <div class="col-xl-9 col-md-7 col-lg-7">
+                    <div class="project_2r">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6  style="padding-top:2px;" class="d-inline-block mb-0">Like</h6>
+                                <h6 style="padding-top:2px;" class="d-inline-block mb-0">(</h6>
+                                <h6 th:text="${likeSize}" style="padding-top:2px;" class="d-inline-block mb-0"></h6>
+                                <h6 style="padding-top:2px;" class="d-inline-block mb-0">)</h6>
+                            </div>
+
+
+                            <div class="card-body table-responsive table_tow">
+                                <div class="table_tow">
+                                    <table class="table table-hover table-bordered table-centered mb-0">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Post</th>
+                                            <th>User</th>
+                                            <th>Created_at</th>
+                                            <th>Active?</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each = "like: ${likeDTO}">
+                                            <td th:text = "${like.id}"></td>
+                                            <td th:text = "${like.postId}"></td>
+                                            <td th:text = "${like.userId}"></td>
+                                            <td th:text = "${like.createdAt}"></td>
+                                            <td>
+                                                <h6 data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Edit" class="d-inline-block mb-0"><a th:href="@{/admin/post/edit/{id}(id=post.id)}"><i style="vertical-align:middle; margin-left:5px;margin-right:5px;" class="fa fa-edit col_3"></i></a></h6>
+                                                <h6 data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Delete" class="d-inline-block mb-0"><a th:href="@{/admin/post/delete/{id}(id=post.id)}"><i class="fa fa-trash col_3"></i></a></h6>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+
+<script th:src="@{/admin/js/bootstrap.bundle.min.js}" ></script>
+<script th:src="@{/admin/js/global.js}"></script>
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+
+
+</body></html>

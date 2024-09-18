@@ -1,0 +1,25 @@
+/*********************project_list_detail****************/
+
+/*********************project_list_detail_end****************/
+
+
+@media screen and (max-width : 767px){
+.prod_2l{
+margin-top:10px; 
+ }
+.proj_dtr {
+margin-top:10px;  
+ }
+.proj_dtr1im{
+margin-top:10px;  
+ }
+.create_1r{
+margin-top:10px;  
+ }
+ }
+@media (min-width:768px) and (max-width:991px) {
+
+ }
+@media (min-width:992px) and (max-width:1200px) {
+
+ }

@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GREEN WHITE NEWS</title>
+    <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+          rel="stylesheet">
+    <style>
+
+        .share-btn {
+            position: relative;
+            display: flow;
+            cursor: pointer;
+            align-items: center;
+            border-radius: 10%;
+            transition: .2s ease-in-out;
+            scale: .65;
+            padding: 5px;
+            width: 30px;
+            height: 30px;
+            z-index: 10;
+
+        }
+
+
+        .up {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5em;
+        }
+
+        .card1 {
+            width: 50px;
+            height: 50px;
+            outline: none;
+            border: none;
+            background: white;
+            border-radius: 95px 95px 95px 95px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+            transition: 300ms cubic-bezier(0.73, -0.18, 0.02, 1.46);
+        }
+        .instagram {
+            fill: #cc39a4;
+        }
+
+        .card1:hover {
+            cursor: pointer;
+            scale: 1.1;
+            background-image: linear-gradient(to top, rgb(250,126,30), rgb(253, 8, 66));
+        }
+
+        .card1:hover .instagram {
+            fill: white;
+        }
+
+
+        .card1[data-toggle1="true"] {
+            transform: translateY(0px) translateX(-0px) scale(0);
+        }
+
+        .card2 {
+            width: 50px;
+            height: 50px;
+            outline: none;
+            border: none;
+            background: white;
+            border-radius: 95px 95px 95px 95px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+            transition: 300ms cubic-bezier(0.73, -0.18, 0.02, 1.46);
+
+        }
+
+        .telegram {
+            fill: #03A9F4;
+        }
+
+        .card2:hover {
+        cursor: pointer;
+        scale: 1.1;
+        background-color: #03A9F4;
+        }
+
+        .card2:hover .telegram {
+        fill: white;
+        }
+
+        .card2[data-toggle2="true"] {
+            transform: translateY(0px) translateX(-0px) scale(0);
+        }
+
+
+        .card3 {
+            width: 50px;
+            height: 50px;
+            outline: none;
+            border: none;
+            background: white;
+            align-items: center;
+            border-radius: 95px 95px 95px 95px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+            rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+            transition: 300ms cubic-bezier(0.73, -0.18, 0.02, 1.46);
+
+        }
+
+        .card3 svg {
+            display: block;
+            margin: auto;
+        }
+
+        .card3:hover .copy-paste {
+            fill: #ffffff;
+        }
+
+        .card3 .copy-paste {
+            fill: #0031ff;
+        }
+
+        .card3[data-toggle3="true"] {
+            transform: translateY(0px) translateX(-0px) scale(0);
+        }
+
+        .card3:hover {
+        cursor: pointer;
+        scale: 1.1;
+        background-color: rgb(74, 74, 230);
+        }
+
+        .card3:hover .facebook {
+        fill: white;
+        }
+
+        .card4 {
+        width: 50px;
+        height: 50px;
+        outline: none;
+        border: none;
+        background: white;
+        border-radius: 95px 95px 95px 95px;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        transition: 300ms cubic-bezier(0.73, 0.18, 0.02, 1.46);
+
+        }
+        .facebook {
+            fill: #0031ff;
+        }
+
+        .card4[data-toggle4="true"] {
+            transform: translateY(0px) translateX(-0px) scale(0);
+        }
+
+        .card4:hover {
+            cursor: pointer;
+            scale: 1.1;
+            background-color: #0031ff;
+        }
+
+        .card4:hover .facebook {
+            fill: #ffffff;
+        }
+
+
+        #source-link > i {
+            color: rgb(94, 106, 210);
+        }
+
+
+        .meta-link > i, .meta-link > span {
+            height: 20px;
+            line-height: 20px;
+        }
+
+        .meta-link > span {
+            color: white;
+            font-family: "Rubik", sans-serif;
+            transition: color 100ms;
+        }
+
+        .contact .contacts li {
+            list-style: none;
+            margin-bottom: 10px;
+            font-family: serif;
+            font-size: 0.8em;
+        }
+
+        .faq {
+            text-align: left;
+            color: #7c8688;
+            font-size: 0.7em;
+        }
+        .author-info {
+            display: flex;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .author-info i {
+            color: #494e49;
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        .author-name {
+            color: #494e49;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .author-name:hover {
+            color: #494e49;
+        }
+
+        .like-btn {
+            outline: none; /* Removes the focus outline */
+            box-shadow: none; /* Ensures no shadow appears */
+        }
+
+        .like-btn:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+
+
+
+
+    </style>
+</head>
+<body th:data-logged-in="${loggedIn != null}">
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container-fluid">
+        <div class="navbar-start">
+            <a class="navbar-brand" th:href="@{/}">
+                <div class="image">
+                    <img th:src="@{/css/photos/greenNews.jpg}" alt="">
+                </div>
+                <h4>Green White News</h4>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="dropdown me-2">
+                <button class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    Categories
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li th:each="category : ${categories}">
+                        <a class="dropdown-item text-success"
+                           th:href="@{/(size = ${size}, page = ${page}, category=${category.title})}"
+                           th:text="${category.title}"> ></a>
+                    </li>
+                </ul>
+            </div>
+            <form th:action="@{/}" method="get" class="d-flex me-auto">
+                <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search">
+                <button class="btn btn-success" type="submit">Search</button>
+            </form>
+            <div th:if="${loggedIn != null}" style="display: flex;">
+                <button class="open" type="button" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas"
+                        aria-controls="profileOffcanvas">
+                    <img th:src="'data:image/png;base64,' + ${photo}" alt="Profile Image">
+                </button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas"
+                     aria-labelledby="profileOffcanvasLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="profileOffcanvasLabel">Profile Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <form th:action="@{/profile/{username}(username=${loggedIn.username})}" method="GET">
+                            <i class="fa-regular fa-circle-user"></i>
+                            <button class="w-100 mb-2" type="submit">Profile</button>
+                        </form>
+                        <form th:action="@{/profile/{username}/edit(username=${loggedIn.username})}">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <button class="w-100 mb-2" type="submit">Edit Profile</button>
+                        </form>
+                        <form th:action="@{/editor/{username}/posts(username=${loggedIn.username})}"
+                              sec:authorize="hasRole('ROLE_EDITOR')">
+                            <i class="fa-regular fa-newspaper"></i>
+                            <button class="w-100 mb-2">Your Posts</button>
+                        </form>
+
+                        <form th:action="@{/editor/{username}/posts/new(username=${loggedIn.username})}" method="GET"
+                              sec:authorize="hasRole('ROLE_EDITOR')">
+                            <i class="fa-regular fa-square-plus"></i>
+                            <button type="submit" class="w-100 mb-2">Create New Post</button>
+                        </form>
+
+                        <form th:action="@{/changePassword}">
+                            <i class="fa-solid fa-key"></i>
+                            <button class="w-100 mb-2">Change Password</button>
+                        </form>
+                        <form th:action="@{/logout}" method="POST" class="w-100">
+                            <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i>
+                            <button type="submit" class="text-danger w-100">Log Out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${loggedIn == null}" style="display: flex;">
+                <form th:action="@{/login}" class="login d-flex" style="height: 60%;">
+                    <button class="btn btn-primary me-2" type="submit">Login</button>
+                </form>
+                <form th:action="@{/register}" method="GET" class="signup" style="height: 60%;">
+                    <button class="btn btn-outline-success" type="submit" style="height: 100%;">Signup</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section id="Post">
+    <div class="date" style="display: flex; justify-content: space-between;">
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+            <div class="calendar">
+                <i class="fa-solid fa-calendar-days"></i>
+                <h5 th:if="${post.createdAt.toLocalDate().isBefore(T(java.time.LocalDate).now())}"
+                    th:text="${#temporals.format(post.createdAt, 'dd')} + ' ' + ${months[post.createdAt.monthValue - 1]} + ' ' + ${#temporals.format(post.createdAt, 'yyyy HH:mm')}">
+                </h5>
+
+                <h5 th:if="${post.createdAt.toLocalDate().isEqual(T(java.time.LocalDate).now())}"  th:attr="data-timestamp=${post.createdAt}" class="timeago"></h5>
+
+            </div>
+            <div class="like d-flex justify-content-start align-items-center">
+                <div th:if="${loggedIn!=null}">
+                    <form th:action="@{/{postId}/likes/{username}(postId=${post.id}, username=${loggedIn.username})}"
+                          method="post" class="like-form me-2">
+                        <button th:if="${!post.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
+                            <i class="bi bi-heart" style="color: black"></i>
+                        </button>
+                        <button th:if="${post.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
+<!--                            <i class="bi bi-heart-fill" style="color: red"></i>-->
+                            <i class="bi bi-balloon-heart-fill" style="color: red"></i>
+                        </button>
+                        <input type="hidden" name="postId" th:value="${post.id}">
+                    </form>
+                </div>
+
+                <div th:if="${loggedIn==null}">
+                    <form action="#" method="post" class="like-form me-2">
+                        <button type="submit" class="btn btn-link p-0 like-btn">
+                            <i class="bi bi-heart like-icon" style="color: black"></i>
+                        </button>
+                        <input type="hidden" name="postId" th:value="${post.id}">
+                    </form>
+                </div>
+
+                <h5 th:text="${post.likesCount}"></h5>
+            </div>
+            <div class="share-btn">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     width="30px"
+                     height="30px"
+                     fill="currentColor"
+                     class="w-6 h-6">
+                    <path fill-rule="evenodd"
+                          d="M15.75 4.5a3 3 0 11.825 2.066l-8.421 4.679a3.002 3.002 0 010 1.51l8.421 4.679a3 3 0 11-.729 1.31l-8.421-4.678a3 3 0 110-4.132l8.421-4.679a3 3 0 01-.096-.755z"
+                          clip-rule="evenodd"
+                    />
+                </svg>
+            </div>
+            <div class="up">
+                <button data-toggle1="true" class="card1">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         viewBox="2,2,356,356"
+                         width="30px"
+                         height="30px"
+                         fill-rule="nonzero"
+                         class="instagram"
+                         onclick="copyAndShareOnInstagram()">
+                        <g fill-rule="nonzero"
+                           stroke="none"
+                           stroke-width="1"
+                           stroke-linecap="butt"
+                           stroke-linejoin="miter"
+                           stroke-miterlimit="10"
+                           stroke-dasharray=""
+                           stroke-dashoffset="0"
+                           font-family="none"
+                           font-weight="bold"
+                           font-size="none"
+                           text-anchor="end"
+                           style="mix-blend-mode: normal">
+                            <g transform="scale(8,8)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48">
+                                    <path fill="#E0E0E0" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z"/>
+                                    <path fill="#CFD8DC" d="M20 6L12 13 4 6z"/>
+                                    <path fill="#F44336" d="M4 6v12h16V6l-8 7z"/>
+                                </svg>
+
+                            </g>
+                        </g>
+                    </svg>
+                </button>
+                <button data-toggle2="true" class="card2">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 48 48"
+                         width="30px"
+                         height="30px"
+                         class="telegram"
+                         onclick="copyAndShareOnTelegram()">
+                        <path d="M24,4C12.972,4,4,12.972,4,24s8.972,20,20,20s20-8.972,20-20S35.028,4,24,4z M34.812,16.633L30.244,33.298 c-0.469,1.728-1.689,2.156-2.965,1.406l-4.095-3.02l-1.977,1.906c-0.219,0.219-0.401,0.401-0.82,0.401l0.292-4.119l7.482-6.759 c0.327-0.292-0.073-0.455-0.509-0.164l-9.243,5.813L12.73,25.97c-1.743-0.551-1.78-1.743,0.363-2.584l19.418-7.491 C34.274,15.346,35.56,15.987,34.812,16.633z"></path>
+                    </svg>
+                </button>
+
+                <button data-toggle4="true" class="card4">
+                    <svg height="50px"
+                         width="30px"
+                         viewBox="0 0 25 25"
+                         xmlns="http://www.w3.org/2000/svg"
+                         class="facebook"
+                         onclick="copyAndShareOnFacebook()">
+                        <path d="M12 2C6.477 2 2 6.477 2 12c0 4.857 3.544 8.875 8.172 9.623v-6.825H7.57V12h2.602V9.633c0-2.576 1.534-3.994 3.882-3.994 1.125 0 2.307.2 2.307.2v2.538h-1.3c-1.278 0-1.675.794-1.675 1.604V12h2.855l-.456 3.798h-2.4v6.824C18.456 20.875 22 16.857 22 12c0-5.523-4.477-10-10-10z"></path>
+                    </svg>
+
+                </button>
+
+                <button data-toggle3="true" class="card3">
+                    <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            width="30px"
+                            height="30px"
+                            class="copy-paste"
+                            onclick="copyAndShare()"
+                    >
+                        <path d="M19 3h-3.18c-.42-1.16-1.52-2-2.82-2s-2.4.84-2.82 2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm6 16H5V5h2v1c0 .55.45 1 1 1s1-.45 1-1V5h6v1c0 .55.45 1 1 1s1-.45 1-1V5h2v14z"/>
+
+
+                    </svg>
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+
+        <div>
+
+        </div>
+        <div class="author-info">
+            <i class="bi bi-person-circle"></i>
+            <a th:href="@{/posts/author/{username}(username=${author.username})}" th:text="${author.first_name + ' ' + author.last_name}" class="author-name" style="margin-right: 20px;"></a>
+
+            <form th:if="${loggedIn} and ${!isFollowed} and ${loggedIn.username} != ${user.username} and ${!user.username.startsWith('deleted_user')}" th:action="@{/follow1/{username}(username=${user.username})/{postId}(postId=${postId})}" method="post" style="display: inline;">
+                <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
+                <input type="hidden" name="followedId" th:value="${user.id}" />
+                <button type="submit" class="follow-button btn btn-outline-success">Follow</button>
+            </form>
+
+            <form th:if="${loggedIn} and ${isFollowed} and ${loggedIn.username} != ${user.username}" th:action="@{/unfollow1/{username}(username=${user.username})/{postId}(postId=${postId})}" method="post"  style="display: inline;">
+                <input type="hidden" name="followerId" th:value="${loggedInUser.id}" />
+                <input type="hidden" name="followedId" th:value="${user.id}" />
+                <button type="submit" class="follow-button btn btn-outline-success">
+                    Unfollow
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <h1 th:text="${post.title}"></h1>
+    <div class="image" style="margin-top: 25px;">
+        <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}"
+             alt="Post Image" style="margin-top: 0;">
+    </div>
+    <p th:utext="${post.content}"></p>
+
+    <div class="tags" th:if="${tags != null}" style="display: flex; justify-content: start; align-items: center; flex-wrap: wrap;">
+        <a th:each="tag : ${tags}"
+           th:href="@{/(tag=${tag.title})}"
+           th:text="'#' + ${tag.title}"
+           style="font-size: 20px; margin-right: 10px;">
+        </a>
+    </div>
+
+</section>
+
+<section id="Comments">
+    <div class="comment-form">
+        <div th:if="${loggedIn!=null}">
+            <form th:action="@{/posts/{postId}/submitComment/{username}(username=${loggedIn.username}, postId=${post.id})}"
+                  th:object="${newComment}" method="POST">
+                <label for="comment">Your Comment:</label>
+                <textarea id="comment" th:field="*{content}" rows="5" placeholder="Write your comment here..."
+                          required></textarea>
+                <button id="submitCommentBtn" class="btn btn-success" type="submit" data-bs-toggle="popover"
+                        title="Error" data-bs-content="Please log in or sign up to submit a comment.">Submit
+                </button>
+            </form>
+        </div>
+
+        <div th:if="${loggedIn==null}">
+            <form action="" th:object="${newComment}" method="POST">
+                <label for="comment">Your Comment:</label>
+                <textarea id="comment1" th:field="*{content}" rows="5" placeholder="Write your comment here..."
+                          required></textarea>
+                <button id="submitCommentBtn1" class="btn btn-success" type="button" data-bs-toggle="popover"
+                        title="Error" data-bs-content="Please log in or sign up to submit a comment.">Submit
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="comments">
+        <h4 th:if="${commentsSize>1}" th:text="${commentsSize} + ' comments'"></h4>
+        <h4 th:if="${commentsSize<2}" th:text="${commentsSize} + ' comment'"></h4>
+        <div class="comment" th:each="comment : ${comments}"
+             style="display: flex; justify-content: start; align-items: center;">
+            <div class="image"
+                 style="width: 40px; height: 40px; border-radius: 50%; margin-right: 15px; margin-bottom: 20px;">
+                <img style="width: 100%; height: 100%; border-radius: 50%; " th:if="${comment.hashedPhoto != null}"
+                     th:src="'data:image/png;base64,' + ${comment.hashedPhoto}" alt="Post Image">
+            </div>
+            <div>
+                <div class="content">
+                    <div th:if="${comment.username.startsWith('deleted_user_')}">
+                        <a >deleted user</a>
+                    </div>
+                    <div th:if="${!comment.username.startsWith('deleted_user_')}">
+                        <a th:href="@{/profile/{username}(username=${comment.username})}" th:text="${comment.username}"></a>
+
+                    </div>
+                    <p th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></p>
+
+                    <form th:if="${loggedIn != null and loggedInId == comment.authorId}"
+                          th:action="@{/posts/{postId}/edit/{commentId}(postId=${post.id}, commentId=${comment.id})}"
+                          method="get">
+                        <button type="submit" style="border: none; background-color: white; margin-left: 20px;">
+                            <i class="fa-solid fa-pen-to-square text-success"></i>
+                        </button>
+                    </form>
+
+                    <form th:if="${loggedIn != null and loggedInId == comment.authorId}"
+                          th:action="@{/posts/{postId}/delete/{commentId}(postId=${post.id}, commentId=${comment.id})}"
+                          method="post">
+                        <input type="hidden" name="_method" value="delete">
+                        <button type="submit" style="border: none; background-color: white; margin-left: 20px;">
+                            <i class="fa-solid fa-trash-can text-danger"></i>
+                        </button>
+                    </form>
+
+                    <p th:if="${comment.edited} == ${one}">
+                        edited
+                    </p>
+                </div>
+                <h4 th:text="${comment.content}"></h4>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section id="Contact" class="mt-5">
+    <div class="contact">
+        <div class="image">
+            <img th:src="@{/css/photos/gws_square.jpg}" alt="Contact Image">
+        </div>
+        <div class="contacts">
+            <h3>Contacts</h3>
+            <li>
+                <a href="https://www.greenwhite.uz/"><i class="bi bi-globe2"></i> www.greenwhite.uz</a>
+            </li>
+            <li>
+                <a href="mailto:info@greenwhite.uz"><i class="bi bi-envelope"></i> info@greenwhite.uz</a>
+            </li>
+            <li>
+                <a href="tel:+998712030301"><i class="bi bi-telephone"></i> +998 71 203 03 01</a>
+            </li>
+            <li>
+                <a href="tel:+998712008833"><i class="bi bi-telephone"></i> +998 71 200 88 33</a>
+            </li>
+        </div>
+    </div>
+    <div class="line"></div>
+    <div class="faq">
+        <p><i class="bi bi-c-circle"></i>Green White Solutions LLC. All rights reserved 2024</p>
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.timeago').forEach(function(element) {
+            var timestamp = element.getAttribute('data-timestamp');
+            element.textContent = moment(timestamp).fromNow();
+        });
+    });
+</script>
+<script>
+
+
+
+    function copyAndShareOnInstagram() {
+        var dummy = document.createElement("textarea");
+        const text = window.location.href;
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        const subject = encodeURIComponent("Check this out!");
+        // window.location.href = `instagram://sharesheet?text=${text}`
+        setTimeout(function () {
+            if (document.visibilityState === "visible") {
+                window.location.href = `mailto:?subject=${subject}&body=${text}`;
+            }
+        }, 100);
+    }
+
+    function copyAndShareOnTelegram() {
+        const dummy = document.createElement("textarea");
+        const text = window.location.href;
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        // window.location.href = `tg://share/msg?text=${encodeURIComponent(text)}`;
+        setTimeout(function () {
+            if (document.visibilityState === "visible") {
+                window.location.href = `https://t.me/share/url?url=${encodeURIComponent(text)}&text=${encodeURIComponent('Check this out!')}`;
+            }
+        }, 10);
+    }
+
+    function copyAndShareOnX() {
+        const dummy = document.createElement("textarea");
+        const text = window.location.href;
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        const X = `twitter://share`;
+
+        window.location.href = X;
+
+        setTimeout(function () {
+            if (document.visibilityState === "visible") {
+                window.location.href = `https://www.twitter.com/`;
+            }
+        }, 100);
+    }
+
+    function copyAndShareOnFacebook() {
+        const dummy = document.createElement("textarea");
+        const text = window.location.href;
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        window.location.href = `https://www.facebook.com/share.php?u=${text}`;
+
+        setTimeout(function () {
+            if (document.visibilityState === "visible") {
+                window.location.href = `https://www.facebook.com/share.php?u=${text}`;
+            }
+        }, 100);
+    }
+
+    function copyAndShare() {
+        var dummy = document.createElement("textarea");
+        var text = window.location.href;
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        alert("URL copied to clipboard!");
+    }
+
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const loggedIn = document.body.getAttribute("data-logged-in") === "true";
+
+        const likeForms = document.querySelectorAll('.like-form');
+
+        likeForms.forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!loggedIn) {
+                    event.preventDefault();
+
+                    var popover = new bootstrap.Popover(form.querySelector('.like-icon'), {
+                        trigger: 'manual',
+                        content: "Please log in or sign up to like.",
+                        placement: 'top'
+                    });
+
+                    popover.show();
+                    setTimeout(function () {
+                        popover.hide();
+                    }, 3000);
+                }
+            });
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const commentBtn = document.getElementById('submitCommentBtn1');
+        if (commentBtn) {
+            const popover = new bootstrap.Popover(commentBtn, {
+                trigger: 'manual',
+                content: "Please log in or sign up to submit a comment.",
+                placement: 'top'
+            });
+            commentBtn.addEventListener('click', function () {
+                popover.show();
+                setTimeout(function () {
+                    popover.hide();
+                }, 3000);
+            });
+        }
+    });
+
+    const shareBtn = document.querySelector(".share-btn");
+    const card1 = document.querySelector(".card1");
+    const card2 = document.querySelector(".card2");
+    const card3 = document.querySelector(".card3");
+    const card4 = document.querySelector(".card4");
+
+    shareBtn.addEventListener("click", () => {
+        if (card1.getAttribute("data-toggle1") === "true") {
+            card1.setAttribute("data-toggle1", false);
+            card2.setAttribute("data-toggle2", false);
+            card3.setAttribute("data-toggle3", false);
+            card4.setAttribute("data-toggle4", false);
+        } else if (card1.getAttribute("data-toggle1") === "false") {
+            card1.setAttribute("data-toggle1", true);
+            card2.setAttribute("data-toggle2", true);
+            card3.setAttribute("data-toggle3", true);
+            card4.setAttribute("data-toggle4", true);
+        }
+    });
+</script>
+
+<script>
+    const animateButton = function (e) {
+
+        // e.preventDefault;
+
+        e.target.classList.remove('animate');
+        e.target.classList.add('animate');
+        setTimeout(function () {
+            e.target.classList.remove('animate');
+        }, 700);
+    };
+
+    var bubblyButtons = document.getElementsByClassName("bubbly-button");
+
+    for (var i = 0; i < bubblyButtons.length; i++) {
+        bubblyButtons[i].addEventListener('click', animateButton, false);
+    }
+</script>
+
+</body>
+</html>

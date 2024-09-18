@@ -1,0 +1,362 @@
+.navbar-brand{
+    display: flex;
+    align-items: center;
+}
+
+.navbar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 94%;
+    margin: auto;
+    height: 80px;
+    background-color: none;
+    margin-bottom: 50px;
+}
+
+.navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar .signup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-start .navbar-brand .image{
+    width: 70px;
+    height: 70px;
+    background-color: rgb(0, 166, 81);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.navbar-brand .image img{
+    color: white;
+    width: 100%;
+    height: 100%;
+}
+
+.navbar-brand h4{
+    font-family: 'Open Sans', sans-serif;
+    color: rgb(0, 166, 81);
+}
+
+.navbar li a{
+    font-size: 20px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    color: gray;
+}
+
+.navbar li .active{
+    color: black;
+}
+
+section#Home {
+    width: 94%;
+    margin: auto;
+}
+
+
+section#Home .post {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    /* cursor: pointer; */
+}
+
+section#Home .post h2{
+    cursor: pointer;
+}
+
+section#Home .post img{
+    width: 50%;
+    margin-right: 20px;
+}
+
+section#Home .post .post_content .date h5{
+    font-family: "Baskervville SC", serif;
+    font-weight: 600;
+    color: rgb(74, 73, 73);
+    margin-left: 5px;
+}   
+
+section#Home .post .post_content .date i, .date h5{
+    display: inline-block;
+    margin: 10px 5px;
+}
+
+section#Home .post .post_content .like i, .like h5{
+    display: inline-block;
+    margin: 15px 2px;
+}
+
+section#Home .post .post_content .like i{
+    margin-right: 10px;
+    width: 7px;
+    height: 7px;
+    font-size: larger;
+    cursor: pointer;
+}
+
+section#Home .post .post_content .like h5{
+    font-family: "Work Sans", sans-serif;
+    color: gray;
+    font-size: medium;
+}
+
+section#Home .post .post_content p{
+    color: gray;
+}
+
+section#News{
+    width: 94%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 40px;
+    margin-top: 50px;
+    margin-left: 3%;
+    margin-right: 3%;
+    /* height: 1250px; */
+    /* border: 1px solid black; */
+    /* align-items: center; */
+}
+
+section#News .post {
+    height: 350px;
+    cursor: pointer;
+    /* border: 1px solid red; */
+    /* padding-top: 25px; */
+}
+
+section#News .post img {
+    width: 100%;
+    height: 60%;
+}
+
+section#News .post .date{
+    width: 100%;
+    display: flex;
+    justify-self: flex-start;
+    align-items: center;
+}
+
+section#News .post .date .calendar{
+    width: 50%;
+}
+
+section#News .post .date .like {
+    width: 50%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+section#News .post .date .like i{
+    font-size: 20px;
+}
+
+section#News .post .date .like h5{
+    margin-left: 8px;
+}
+
+section#News .post .date .calendar h5{
+    font-family: "Baskervville SC", serif;
+    font-size: medium;
+    margin-right: 10px;
+}
+
+section#News .post h5 {
+    font-family: "Playfair Display", serif;
+    color: gray;
+}
+
+section#News .post .line {
+    height: 1px;
+    width: 100%;
+    background-color: gray;
+}
+
+
+section#Contact{
+    margin-top: 100px;
+    background-color: black;
+    padding: 3% 10%;
+}
+
+section#Contact .contact{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+section#Contact .contact .contacts{
+    color: white;
+}
+
+section#Contact .contact .contacts a{
+    color: white;
+    font-family: sans-serif;
+    text-decoration: none;
+}
+
+section#Contact .contact .contacts li{
+    list-style: none;
+}
+
+section#Contact .image{
+    width: 100px;
+    height: 100px;
+}
+
+section#Contact .image img{
+    width: 100%;
+    height: 100%;
+}
+
+section#Contact .line{
+    width: 100%;
+    height: 0.5px;
+    background-color: white;
+    margin-top: 60px;
+}
+
+section#Contact .faq{
+    margin-top: 20px;
+    color: white;
+}
+
+section#Post {
+    width: 60%;
+    margin: 0 auto;
+}
+
+section#Post .date {
+    font-size: 18px;
+    color: rgb(84, 83, 83);    
+    font-family: "Lora", serif;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    /* border: 1px solid red; */
+}
+
+section#Post .date .like {
+    margin: 0 45px;
+    cursor: pointer;
+}
+
+section#Post .date .share {
+    cursor: pointer;
+}
+
+section#Post h1 {
+    font-family: "Wittgenstein", serif;
+    font-weight: 600;
+}
+
+section#Post .image img{
+    width: 100%;
+    margin: 50px 0;
+}
+
+section#Post p {
+    font-size: 20px;
+}
+
+section#Comments {
+    margin: auto;
+    margin-top: 60px;
+    width: 92%;
+    border-radius: 8px;
+    border: 1px solid rgb(0, 166, 81);
+    padding: 10px;
+}
+
+section#Comments .comment-form {
+    width: 100%;
+    /* max-width: 600px; */
+    margin: auto;
+    max-height: 300px;  
+    padding: 10px;
+    /* border: 1px solid #ddd; */
+    border-radius: 5px;
+    /* height: 200px; */
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+}
+
+section#Comments .comment-form textarea{
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgb(0, 166, 81);
+    border-radius: 5px;
+    height: 10%;
+    resize: vertical;
+    height: 70px;
+}
+
+section#Comments .comment-form button{
+    display: inline-block;
+    padding: 10px 20px;
+    /* background-color: #169532; */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+section#Comments .comments {
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
+    /* background-color: wheat; */
+}
+
+section#Comments .comments h4 {
+    margin-bottom: 15px;
+}
+
+section#Comments .comments .comment{
+    margin-bottom: 40px;
+    border-radius: 10px;
+
+    /* box-shadow: 0 2px 4px rgba(0, 0,1) */
+}
+
+section#Comments .comments .comment .content{
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 0;
+}
+
+section#Comments .comments .comment .content p{
+    margin-left: 20px;
+    color: gray;
+}
+
+section#Comments .comments .comment .content h5{
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    /* color: rgb(121, 128, 0); */
+    color: rgb(0, 166, 81);
+}
+
+section#Comments .comments .comment h4{
+    font-size: 17px;
+    font-weight: 500;
+}

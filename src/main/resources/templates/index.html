@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GREEN WHITE NEWS</title>
+    <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ssajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+
+    <style>
+        .contact .contacts li {
+            list-style: none;
+            margin-bottom: 10px;
+            font-family: serif;
+            font-size: 0.8em;
+        }
+        .faq {
+            text-align: left;
+            color: #7c8688;
+            font-size: 0.7em;
+        }
+        .page-item.active .page-link {
+            background-color: rgb(0, 166, 81);
+            border-color: rgb(0, 166, 81);
+            color: white;
+        }
+
+        .page-item.active .page-link a{
+            color: white;
+        }
+
+        .page-item .page-link {
+            color: rgb(0, 166, 81);
+        }
+
+        .page-item {
+            margin-right: 7px;
+        }
+        /*.notification-button {*/
+        /*    position: relative;*/
+        /*    background: none;*/
+        /*    border: none;*/
+        /*    cursor: pointer;*/
+        /*    margin-right: 20px;*/
+        /*    margin-top: 12px;*/
+        /*    font-size: 40px;*/
+        /*}*/
+
+        /*.notification-badge {*/
+        /*    position: absolute;*/
+        /*    top: -10px; !* Adjusts the vertical position *!*/
+        /*    right: -10px; !* Adjusts the horizontal position *!*/
+        /*    background-color: red;*/
+        /*    color: white;*/
+        /*    border-radius: 50%;*/
+        /*    padding: 5px 8px;*/
+        /*    font-size: 0.75rem;*/
+        /*    font-weight: bold;*/
+        /*}*/
+        .notification-container {
+            position: -ms-device-fixed;
+            display: inline-block;
+
+
+        }
+
+        .notification-button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            font-size: 45px;
+            color: #555;
+            transition: color 0.3s ease;
+        }
+
+        .notification-button:hover {
+            color: rgb(0, 166, 81);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 2px;
+            background-color: #e11d48;
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        #userSuggestions {
+            position: absolute;
+            top: 80%;
+            left: 30%;
+            background-color: white;
+            border: 1px solid #ddd;
+            z-index: 1000;
+            width: 300px;
+            box-shadow: none;
+            max-height: 400px;
+            display: none;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #888 #f1f1f1;
+        }
+
+        #userSuggestions::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #userSuggestions::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        #userSuggestions::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        #userSuggestions::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .suggestion {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion:hover {
+            background-color: #f0f0f0;
+        }
+
+        .flash {
+            border: 4px solid transparent;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .flash:hover {
+            box-shadow: 0 0 15px 5px rgba(92, 92, 92, 0.7);
+        }
+
+        .like-btn {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .like-btn:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .pin {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            /*cursor: pointer;*/
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            background-color: gray;
+            transition: border-radius 0.5s ease, background-color 0.5s ease;
+            margin-left: 120px;
+        }
+
+        .fa-thumbtack {
+            font-size: 15px;
+            z-index: 3;
+            transform: rotate(45deg);
+            color: white;
+        }
+
+        .hover-text {
+            position: absolute;
+            padding-top: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: 0;
+            opacity: 0;
+            height: 30px;
+            line-height: 30px;
+            background-color: transparent;
+            color: white;
+            z-index: 2;
+            /*left: 0;*/
+            left: 10px;
+            transition: max-width 1.5s ease, opacity 1s ease, left 1s ease;
+        }
+
+        .pin:hover {
+            background-color: rgb(0, 166, 81);
+            border-radius: 0 15px 15px 0;
+        }
+
+        .pin::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 100%;
+            height: 100%;
+            width: 0;
+            background-color: rgb(0, 166, 81);
+            transition: width 2s ease;
+            z-index: 1;
+            border-radius: 15px 0 0 15px;
+        }
+
+        .pin:hover::before {
+            width: 80px;
+            justify-content: space-between;
+        }
+
+        .pin:hover .hover-text {
+            text-align: center;
+            max-width: 60px;
+            opacity: 1;
+            left: -60px;
+        }
+
+        .category {
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-item:focus {
+            background-color: white;
+        }
+
+
+    </style>
+</head>
+<body th:data-logged-in="${loggedIn != null}">
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container-fluid">
+        <div class="navbar-start">
+            <a class="navbar-brand" href="/">
+                <div class="image">
+                    <img th:src="@{/css/photos/greenNews.jpg}" alt="">
+                </div>
+                <h4>Green White News</h4>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="dropdown me-2">
+                <button th:if="${categories != null and !category.isEmpty()}" th:text="${category}" class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                </button>
+
+                <button th:if="${category == null or category.isEmpty()}" class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                    Categories
+                </button>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li>
+                        <a class="dropdown-item text-success category" th:href="@{/}">All posts</a>
+                    </li>
+                    <li th:each="category : ${categories}">
+                        <a class="dropdown-item text-success category" th:href="@{/(category=${category.title})}" th:text="${category.title}"> ></a>
+                    </li>
+                </ul>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                    <li th:each="category : ${categories}">
+                        <a class="dropdown-item text-success category" th:href="@{/(category=${category.title})}" th:text="${category.title}"></a>
+                    </li>
+                </ul>
+            </div>
+            <form id="searchForm" th:action="@{/}" method="get" class="d-flex me-auto">
+                <input class="form-control me-2" id="searchInput" type="search" name="keyword"
+                       placeholder="Search"
+                       aria-label="Search"
+                       data-toggle="popover"
+                       data-trigger="hover"
+                       title="Search Tips. You can search posts by title or also you can search users with '@' + username.">
+
+                <div id="userSuggestions"></div>
+                <button class="btn btn-success" type="submit">Search</button>
+            </form>
+
+
+            <div th:if="${loggedIn != null}" style="display: flex;">
+
+                <div class="notification-container" style="display: inline-block;">
+                    <form th:action="@{/notifications}" method="get" style="text-decoration: none">
+<!--                        <div th:if="${userRoles.contains('ROLE_EDITOR') or userRoles.contains('ROLE_ADMIN')}">-->
+                            <button type="submit" class="notification-button" style="margin-right: 20px;">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge" th:if="${unreadNotifications.size()} != 0" th:text="${unreadNotifications.size()}"></span>
+                                <span class="visually-hidden">unread messages</span>
+                            </button>
+<!--                        </div>-->
+                    </form>
+                </div>
+
+
+                <button class="open" type="button" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas" aria-controls="profileOffcanvas" style="background: none; border: none; padding: 0;">
+                    <img th:src="'data:image/png;base64,' + ${photo}" alt="Profile Image" style="border-radius: 50%; width: 60px; height: 60px;" >
+                </button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas" aria-labelledby="profileOffcanvasLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="profileOffcanvasLabel">Profile Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <form th:action="@{/admin}" sec:authorize="hasRole('ROLE_ADMIN')" method="GET">
+                            <i class="fa-regular fa-circle-user"></i>
+                            <button class="w-100 mb-2" type="submit">Admin panel</button>
+                        </form>
+                        <form th:action="@{/profile/{username}(username=${loggedIn.username})}" method="GET">
+                            <i class="fa-regular fa-circle-user"></i>
+                            <button class="w-100 mb-2" type="submit">Profile</button>
+                        </form>
+                        <form th:action="@{/profile/{username}/edit(username=${loggedIn.username})}">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <button class="w-100 mb-2" type="submit">Edit Profile</button>
+                        </form>
+
+                        <form th:action="@{/editor/{username}/posts(username=${loggedIn.username})}"
+                              sec:authorize="hasRole('ROLE_EDITOR')">
+                            <i class="fa-regular fa-newspaper"></i>
+                            <button class="w-100 mb-2">Your Posts</button>
+                        </form>
+
+                        <form th:action="@{/editor/{username}/posts/new(username=${loggedIn.username})}" method="GET" sec:authorize="hasRole('ROLE_EDITOR')">
+                            <i class="fa-regular fa-square-plus"></i>
+                            <button type="submit" class="w-100 mb-2">Create New Post</button>
+                        </form>
+
+                        <form th:action="@{/vacancy}"
+                              sec:authorize="!hasRole('ROLE_EDITOR')">
+                            <i class="fa-solid fa-suitcase"></i>
+                            <button class="w-100 mb-2">GWN Jobs</button>
+                        </form>
+
+                        <form th:action="@{/changePassword}">
+                            <i class="fa-solid fa-key"></i>
+                            <button class="w-100 mb-2">Change Password</button>
+                        </form>
+                        <form th:action="@{/logout}" method="POST" class="w-100">
+                            <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i>
+                            <button type="submit" class="text-danger w-100">Log Out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${loggedIn == null}" style="display: flex;">
+                <form th:action="@{/login}" class="login d-flex" style="height: 60%;">
+                    <button class="btn btn-outline-primary me-2" type="submit">Login</button>
+                </form>
+                <form th:action="@{/register}" method="GET" class="signup" style="height: 60%;">
+                    <button class="btn btn-outline-success" type="submit" style="height: 100%;">Signup</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert" style="display:flex; justify-content: space-around; margin: 4%;">
+    <span th:text="${success}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<h2 th:if="${topPost == null}" style="margin-left: 3%; margin-bottom: 30px">Posts don't exist yet</h2>
+
+<section id="Home" th:if="${topPost != null}">
+    <div class="post">
+        <a th:href="@{/posts/{postId}(postId=${topPost.id})}" style="text-decoration: none; width: 50%; margin-right: 20px;">
+            <img th:src="'data:image/png;base64,' + ${topPost.hashedPhoto}" alt="Post Image" class="flash">
+        </a>
+        <div class="post_content">
+            <div class="date">
+                <i class="fa-solid fa-calendar-days"></i>
+                <h5 th:if="${topPost.createdAt.toLocalDate().isBefore(T(java.time.LocalDate).now())}"
+                    th:text="${months[topPost.createdAt.monthValue - 1]} + ' ' + ${#temporals.format(topPost.createdAt, 'dd')} + ',' +  ' ' +  ${#temporals.format(topPost.createdAt, 'yyyy HH:mm')}">
+                </h5>
+
+                <h5 th:if="${topPost.createdAt.toLocalDate().isEqual(T(java.time.LocalDate).now())}"  th:attr="data-timestamp=${topPost.createdAt}" class="timeago"></h5>
+
+                <div th:if="${topPostId > -1}" class="pin">
+                    <p class="hover-text">Newest</p>
+                    <i class="fa-solid fa-thumbtack"></i>
+                </div>
+            </div>
+            <a th:href="@{/posts/{postId}(postId=${topPost.id})}" class="title" th:text="${topPost.title}"></a>
+
+            <p th:with="contentLength=${#strings.length(topPost.content)}">
+                <span th:if="${contentLength <= 300}" th:utext="${topPost.content}"></span>
+                <span th:if="${contentLength > 300}" th:utext="${#strings.substring(topPost.content, 0, 300)} + '...'"></span>
+                <a th:if="${contentLength > 300}" th:href="@{/posts/{postId}(postId=${topPost.id})}" class="link-primary" style="font-size:15px; font-weight: 500;">READ MORE</a>
+            </p>
+
+
+            <div class="like d-flex justify-content-start">
+                <div th:if="${loggedIn!=null}">
+                    <form th:action="@{posts/{postId}/likes/{username}(postId=${topPost.id}, username=${loggedIn.username}, page=${page}, size=${size}, keyword=${keyword}, tag=${tag}, category=${category})}" method="post" class="like-form me-2">
+                        <button th:if="${!topPost.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
+                            <i class="bi bi-heart" style="color: black"></i>
+
+                        </button>
+                        <button th:if="${topPost.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
+                            <i class="bi bi-heart-fill" style="color: red"></i>
+
+                        </button>
+                        <input type="hidden" name="postId" th:value="${topPost.id}">
+                    </form>
+                </div>
+                <div th:if="${loggedIn==null}">
+                    <form action="#" method="post" class="like-form me-2">
+                        <button type="submit" class="btn btn-link p-0 like-btn">
+                            <i class="bi bi-heart like-icon" style="color: black"></i>
+                        </button>
+                        <input type="hidden" name="postId" th:value="${topPost.id}">
+                    </form>
+                </div>
+
+                <h5 th:text="${topPost.likesCount}"></h5>
+            </div>
+        </div>
+    </div>
+
+
+</section>
+
+
+
+<section id="News" th:if="${posts != null && !posts.isEmpty()}">
+    <div class="post flash" th:each="post : ${posts}" th:if="${post != topPost}" style="padding-bottom: 0">
+        <a th:href="@{/posts/{postId}(postId=${post.id})}" style="text-decoration: none;">
+            <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
+        </a>
+        <a class="title" th:if="${post.title.length() > 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${#strings.substring(post.title, 0, 30)} + '...'"></a>
+        <a class="title" th:if="${post.title.length() <= 30}" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${post.title}"></a>
+        <div class="date">
+            <div class="calendar">
+                <i class="fa-solid fa-calendar-days"></i>
+                <h5 th:if="${post.createdAt.toLocalDate().isBefore(T(java.time.LocalDate).now())}"
+                    th:text="${months[post.createdAt.monthValue - 1]} + ' ' + ${#temporals.format(post.createdAt, 'dd')} + ', ' + ${#temporals.format(post.createdAt, 'yyyy HH:mm')}">
+                </h5>
+
+                <h5 th:if="${post.createdAt.toLocalDate().isEqual(T(java.time.LocalDate).now())}"  th:attr="data-timestamp=${post.createdAt}" class="timeago"></h5>
+
+            </div>
+            <div class="like">
+                <div th:if="${loggedIn!=null}">
+                    <form th:action="@{posts/{postId}/likes/{username}(postId=${post.id}, username=${loggedIn.username}, page=${page}, size=${size}, keyword=${keyword}, tag=${tag}, category=${category})}" method="post" class="like-form">
+                        <button th:if="${!post.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
+<!--                            <i class="fa-regular fa-thumbs-up text-dark like-icon"></i>-->
+                            <i class="bi bi-heart" style="color: black"></i>
+
+                        </button>
+                        <button th:if="${post.isLiked}" type="submit" class="btn btn-link p-0 like-btn">
+<!--                            <i class="fa-solid fa-thumbs-up text-dark like-icon"></i>-->
+                            <i class="bi bi-heart-fill" style="color: red"></i>
+
+                        </button>
+                        <input type="hidden" name="postId" th:value="${post.id}">
+                    </form>
+                </div>
+                <div th:if="${loggedIn==null}">
+                    <form action="" method="post" class="like-form">
+                        <button type="submit" class="btn btn-link p-0 like-btn">
+                            <i class="bi bi-heart like-icon" style="color: black"></i>
+                        </button>
+                        <input type="hidden" name="postId" th:value="${post.id}">
+                    </form>
+                </div>
+
+                <h5 th:text="${post.likesCount}"></h5>
+            </div>
+        </div>
+        <div class="line"></div>
+    </div>
+</section>
+
+<section id="pagination"  class="d-flex justify-content-center mt-4">
+    <div class="btn-group">
+        <button th:text="${size} + ' / page'" type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="height: min-content; background-color: rgb(0, 166, 81); border: none;">
+        </button>
+        <ul class="dropdown-menu" >
+<!--            <li th:if="${postsSize >= 3}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=3'(category=${category}, tag=${tag}, keyword=${keyword})}">3 / page</a></li>-->
+            <li th:if="${postsSize >= 5}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=5'(category=${category}, tag=${tag}, keyword=${keyword})}">5 / page</a></li>
+            <li th:if="${postsSize >= 20}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=20'(category=${category}, tag=${tag}, keyword=${keyword})}">20 / page</a></li>
+            <li th:if="${postsSize >= 40}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=20'(category=${category}, tag=${tag}, keyword=${keyword})}">40 / page</a></li>
+            <li th:if="${postsSize >= 60}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=50'(category=${category}, tag=${tag}, keyword=${keyword})}">60 / page</a></li>
+            <li th:if="${postsSize >= 100}"><a class="dropdown-item" th:href="@{'/?page=' + ${postPage.number + 1} + '&size=100'(category=${category}, tag=${tag}, keyword=${keyword})}">100 / page</a></li>
+        </ul>
+    </div>
+
+    <ul class="pagination" th:if="${postPage.totalPages > 1}" style="margin-left: 10px;">
+        <li th:classappend="${postPage.hasPrevious() ? '' : 'disabled'}"
+            style="color: rgb(0, 166, 81); margin-right: 7px;">
+            <a th:if="${postPage.number == 0}" class="page-link" th:href="@{/(page=${postPage.totalPages}, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}"
+               aria-label="Previous" style="color: rgb(0, 166, 81); border-radius: 7px;">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+            <a th:if="${postPage.number > 0}" class="page-link" th:href="@{/(page=${postPage.number}, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}"
+               aria-label="Previous" style="color: rgb(0, 166, 81); border-radius: 7px;">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        <li class="page-item" th:classappend="${postPage.number == 0 ? 'active' : ''}" style="border-radius: 50px;">
+            <a class="page-link" th:href="@{/(page=1, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}" style="border-radius: 7px;">1</a>
+        </li>
+
+        <li class="page-item disabled" th:if="${postPage.number > 2}">
+            <span class="page-link" style="border-radius: 7px;">...</span>
+        </li>
+
+        <li th:each="i : ${#numbers.sequence(postPage.number - 1, postPage.number + 1)}"
+            class="page-item"
+            th:classappend="${i == postPage.number ? 'active' : ''}"
+            th:if="${i > 0 and i < postPage.totalPages - 1}"
+            style="border-radius: 50px;">
+            <a class="page-link" th:href="@{/(page=${i + 1}, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}" th:text="${i + 1}" style="border-radius: 7px;"></a>
+        </li>
+
+        <li class="page-item disabled" th:if="${postPage.number < postPage.totalPages - 3}">
+            <span class="page-link" style="border-radius: 7px;">...</span>
+        </li>
+
+        <li class="page-item" th:classappend="${postPage.number == postPage.totalPages - 1 ? 'active' : ''}"
+            th:if="${postPage.totalPages > 1}" style="border-radius: 50px;">
+            <a class="page-link" th:href="@{/(page=${postPage.totalPages}, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}" th:text="${postPage.totalPages}"
+               style="border-radius: 7px;"></a>
+        </li>
+
+        <li th:classappend="${postPage.hasNext() ? '' : 'disabled'}">
+            <a th:if="${postPage.number == postPage.totalPages - 1}" class="page-link" th:href="@{/(page=1, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}"
+               aria-label="Next" style="border-radius: 7px; color: rgb(0, 166, 81);">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+            <a th:if="${postPage.number < postPage.totalPages - 1}" class="page-link"
+               th:href="@{/(page=${postPage.number + 2}, size=${size}, category=${category}, tag=${tag}, keyword=${keyword})}" aria-label="Next"
+               style="color: rgb(0, 166, 81); border-radius: 7px;">
+                <span aria-hidden="true" style="color: rgb(0, 166, 81);">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</section>
+
+
+
+<section id="Contact" class="mt-5">
+    <div class="contact">
+        <div class="image">
+            <img th:src="@{/css/photos/gws_square.jpg}" alt="Contact Image">
+        </div>
+        <div class="contacts">
+            <h3>Contacts</h3>
+            <li>
+                <a href="https://www.greenwhite.uz/"><i class="bi bi-globe2"></i> www.greenwhite.uz</a>
+            </li>
+            <li>
+                <a href="mailto:info@greenwhite.uz"><i class="bi bi-envelope"></i> info@greenwhite.uz</a>
+            </li>
+            <li>
+                <a href="tel:+998712030301"><i class="bi bi-telephone"></i> +998 71 203 03 01</a>
+            </li>
+            <li>
+                <a href="tel:+998712008833"><i class="bi bi-telephone"></i> +998 71 200 88 33</a>
+            </li>
+        </div>
+    </div>
+    <div class="line"></div>
+    <div class="faq" >
+        <p><i class="bi bi-c-circle"></i>Green White Solutions LLC. All rights reserved 2024</p>
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.timeago').forEach(function(element) {
+            var timestamp = element.getAttribute('data-timestamp');
+            element.textContent = moment(timestamp).fromNow();
+        });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all dropdown items
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+        // Add click event listener to each dropdown item
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function(event) {
+                // Prevent the default action
+                event.preventDefault();
+
+                // Remove 'clicked' class from all items
+                dropdownItems.forEach(item => item.classList.remove('clicked'));
+
+                // Add 'clicked' class to the clicked item
+                this.classList.add('hello');
+
+                // If you want to navigate to the href, uncomment the next line
+                window.location.href = this.getAttribute('href');
+            });
+        });
+    });
+
+    function changeBackground(element) {
+        const dropdownItems = element.closest('.dropdown-menu').querySelectorAll('.dropdown-item');
+        dropdownItems.forEach(item => item.classList.remove('clicked'));
+        element.classList.add('hello');
+    }
+</script>
+
+<script th:inline="javascript">
+        const searchInput = document.getElementById('searchInput');
+        const userSuggestions = document.getElementById('userSuggestions');
+        const searchForm = document.getElementById('searchForm');
+
+        const users = /*[[${users}]]*/ [];
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                if (query.startsWith('@') && query.length > 1) {
+                    const keyword = query.substring(1).toLowerCase();
+                    const filteredUsers = users.filter(user =>
+                        user.username.toLowerCase().includes(keyword)
+                    );
+                    showSuggestions(filteredUsers);
+                } else {
+                    userSuggestions.style.display = 'none';
+                }
+            });
+        }
+
+        function showSuggestions(users) {
+        userSuggestions.innerHTML = '';
+        if (users.length > 0) {
+        users.forEach(user => {
+        const div = document.createElement('div');
+        div.className = 'suggestion';
+        div.textContent = `${user.first_name} ${user.last_name} (@${user.username})`;
+        div.onclick = function() {
+        window.location.href = `/profile/${user.username}`;
+    };
+        userSuggestions.appendChild(div);
+    });
+        userSuggestions.style.display = 'block';
+    } else {
+        userSuggestions.style.display = 'none';
+    }
+    }
+    document.addEventListener('click', function(e) {
+        if (e.target !== searchInput && e.target !== userSuggestions) {
+            userSuggestions.style.display = 'none';
+        }
+    });
+        searchForm.addEventListener('submit', function(e) {
+        if (searchInput.value.startsWith('@')) {
+        e.preventDefault();
+    }
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var loggedIn = document.body.getAttribute("data-logged-in") === "true";
+
+        var likeForms = document.querySelectorAll('.like-form');
+
+        likeForms.forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!loggedIn) {
+                    event.preventDefault();
+
+                    var likeBtn = form.querySelector('.like-btn');
+                    var popover = new bootstrap.Popover(likeBtn, {
+                        trigger: 'manual',
+                        content: "Please log in or sign up to like.",
+                        placement: 'top'
+                    });
+
+                    popover.show();
+                    setTimeout(function() {
+                        popover.hide();
+                    }, 3000);
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

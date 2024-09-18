@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GREEN WHITE NEWS</title>
+    <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .confirmation-container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .confirmation-container h1 {
+            color: #28a745;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .confirmation-container p {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+
+        .confirmation-container .btn {
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .confirmation-container .btn:hover {
+            background-color: #218838;
+        }
+
+        .confirmation-container .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .confirmation-container .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="confirmation-container">
+    <h1>Email Confirmed!</h1>
+    <p th:if="${message}" th:text="${message}"></p>
+      <a class="back-link" th:href="@{/auto-login}">Back to login page</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GREEN WHITE NEWS</title>
+    <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    section#postForm {
+        width: 80%;
+        margin: auto;
+        margin-top: 50px;
+        background-color: rgb(0, 166, 81);
+        padding: 30px;
+        border-radius: 20px;
+    }
+
+    .create {
+        background-color: white;
+        padding: 15px;
+        border-radius: 5px;
+    }
+
+    #file {
+        width: 30%;
+        background-color: rgb(0, 166, 81);
+        color: white;
+    }
+</style>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container-fluid">
+        <div class="navbar-start">
+            <a class="navbar-brand" th:href="@{/}">
+                <div class="image">
+                    <img th:src="@{/css/photos/greenNews.jpg}" alt="">
+                </div>
+                <h4>Green White News</h4>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="dropdown me-2">
+                <button class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Categories
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li th:each="category : ${categories}">
+                        <a class="dropdown-item text-success" th:href="@{/(size = ${size}, page = ${page}, category=${category.title})}" th:text="${category.title}"> ></a>
+                    </li>
+                </ul>
+            </div>
+            <form th:action="@{/}" method="get" class="d-flex me-auto">
+                <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search">
+                <button class="btn btn-success" type="submit">Search</button>
+            </form>
+            <div th:if="${loggedIn != null}" style="display: flex;">
+                <button class="open" type="button" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas" aria-controls="profileOffcanvas">
+                    <img th:src="'data:image/png;base64,' + ${photo}" alt="Profile Image">
+                </button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas" aria-labelledby="profileOffcanvasLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="profileOffcanvasLabel">Profile Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <form th:action="@{/profile/{username}(username=${loggedIn.username})}" method="GET">
+                            <i class="fa-regular fa-circle-user"></i>
+                            <button class="w-100 mb-2" type="submit">Profile</button>
+                        </form>
+                        <form th:action="@{/profile/{username}/edit(username=${loggedIn.username})}">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <button class="w-100 mb-2" type="submit">Edit Profile</button>
+                        </form>
+
+                        <form th:action="@{/editor/{username}/posts(username=${loggedIn.username})}"
+                              sec:authorize="hasRole('ROLE_EDITOR')">
+                            <i class="fa-regular fa-newspaper"></i>
+                            <button class="w-100 mb-2">Your Posts</button>
+                        </form>
+                        <form th:action="@{/changePassword}">
+                            <i class="fa-solid fa-key"></i>
+                            <button class="w-100 mb-2">Change Password</button>
+                        </form>
+                        <form th:action="@{/logout}" method="POST" class="w-100">
+                            <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i>
+                            <button type="submit" class="text-danger w-100">Log Out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${loggedIn == null}" style="display: flex;">
+                <form th:action="@{/login}" class="login d-flex" style="height: 60%;">
+                    <button class="btn btn-primary me-2" type="submit">Login</button>
+                </form>
+                <form th:action="@{/register}" method="GET" class="signup" style="height: 60%;">
+                    <button class="btn btn-outline-success" type="submit" style="height: 100%;">Signup</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container">
+    <h2>Create Post - Step 2</h2>
+    <form th:action="@{/editor/{username}/posts/save(username=${username})}" method="POST" th:object="${post}" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{title}">
+        <input type="hidden" th:field="*{content}">
+        <input type="hidden" th:field="*{photo}">
+        <div class="form-group">
+            <h3>Categories</h3>
+            <div class="container">
+                <div th:each="category : ${categories}">
+                    <label>
+                        <input type="checkbox" th:field="*{categories}" th:value="${category.id}">
+                        <span th:text="${category.title}"></span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label class="form-label">Tags</label>
+            <textarea th:field="*{tagsString}" class="form-control" placeholder="write tags with space, for example: #law #world or law world..."> </textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="scheduleTime" class="form-label">Schedule Time</label>
+            <input type="datetime-local" id="scheduleTime" th:field="*{scheduleTime}" class="form-control">
+        </div>
+
+        <div class="form-group mt-2">
+            <input type="checkbox" id="scheduleCheckbox">
+            <label for="scheduleCheckbox">Schedule this post</label>
+        </div>
+
+
+        <input type="submit" class="btn btn-primary mt-3" name="action" value="Save as draft">
+        <input type="submit" class="btn btn-success mt-3" id="publishButton" name="action" value="Publish">
+    </form>
+</div>
+
+<form class="container mt-5" th:action="@{/editor/{username}/posts/new(username=${username})}">
+    <button class="btn btn-danger">
+        Back
+    </button>
+</form>
+
+<section id="Contact" class="mt-5">
+    <div class="contact">
+        <div class="image">
+            <img th:src="@{/css/photos/gws_square.jpg}" alt="Contact Image">
+        </div>
+        <div class="contacts">
+            <h3>Contacts</h3>
+            <li>
+                <a href="https://www.greenwhite.uz/"><i class="bi bi-globe2"></i> www.greenwhite.uz</a>
+            </li>
+            <li>
+                <a href="mailto:info@greenwhite.uz"><i class="bi bi-envelope"></i> info@greenwhite.uz</a>
+            </li>
+            <li>
+                <a href="tel:+998712030301"><i class="bi bi-telephone"></i> +998 71 203 03 01</a>
+            </li>
+            <li>
+                <a href="tel:+998712008833"><i class="bi bi-telephone"></i> +998 71 200 88 33</a>
+            </li>
+        </div>
+    </div>
+    <div class="line"></div>
+    <div class="faq" >
+        <p><i class="bi bi-c-circle"></i>Green White Solutions LLC. All rights reserved 2024</p>
+    </div>
+
+
+</section>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+
+<script>
+    const tagInput = document.getElementById('tagInput');
+    const tagsContainer = document.getElementById('tagsContainer');
+    const saveDraftButton = document.getElementById('saveDraftButton');
+
+    const scheduleCheckbox = document.getElementById('scheduleCheckbox');
+    const scheduleTimeInput = document.getElementById('scheduleTime');
+    const publishButton = document.getElementById('publishButton');
+
+    scheduleTimeInput.disabled = true;
+
+    scheduleCheckbox.addEventListener('change', function() {
+        scheduleTimeInput.disabled = !this.checked;
+
+        publishButton.disabled = this.checked;
+
+        if (this.checked) {
+            publishButton.style.backgroundColor = 'rgb(39, 97, 68)';
+            publishButton.style.cursor = 'not-allowed';
+        } else {
+            publishButton.style.backgroundColor = ''; // Reset to default
+            publishButton.style.cursor = 'pointer';
+        }
+    });
+
+    document.getElementById('scheduleCheckbox').addEventListener('change', function() {
+        const publishButton = document.getElementById('publishButton');
+        if (this.checked) {
+            publishButton.disabled = true;
+            publishButton.style.backgroundColor = 'rgb(39, 97, 68)';
+            publishButton.style.cursor = 'none'
+        } else {
+            publishButton.disabled = false;
+        }
+    });
+
+
+
+
+    tagInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' && tagInput.value.trim() !== '') {
+            addTag(tagInput.value.trim());
+            tagInput.value = '';
+        }
+    });
+
+    function addTag(tagName) {
+        const tag = document.createElement('div');
+        tag.classList.add('tag');
+        tag.textContent = tagName;
+        tag.addEventListener('click', function() {
+            this.remove();
+        });
+        tagsContainer.appendChild(tag);
+    }
+
+    addTag('Technology');
+    addTag('Programming');
+    addTag('Web Development');
+
+    publishButton.addEventListener('click', function() {
+        alert('Post published!');
+    });
+
+    saveDraftButton.addEventListener('click', function() {
+        alert('Draft saved!');
+    });
+</script>
+
+</body>
+</html>

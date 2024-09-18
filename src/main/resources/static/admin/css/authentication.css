@@ -1,0 +1,169 @@
+/*********************authentication****************/
+.aulog_li ul li a {
+background: #eb8153;
+}
+#aulog {
+background-image: url(../img/5.jpg);
+background-position: center;
+}
+.aulog_m{
+background:#0000007d;
+ }
+/*********************authentication_end****************/
+
+/*********************simple_login****************/
+#autlog{
+padding-top:100px;
+padding-bottom:100px; 
+ }
+.autlog_1 .form-control {
+padding: 0.3125rem 1rem;
+font-size: 1rem;
+color: #344050;
+border-color: #d8e2ef;
+}
+.autlog_1 ::placeholder {
+color:#9da9bb; 
+}
+.behalf:before {
+display: inline-block;
+width: 37%;
+height: 1px;
+background-color: #d8e2ef;
+vertical-align: middle;
+margin-right: 1%;
+content: "";
+}
+.behalf:after {
+display: inline-block;
+width: 37%;
+height: 1px;
+background-color: #d8e2ef;
+vertical-align: middle;
+margin-left: 1%;
+content: "";
+}
+
+/*********************simple_login_end****************/
+
+/*********************simple_register****************/
+.reg_n1 .behalf:before{
+width: 36%; 
+ }
+.reg_n1 .behalf:after{
+width: 36%;
+ }
+/*********************simple_register_end****************/
+
+/*********************card_login****************/
+#autcard_log{
+padding-top:100px;
+padding-bottom:100px;
+width:65%;
+margin-left:auto;
+margin-right:auto; 
+ }
+.autcard_logir .behalf:before{
+width: 39%; 
+ }
+.autcard_logir .behalf:after{
+width: 39%;
+ }
+.autcard_logiro .behalf:before{
+width: 37%; 
+ }
+.autcard_logiro .behalf:after{
+width: 37%;
+ }
+
+/*********************card_login_end****************/
+
+/*********************error****************/
+
+/*********************error_end****************/
+
+@media screen and (max-width : 767px){
+.aulog_l .form-control{
+margin-top:20px!important; 
+ }
+#aulog {
+background:none!important;
+}
+.aulog_r{
+padding-top:50px!important;
+padding-bottom:50px!important; 
+ }
+ 
+.autlog_1i {
+width:80%!important;
+padding:15px!important; 
+ }
+.autlog_1i1l h6 a{
+margin-top:5px;
+margin-bottom:5px; 
+ }
+.behalf:before{
+display:none; 
+ }
+.behalf:after{
+display:none; 
+ }
+.autlog_1i  h1{
+font-size:60px!important; 
+ }
+#autcard_log{
+width:80%; 
+ }
+ }
+@media (min-width:768px) and (max-width:991px) {
+.autlog_1i {
+width:60%!important;
+ }
+.behalf:before{
+width: 30%;  
+ }
+.behalf:after{
+width: 30%;  
+ }
+.reg_n1 .behalf:before {
+width: 30%;
+}
+.reg_n1 .behalf:after {
+width: 30%;
+}
+#autcard_log{
+width:80%; 
+ }
+.autcard_logir .behalf:before {
+width: 30%;
+}
+.autcard_logir .behalf:after {
+width: 30%;
+}
+ }
+@media (min-width:992px) and (max-width:1200px) {
+.autlog_1i {
+width:50%!important;
+ }
+.behalf:before{
+width: 30%;  
+ }
+.behalf:after{
+width: 30%;  
+ }
+.reg_n1 .behalf:before {
+width: 30%;
+}
+.reg_n1 .behalf:after {
+width: 30%;
+}
+#autcard_log{
+width:70%; 
+ }
+.autcard_logir .behalf:before {
+width: 30%;
+}
+.autcard_logir .behalf:after {
+width: 30%;
+}
+ }

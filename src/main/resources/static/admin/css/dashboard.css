@@ -1,0 +1,119 @@
+/*********************analytics****************/
+.analytic_1r .input-group{
+width:250px;
+float:left;
+margin-right:10px;
+}
+.analytic_1r .input-group .form-control{
+background:#cbe1ff;
+border:none;
+}
+.analytic_1r .input-group .btn:hover{
+background:#727cf5; 
+}
+.analytic_2l1{
+padding:20px; 
+ }
+.analytic_2r{
+padding:20px;  
+ }
+.analytic_3i{
+padding:20px;
+ }
+/*********************analytics_end****************/
+
+
+/*********************ecommerce****************/
+
+/*********************ecommerce_end****************/
+
+/*********************projects****************/
+.project_1i{
+padding:30px 15px; 
+ }
+/*********************projects_end****************/
+
+
+@media screen and (max-width : 767px){
+.analytic_1r {
+float:none!important;
+margin-top:10px; 
+ }
+.analytic_4m{
+margin-top:10px;
+margin-bottom:10px; 
+ }
+.analytic_4l{
+margin-top:10px; 
+ }
+.analytic_2l1 {
+margin-top:10px; 
+ }
+.analytic_2r{
+ margin-top:15px;
+ }
+.analytic_4r{
+margin-top:10px; 
+ }
+.crm_4m{
+margin-top:10px;
+margin-bottom:10px; 
+ }
+.analytic_1r .input-group{
+width:200px; 
+ }
+.Ecommerce_1r{
+margin-top:10px; 
+ }
+.Ecommerce_2r{
+margin-top:10px; 
+ }
+.Ecommerce_3m{
+margin-top:10px;
+margin-bottom:10px; 
+ }
+.project_1i {
+margin-bottom:10px;  
+ }
+.project_2r{
+margin-top:10px; 
+ }
+.project_4r{
+margin-top:10px;  
+ }
+.project_4rir{
+margin-top:10px; 
+ }
+ }
+@media (min-width:768px) and (max-width:991px) {
+.analytic_4r{
+margin-top:10px; 
+ }
+.analytic_2l1 {
+margin-top:10px;  
+ }
+.analytic_2r {
+margin-top:10px; 
+ }
+.crm_4m{
+margin-top:10px;
+margin-bottom:10px; 
+ }
+.Ecommerce_3l{
+margin-bottom:10px;  
+ }
+.project_2r{
+margin-top:10px; 
+ }
+.project_4r{
+margin-top:10px; 
+ }
+ }
+@media (min-width:992px) and (max-width:1200px) {
+.crm_4r{
+margin-top:10px; 
+ }
+.Ecommerce_3l{
+margin-bottom:10px; 
+ }
+ }

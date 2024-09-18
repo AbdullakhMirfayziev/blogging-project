@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
+    <title>GREEN WHITE NEWS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 3rem;
+            color: #2d3e1f;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .follower-card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .follower-card:hover {
+            background-color: #f1f1f1;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+        .follower-card img {
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        .follower-card .follower-info {
+            flex: 1;
+        }
+        .follower-card .follower-info a {
+            text-decoration: none;
+            color: #2d3e1f;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        .follower-card .follower-info a:hover {
+            color: #38b2a1;
+        }
+        .follower-card .follower-info p {
+            margin: 0;
+            color: #6c757d;
+        }
+
+        .contact .contacts li {
+            list-style: none;
+            margin-bottom: 10px;
+            font-family: serif;
+            font-size: 0.8em;
+        }
+        .faq {
+            text-align: left;
+            color: #7c8688;
+            font-size: 0.7em;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container-fluid">
+        <div class="navbar-start">
+            <a class="navbar-brand" href="/">
+                <div class="image">
+                    <img th:src="@{/css/photos/greenNews.jpg}" alt="">
+                </div>
+                <h4>Green White News</h4>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="dropdown me-2">
+                <button class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                    Categories
+                </button>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li>
+                        <a class="dropdown-item text-success" th:href="@{/}">All posts</a>
+                    </li>
+                    <li th:each="category : ${categories}">
+                        <a class="dropdown-item text-success" th:href="@{/(category=${category.title})}" th:text="${category.title}"> ></a>
+                    </li>
+                </ul>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                    <li th:each="category : ${categories}">
+                        <a class="dropdown-item text-success" th:href="@{/(category=${category.title})}" th:text="${category.title}"></a>
+                    </li>
+                </ul>
+            </div>
+            <form th:action="@{/}" method="get" class="d-flex me-auto">
+                <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search">
+                <button class="btn btn-success" type="submit">Search</button>
+            </form>
+            <div th:if="${loggedIn != null}" style="display: flex;">
+
+                <button class="open" type="button" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas" aria-controls="profileOffcanvas" style="background: none; border: none; padding: 0;">
+                    <img th:src="'data:image/png;base64,' + ${photo}" alt="Profile Image" style="border-radius: 50%; width: 60px; height: 60px;">
+                </button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas" aria-labelledby="profileOffcanvasLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="profileOffcanvasLabel">Profile Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <form th:action="@{/admin}" sec:authorize="hasRole('ROLE_ADMIN')" method="GET">
+                            <i class="fa-regular fa-circle-user"></i>
+                            <button class="w-100 mb-2" type="submit">Admin panel</button>
+                        </form>
+                        <form th:action="@{/profile/{username}(username=${loggedIn.username})}" method="GET">
+                            <i class="fa-regular fa-circle-user"></i>
+                            <button class="w-100 mb-2" type="submit">Profile</button>
+                        </form>
+                        <form th:action="@{/profile/{username}/edit(username=${loggedIn.username})}">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <button class="w-100 mb-2" type="submit">Edit Profile</button>
+                        </form>
+
+                        <form th:action="@{/editor/{username}/posts(username=${loggedIn.username})}"
+                              sec:authorize="hasRole('ROLE_EDITOR')">
+                            <i class="fa-regular fa-newspaper"></i>
+                            <button class="w-100 mb-2">Your Posts</button>
+                        </form>
+
+                        <form th:action="@{/editor/{username}/posts/new(username=${loggedIn.username})}" method="GET" sec:authorize="hasRole('ROLE_EDITOR')">
+                            <i class="fa-regular fa-square-plus"></i>
+                            <button type="submit" class="w-100 mb-2">Create New Post</button>
+                        </form>
+
+                        <form th:action="@{/vacancy}"
+                              sec:authorize="!hasRole('ROLE_EDITOR')">
+                            <i class="fa-solid fa-suitcase"></i>
+                            <button class="w-100 mb-2">GWN Jobs</button>
+                        </form>
+
+                        <form th:action="@{/changePassword}">
+                            <i class="fa-solid fa-key"></i>
+                            <button class="w-100 mb-2">Change Password</button>
+                        </form>
+                        <form th:action="@{/logout}" method="POST" class="w-100">
+                            <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i>
+                            <button type="submit" class="text-danger w-100">Log Out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${loggedIn == null}" style="display: flex;">
+                <form th:action="@{/login}" class="login d-flex" style="height: 60%;">
+                    <button class="btn btn-outline-primary me-2" type="submit">Login</button>
+                </form>
+                <form th:action="@{/register}" method="GET" class="signup" style="height: 60%;">
+                    <button class="btn btn-outline-success" type="submit" style="height: 100%;">Signup</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Followers</h1>
+    <ul class="list-unstyled">
+        <li th:each="user : ${followers}" class="follower-card">
+            <img th:src="'data:image/png;base64,' + ${user.hashedPhoto}" alt="Profile Image">
+            <div class="follower-info" th:if="${!user.username.startsWith('deleted_user')}">
+                <a th:href="@{/profile/{username}(username=${user.username})}" th:text="${user.username}"></a>
+                <p th:text="${user.first_name + ' ' + user.last_name}"></p>
+            </div>
+            <div class="follower-info" th:if="${user.username.startsWith('deleted_user')}">
+                <p>Deleted User</p>
+                <p>This account has been deleted</p>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<section id="Contact" class="mt-5">
+    <div class="contact">
+        <div class="image">
+            <img th:src="@{/css/photos/gws_square.jpg}" alt="Contact Image">
+        </div>
+        <div class="contacts">
+            <h3>Contacts</h3>
+            <li>
+                <a href="https://www.greenwhite.uz/"><i class="bi bi-globe2"></i> www.greenwhite.uz</a>
+            </li>
+            <li>
+                <a href="mailto:info@greenwhite.uz"><i class="bi bi-envelope"></i> info@greenwhite.uz</a>
+            </li>
+            <li>
+                <a href="tel:+998712030301"><i class="bi bi-telephone"></i> +998 71 203 03 01</a>
+            </li>
+            <li>
+                <a href="tel:+998712008833"><i class="bi bi-telephone"></i> +998 71 200 88 33</a>
+            </li>
+        </div>
+    </div>
+    <div class="line"></div>
+    <div class="faq" >
+        <p><i class="bi bi-c-circle"></i>Green White Solutions LLC. All rights reserved 2024</p>
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script></body>
+</html>

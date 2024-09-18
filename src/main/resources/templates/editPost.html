@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GREEN WHITE NEWS</title>
+    <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdn.ckeditor.com/4.24.0-lts/standard/ckeditor.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@3.2.7/js/froala_editor.pkgd.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/froala-editor@3.2.7/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    section#postForm {
+        width: 80%;
+        margin: 50px auto auto;
+        background-color: rgb(0, 166, 81);
+        padding: 30px;
+        border-radius: 20px;
+    }
+
+    .create {
+        background-color: white;
+        padding: 15px;
+        border-radius: 5px;
+    }
+
+    #file {
+        width: 30%;
+        background-color: rgb(0, 166, 81);
+        color: white;
+    }
+</style>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container-fluid">
+        <div class="navbar-start">
+            <a class="navbar-brand" th:href="@{/}">
+                <div class="image">
+                    <img th:src="@{/css/photos/greenNews.jpg}" alt="">
+                </div>
+                <h4>Green White News</h4>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="dropdown me-2">
+                <button class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Categories
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li th:each="category : ${categories}">
+                        <a class="dropdown-item text-success" th:href="@{/(size = ${size}, page = ${page}, category=${category.title})}" th:text="${category.title}"> ></a>
+                    </li>
+                </ul>
+            </div>
+            <form th:action="@{/}" method="get" class="d-flex me-auto">
+                <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search">
+                <button class="btn btn-success" type="submit">Search</button>
+            </form>
+            <div th:if="${loggedIn != null}" style="display: flex;">
+                <button class="open" type="button" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas" aria-controls="profileOffcanvas">
+                    <img th:src="'data:image/png;base64,' + ${photo}" alt="Profile Image">
+                </button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas" aria-labelledby="profileOffcanvasLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="profileOffcanvasLabel">Profile Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <form th:action="@{/profile/{username}(username=${loggedIn.username})}" method="GET">
+                            <i class="fa-regular fa-circle-user"></i>
+                            <button class="w-100 mb-2" type="submit">Profile</button>
+                        </form>
+                        <form th:action="@{/profile/{username}/edit(username=${loggedIn.username})}">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <button class="w-100 mb-2" type="submit">Edit Profile</button>
+                        </form>
+                        <form th:action="@{/editor/{username}/posts(username=${loggedIn.username})}" sec:authorize="hasRole('ROLE_EDITOR')">
+                            <i class="fa-regular fa-newspaper"></i>
+                            <button class="w-100 mb-2">Your Posts</button>
+                        </form>
+                        <form th:action="@{/changePassword}">
+                            <i class="fa-solid fa-key"></i>
+                            <button class="w-100 mb-2">Change Password</button>
+                        </form>
+                        <form th:action="@{/logout}" method="POST" class="w-100">
+                            <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i>
+                            <button type="submit" class="text-danger w-100">Log Out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${loggedIn == null}" style="display: flex;">
+                <form th:action="@{/login}" class="login d-flex" style="height: 60%;">
+                    <button class="btn btn-primary me-2" type="submit">Login</button>
+                </form>
+                <form th:action="@{/register}" method="GET" class="signup" style="height: 60%;">
+                    <button class="btn btn-outline-success" type="submit" style="height: 100%;">Signup</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section id="postForm">
+    <form th:action="@{/editor/posts/{username}/edit/{postId}(username=${username}, postId=${post.id})}" method="POST" class="create" th:object="${post}" enctype="multipart/form-data">
+        <input type="hidden" name="_method" value="put">
+        <h3 style="margin-bottom: 10px;">Edit Post</h3>
+
+        <h5>Upload photo: </h5>
+        <input class="form-control file" type="file" id="file" name="file">
+
+        <div class="fields mt-3">
+            <label class="form-label">Title: </label>
+            <input type="text" class="form-control" th:field="*{title}" placeholder="title" required >
+        </div>
+
+        <div class="fields mt-3">
+<!--            <label for="editor-container" th:text="*{content}"></label>-->
+            <textarea name="content" id="editor-container" th:field=" *{content}"></textarea>
+        </div>
+
+        <h4 style="margin-top: 30px;">Categories: </h4>
+        <div class="container" th:each="category : ${categories}">
+            <label class="form-label">
+                <input type="checkbox" th:field="*{categories}" th:value="${category.id}" th:checked="${post.getCategories().contains(category.id)}">
+                <span th:text="${category.title}"></span>
+            </label>
+        </div>
+
+        <div th:if="${post.status == post.status.DRAFT}" class="form-group">
+            <label for="scheduleTime" class="form-label">Schedule Time</label>
+            <input type="datetime-local" id="scheduleTime" th:field="*{scheduleTime}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Tags</label>
+            <textarea th:field="*{tagsString}" type="text" class="form-control" placeholder="write tags with space, for example: law world ..."></textarea>
+        </div>
+
+        <input type="submit" class="btn btn-success mt-3" value="Save changes">
+    </form>
+</section>
+
+<section id="Contact" class="mt-5">
+    <div class="contact">
+        <div class="image">
+            <img th:src="@{/css/photos/gws_square.jpg}" alt="Contact Image">
+        </div>
+        <div class="contacts">
+            <h3>Contacts</h3>
+            <li>
+                <a href="https://www.greenwhite.uz/"><i class="bi bi-globe2"></i> www.greenwhite.uz</a>
+            </li>
+            <li>
+                <a href="mailto:info@greenwhite.uz"><i class="bi bi-envelope"></i> info@greenwhite.uz</a>
+            </li>
+            <li>
+                <a href="tel:+998712030301"><i class="bi bi-telephone"></i> +998 71 203 03 01</a>
+            </li>
+            <li>
+                <a href="tel:+998712008833"><i class="bi bi-telephone"></i> +998 71 200 88 33</a>
+            </li>
+        </div>
+    </div>
+    <div class="line"></div>
+    <div class="faq">
+        <p><i class="bi bi-c-circle"></i>Green White Solutions LLC. All rights reserved 2024</p>
+    </div>
+</section>
+
+
+<script>
+    new FroalaEditor('#editor-container ', {
+        toolbarButtons: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert', 'formatOL', 'formatUL', 'fontFamily', 'fontSize'],
+        fontFamilySelection: true,
+        fontSizeSelection: true,
+        fontFamily: {
+            "Arial,Helvetica,sans-serif": 'Arial',
+            "Courier,monospace": 'Courier',
+            "Georgia,serif": 'Georgia',
+            "Tahoma,Geneva,sans-serif": 'Tahoma',
+            "Times New Roman,Times,serif": 'Times New Roman',
+            "Verdana,Geneva,sans-serif": 'Verdana',
+            "Lucida Sans Unicode,Lucida Grande,sans-serif": 'Lucida Sans Unicode',
+            "Trebuchet MS,Helvetica,sans-serif": 'Trebuchet MS',
+            "Arial Black,Gadget,sans-serif": 'Arial Black',
+            "Comic Sans MS,cursive,sans-serif": 'Comic Sans MS',
+            "Impact,Charcoal,sans-serif": 'Impact',
+            "Palatino Linotype,Book Antiqua,Palatino,serif": 'Palatino Linotype',
+            "Lucida Console,Monaco,monospace": 'Lucida Console',
+            "Gill Sans,Geneva,sans-serif": 'Gill Sans',
+            "Franklin Gothic Medium,Arial Narrow,sans-serif": 'Franklin Gothic Medium',
+            "Garamond,serif": 'Garamond',
+            "Brush Script MT,cursive": 'Brush Script MT',
+            "Copperplate,serif": 'Copperplate',
+            "Futura,sans-serif": 'Futura',
+            "Calibri,Candara,Segoe,sans-serif": 'Calibri',
+            "Cambria,Georgia,serif": 'Cambria',
+            "Didot,serif": 'Didot',
+            "Rockwell,serif": 'Rockwell',
+            "Consolas,monospace": 'Consolas',
+            "Baskerville,serif": 'Baskerville',
+            "Bookman,serif": 'Bookman',
+            "Century Schoolbook,serif": 'Century Schoolbook',
+            "Merriweather,serif": 'Merriweather',
+            "Open Sans,sans-serif": 'Open Sans',
+            "Roboto,sans-serif": 'Roboto',
+            "Lato,sans-serif": 'Lato',
+            "Montserrat,sans-serif": 'Montserrat',
+            "Oswald,sans-serif": 'Oswald',
+            "Raleway,sans-serif": 'Raleway',
+            "PT Sans,sans-serif": 'PT Sans',
+            "Source Sans Pro,sans-serif": 'Source Sans Pro',
+            "Ubuntu,sans-serif": 'Ubuntu',
+            "Playfair Display,serif": 'Playfair Display',
+            "Noto Sans,sans-serif": 'Noto Sans',
+            "Nunito,sans-serif": 'Nunito',
+            "Muli,sans-serif": 'Muli',
+            "Quicksand,sans-serif": 'Quicksand',
+            "Bebas Neue,cursive": 'Bebas Neue',
+            "Josefin Sans,sans-serif": 'Josefin Sans',
+            "Rubik,sans-serif": 'Rubik',
+            "Lora,serif": 'Lora',
+            "Arvo,serif": 'Arvo',
+            "Poppins,sans-serif": 'Poppins',
+            "Karla,sans-serif": 'Karla',
+            "Oxygen,sans-serif": 'Oxygen',
+            "Inconsolata,monospace": 'Inconsolata',
+            "Cairo,sans-serif": 'Cairo',
+            "Constantia,serif": 'Constantia',
+            "Corbel,sans-serif": 'Corbel',
+            "Candara,sans-serif": 'Candara',
+            "Ebrima,sans-serif": 'Ebrima',
+            "Gabriola,serif": 'Gabriola',
+            "Gadugi,sans-serif": 'Gadugi',
+            "Malgun Gothic,sans-serif": 'Malgun Gothic',
+            "Meiryo,sans-serif": 'Meiryo',
+            "Microsoft YaHei,sans-serif": 'Microsoft YaHei',
+            "Microsoft JhengHei,sans-serif": 'Microsoft JhengHei',
+            "Mongolian Baiti,serif": 'Mongolian Baiti',
+            "MS Gothic,sans-serif": 'MS Gothic',
+            "MS PGothic,sans-serif": 'MS PGothic',
+            "MS UI Gothic,sans-serif": 'MS UI Gothic',
+            "Segoe UI,sans-serif": 'Segoe UI',
+            "Segoe UI Symbol,sans-serif": 'Segoe UI Symbol',
+            "SimSun,serif": 'SimSun',
+            "NSimSun,serif": 'NSimSun',
+            "Sylfaen,serif": 'Sylfaen',
+            "Uighur,sans-serif": 'Uighur',
+            "Yu Gothic,sans-serif": 'Yu Gothic',
+            "Microsoft Sans Serif,sans-serif": 'Microsoft Sans Serif'
+
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+</body>
+</html>

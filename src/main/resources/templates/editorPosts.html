@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GREEN WHITE NEWS</title>
+    <link rel="icon" th:href="@{/css/photos/gws_square.ico}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <style>
+        .contact .contacts li {
+            list-style: none;
+            margin-bottom: 10px;
+            font-family: serif;
+            font-size: 0.8em;
+        }
+        .faq {
+            text-align: left;
+            color: #7c8688;
+            font-size: 0.7em;
+        }
+
+    </style>
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: #f8f9fa;
+        }
+        .container {
+            margin-top: 10px;
+        }
+        section.tours {
+            padding: 30px 0;
+            text-align: center;
+
+        }
+
+        section.tours .nav-tabs {
+            border: none;
+            margin: 10px 0px;
+        }
+
+        section.tours .nav-tabs button {
+            padding: 10px 20px;
+            border: none;
+        }
+
+        section.tours .nav-tabs button.active {
+            border: none;
+            background-color: rgb(9, 9, 94);
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        section.tours .tab-content .box {
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 1);
+            padding: 24px;
+            padding-bottom: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0px 2px 53px -8px rgba(0, 0, 0, 0.22);
+            -webkit-box-shadow: 0px 2px 53px -8px rgba(0, 0, 0, 0.22);
+            -moz-box-shadow: 0px 2px 53px -8px rgba(0, 0, 0, 0.22);
+            min-height: 600px;
+            text-align: center;
+        }
+
+
+        section.tours .tab-content .box h3 {
+            font-weight: 700;
+            font-size: 30px;
+            line-height: 31px;
+            color: rgb(51, 51, 51);
+            margin: 20px 0px;
+        }
+
+
+        section.tours .tab-content .box p {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 21px;
+            color: rgb(85, 85, 85);
+
+        }
+        section.tours .tab-content .box p {
+            font-size: 14px;
+        }
+        .post-image {
+            width: 100%;
+            border-top-right-radius: 20px;
+            border-top-left-radius: 20px;
+            position: relative;
+            /*border: 1px solid red;*/
+        }
+        .post-image img {
+            width: 100%;
+            border-top-right-radius: 15px;
+            border-top-left-radius: 15px;
+            height: 100%;
+        }
+
+
+        .btn-edit {
+            background-color: rgb(0, 166, 81);
+            border: none;
+            color: white;
+            transition: background-color 0.3s ease-in-out;
+            margin-right: 10px;
+        }
+        section.posts {
+            width: 92%;
+            margin: 0 4%;
+        }
+
+        section.posts .post-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        section.posts .post {
+            width: 100%;
+
+            border-radius: 15px;
+            box-shadow: 5px 5px 5px 5px gray;
+            height: 450px;
+        }
+
+        /*section.posts .post {*/
+        /*    width: 100%;*/
+        /*}*/
+
+        section.posts .post .post-body {
+            height: 50%;
+            padding: 20px 0;
+            /*border: 1px solid black;*/
+        }
+
+        .btn-edit {
+            background-color: rgb(0, 166, 81);
+            border: none;
+            color: white;
+            transition: background-color 0.3s ease-in-out;
+            margin-right: 10px;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .btn-new-post {
+            background-color: rgb(0, 166, 81);
+            border: none;
+            color: white;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .post-image .modallll {
+            position: absolute;
+            height: 35px;
+            width: 35px;
+            right: 5%;
+            top: 10px;
+            border-radius: 50%;
+            background-color: rgba(128, 128, 128, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        section.posts .nav-item .active {
+            background-color: rgb(0, 166,  81);
+            color: white;
+        }
+
+        section.posts .nav-item a{
+            color: rgb(0, 166, 81);
+        }
+
+        .no-caret:after {
+            display: none;
+        }
+
+        .post-status {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-published {
+            color: #28a745;
+        }
+        .status-draft {
+            color: #ffc107;
+        }
+
+        .countdown-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .countdown-display:hover {
+            background-color: #f1f3f5;
+            transition: background-color 0.3s ease;
+        }
+
+        .no-caret {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .no-caret:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        section.posts .post {
+            width: 100%;
+            box-shadow: 5px 5px 5px 5px gray;
+            height: 300px;
+            display: flex;
+            border-radius: 20px;
+            flex-direction: column;
+        }
+
+        section.posts .post .post-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        section.posts .post .post-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        section.posts .post.has-schedule {
+            height: 420px;
+        }
+
+        .countdown-timer {
+            margin-top: auto;
+        }
+
+        .post {
+            position: relative;
+            width: 100%;
+            box-shadow: 5px 5px 5px 5px gray;
+            height: 300px;
+            border-radius: 20px;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 80%;
+            position: relative;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .countdown-timer {
+            position: absolute;
+            top: 10px;
+            left: 5%;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 14px;
+            height: 35px;
+            z-index: 10;
+        }
+
+        .countdown-value {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .post-body {
+            /*position: absolute;*/
+            height: 20%;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            margin-bottom: 0;
+        }
+
+        .modallll {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+    </style>
+
+
+
+</head>
+<body th:data-logged-in="${loggedIn != null}">
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container-fluid">
+        <div class="navbar-start">
+            <a class="navbar-brand" th:href="@{/}">
+                <div class="image">
+                    <img th:src="@{/css/photos/greenNews.jpg}" alt="">
+                </div>
+                <h4>Green White News</h4>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="dropdown me-2">
+                <button class="btn dropdown-toggle text-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Categories
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li th:each="category : ${categories}">
+                        <a class="dropdown-item text-success" th:href="@{/(size = ${size}, page = ${page}, category=${category.title})}" th:text="${category.title}"> ></a>
+                    </li>
+                </ul>
+            </div>
+            <form th:action="@{/}" method="get" class="d-flex me-auto">
+                <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search">
+                <button class="btn btn-success" type="submit">Search</button>
+            </form>
+            <div th:if="${loggedIn != null}" style="display: flex;">
+                <button class="open" type="button" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas" aria-controls="profileOffcanvas">
+                    <img th:src="'data:image/png;base64,' + ${photo}" alt="Profile Image">
+                </button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas" aria-labelledby="profileOffcanvasLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="profileOffcanvasLabel">Profile Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <form th:action="@{/profile/{username}(username=${loggedIn.username})}" method="GET">
+                            <i class="fa-regular fa-circle-user"></i>
+                            <button class="w-100 mb-2" type="submit">Profile</button>
+                        </form>
+                        <form th:action="@{/profile/{username}/edit(username=${loggedIn.username})}">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <button class="w-100 mb-2" type="submit">Edit Profile</button>
+                        </form>
+
+                        <form th:action="@{/changePassword}">
+                            <i class="fa-solid fa-key"></i>
+                            <button class="w-100 mb-2">Change Password</button>
+                        </form>
+                        <form th:action="@{/logout}" method="POST" class="w-100">
+                            <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i>
+                            <button type="submit" class="text-danger w-100">Log Out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${loggedIn == null}" style="display: flex;">
+                <form th:action="@{/login}" class="login d-flex" style="height: 60%;">
+                    <button class="btn btn-primary me-2" type="submit">Login</button>
+                </form>
+                <form th:action="@{/register}" method="GET" class="signup" style="height: 60%;">
+                    <button class="btn btn-outline-success" type="submit" style="height: 100%;">Signup</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="tours" id="tours">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 aos-init aos-animate" data-aos="zoom-in">
+            <h1 class="text-center">Your Posts</h1>
+            <div class="text-right mb-4">
+                <a th:href="@{/editor/{username}/posts/new(username=${loggedIn.username})}" class="btn btn-success btn-new-post">New Post</a>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+<section th:if="${!posts.isEmpty()}" class="posts">
+    <ul class="nav nav-tabs nav-justified nav-bordered mb-3">
+        <li class="nav-item">
+            <a href="#home-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+                <i class="mdi mdi-home-variant d-md-none d-block"></i>
+                <span class="d-md-block" th:text="'All posts ' + '(' + ${posts.size()} + ')'"></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#profile-b2" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
+                <i class="mdi mdi-account-circle d-md-none d-block"></i>
+                <span class="d-md-block" th:text="'Published posts ' + '(' + ${publishedPosts.size()} + ')'"></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#settings-b2" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                <i class="mdi mdi-settings-outline d-md-none d-block"></i>
+                <span class="d-md-block" th:text="'Draft posts ' + '(' + ${draftPosts.size()} + ')' "></span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane p active" id="home-b2">
+
+            <div class="post-container">
+                <div th:each="post : ${posts}" class="post">
+
+                    <div class="post-image">
+                        <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
+
+                        <div th:if="${post.status == post.getStatus().DRAFT and post.scheduleTime != null}" class="countdown-timer">
+                            <span th:id="'countdown_' + ${post.id}" th:data-schedule-time="${post.scheduleTime}" class="countdown-value"></span>
+                        </div>
+
+                            <div class="dropdown modallll">
+                            <button class="btn dropdown-toggle no-caret" type="button" th:id="'dropdownMenuButton_' + ${post.id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis-vertical text-white"></i>
+                            </button>
+                            <ul class="dropdown-menu" th:aria-labelledby="'dropdownMenuButton_' + ${post.id}">
+                                <li>
+                                    <form th:action="@{/editor/posts/{username}/edit/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="GET">
+                                        <button type="submit" class="dropdown-item">Edit</button>
+                                    </form>
+                                </li>
+                                <li th:if="${post.status == post.getStatus().DRAFT}">
+                                    <form th:action="@{/editor/posts/{username}/switch/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="put">
+                                        <button type="submit" class="dropdown-item">Publish Post</button>
+                                    </form>
+                                </li>
+
+                                <li th:if="${post.status == post.getStatus().PUBLISHED}">
+                                    <form th:action="@{/editor/posts/{username}/draft/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="put">
+                                        <button type="submit" class="dropdown-item">Draft Post</button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form th:action="@{/editor/posts/{username}/delete/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="delete">
+                                        <button type="submit" class="dropdown-item">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="post-body" style="padding-right: 20px; padding-left: 20px;">
+                        <h3>
+                            <a th:href="@{/posts/{postId}(postId=${post.id})}" class="title" th:text="${post.title}" style="color: black;
+                text-decoration: none;"></a>
+                        </h3>
+                        <!--            <p th:utext="${post.content}"></p>-->
+                        <h5 class="text-success" th:text="${post.status}" style="font-weight: 600;"></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane p show" id="profile-b2">
+
+            <div class="post-container">
+                <div th:each="post : ${publishedPosts}" class="post">
+                    <div class="post-image">
+                        <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
+
+                        <div class="dropdown modallll">
+                            <button class="btn dropdown-toggle no-caret" type="button" th:id="'dropdownMenuButton_' + ${post.id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis-vertical text-white"></i>
+                            </button>
+                            <ul class="dropdown-menu" th:aria-labelledby="'dropdownMenuButton_' + ${post.id}">
+                                <li>
+                                    <form th:action="@{/editor/posts/{username}/edit/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="GET">
+                                        <button type="submit" class="dropdown-item">Edit</button>
+                                    </form>
+                                </li>
+                                <li th:if="${post.status == post.getStatus().DRAFT}">
+                                    <form th:action="@{/editor/posts/{username}/switch/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="put">
+                                        <button type="submit" class="dropdown-item">Publish Post</button>
+                                    </form>
+                                </li>
+
+                                <li th:if="${post.status == post.getStatus().PUBLISHED}">
+                                    <form th:action="@{/editor/posts/{username}/draft/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="put">
+                                        <button type="submit" class="dropdown-item">Draft Post</button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form th:action="@{/editor/posts/{username}/delete/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="delete">
+                                        <button type="submit" class="dropdown-item">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="post-body" style="padding-right: 20px; padding-left: 20px;">
+                        <h3>
+                            <a th:href="@{/posts/{postId}(postId=${post.id})}" class="title" th:text="${post.title}" style="color: black;
+                text-decoration: none;"></a>
+                        </h3>
+                        <!--            <p th:utext="${post.content}"></p>-->
+                        <h5 class="text-success" th:text="${post.status}" style="font-weight: 600;"></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane p" id="settings-b2">
+            <div class="post-container">
+                <div th:each="post : ${draftPosts}" class="post">
+                    <div class="post-image">
+                        <img th:if="${post.hashedPhoto != null}" th:src="'data:image/png;base64,' + ${post.hashedPhoto}" alt="Post Image">
+
+                        <div th:if="${post.status == post.getStatus().DRAFT and post.scheduleTime != null}" class="countdown-timer">
+                            <span th:id="'countdown_' + ${post.id}" th:data-schedule-time="${post.scheduleTime}" class="countdown-value"></span>
+                        </div>
+
+                        <div class="dropdown modallll">
+                            <button class="btn dropdown-toggle no-caret" type="button" th:id="'dropdownMenuButton_' + ${post.id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis-vertical text-white"></i>
+                            </button>
+                            <ul class="dropdown-menu" th:aria-labelledby="'dropdownMenuButton_' + ${post.id}">
+                                <li>
+                                    <form th:action="@{/editor/posts/{username}/edit/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="GET">
+                                        <button type="submit" class="dropdown-item">Edit</button>
+                                    </form>
+                                </li>
+                                <li th:if="${post.status == post.getStatus().DRAFT}">
+                                    <form th:action="@{/editor/posts/{username}/switch/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="put">
+                                        <button type="submit" class="dropdown-item">Publish Post</button>
+                                    </form>
+                                </li>
+
+                                <li th:if="${post.status == post.getStatus().PUBLISHED}">
+                                    <form th:action="@{/editor/posts/{username}/draft/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="put">
+                                        <button type="submit" class="dropdown-item">Draft Post</button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form th:action="@{/editor/posts/{username}/delete/{postId}(postId=${post.id}, username=${loggedIn.username})}" method="POST">
+                                        <input type="hidden" name="_method" value="delete">
+                                        <button type="submit" class="dropdown-item">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="post-body" style="padding-right: 20px; padding-left: 20px;">
+                        <h3>
+                            <a th:href="@{/posts/{postId}(postId=${post.id})}" class="title" th:text="${post.title}" style="color: black;
+                text-decoration: none;"></a>
+                        </h3>
+                        <!--            <p th:utext="${post.content}"></p>-->
+                        <h5 class="text-success" th:text="${post.status}" style="font-weight: 600;"></h5>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+</section>
+
+
+
+<section id="Contact" class="mt-5">
+    <div class="contact">
+        <div class="image">
+            <img th:src="@{/css/photos/gws_square.jpg}" alt="Contact Image">
+        </div>
+        <div class="contacts">
+            <h3>Contacts</h3>
+            <li>
+                <a href="https://www.greenwhite.uz/"><i class="bi bi-globe2"></i> www.greenwhite.uz</a>
+            </li>
+            <li>
+                <a href="mailto:info@greenwhite.uz"><i class="bi bi-envelope"></i> info@greenwhite.uz</a>
+            </li>
+            <li>
+                <a href="tel:+998712030301"><i class="bi bi-telephone"></i> +998 71 203 03 01</a>
+            </li>
+            <li>
+                <a href="tel:+998712008833"><i class="bi bi-telephone"></i> +998 71 200 88 33</a>
+            </li>
+        </div>
+    </div>
+    <div class="line"></div>
+    <div class="faq" >
+        <p><i class="bi bi-c-circle"></i>Green White Solutions LLC. All rights reserved 2024</p>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const posts = document.querySelectorAll('.post');
+
+        posts.forEach(post => {
+            const countdownElement = post.querySelector('[id^="countdown_"]');
+            if (countdownElement) {
+                const scheduleTime = countdownElement.dataset.scheduleTime;
+
+                if (scheduleTime) {
+                    startCountdown(countdownElement, new Date(scheduleTime));
+                }
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const posts = document.querySelectorAll('.post');
+
+        posts.forEach(post => {
+            const countdownElement = post.querySelector('[id^="countdown_"]');
+            if (countdownElement) {
+                const scheduleTime = countdownElement.dataset.scheduleTime;
+
+                if (scheduleTime) {
+                    startCountdown(countdownElement, new Date(scheduleTime));
+                }
+            }
+        });
+    });
+
+    function startCountdown(element, targetDate) {
+        function updateCountdown() {
+            const now = new Date();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                element.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            } else {
+                element.textContent = "Published!";
+                clearInterval(intervalId);
+            }
+        }
+
+        updateCountdown();
+        const intervalId = setInterval(updateCountdown, 1000);
+    }
+
+</script>
+
+
+
+</body>
+</html>

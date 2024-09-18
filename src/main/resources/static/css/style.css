@@ -1,0 +1,596 @@
+.navbar-brand{
+    display: flex;
+    align-items: center;
+}
+
+.navbar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0 3%;
+    height: 80px;
+    background-color: transparent;
+    margin-bottom: 50px;
+}
+
+.navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .dropdown-toggle {
+    width: 120px;
+    /*border: 1px solid red;*/
+}
+
+.post {
+    /*box-shadow: 3px 3px 10px 3px rgb(0, 166, 81) ;*/
+}
+
+#Home .post {
+    box-shadow: none;
+}
+
+
+
+.navbar .login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar .signup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar h4 {
+    margin-bottom: 0;
+}
+
+
+.open {
+    width: 60px;
+    height: 60px;
+    padding: 0; /* Remove padding */
+    border: none; /* Remove border */
+    border-radius: 50%; /* Make the button circular */
+    overflow: hidden; /* Ensure the image fits within the button */
+}
+
+.open img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+.navbar .offcanvas-body form{
+    height: 40px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.navbar .offcanvas-body form button {
+    background-color: white;
+    border: 0;
+    text-align: start;
+    color: black;
+    font-size: 20px;
+}
+
+.navbar .offcanvas-body form i {
+    font-size: 20px;
+    margin-left: 8px;
+    color: black;
+}
+
+
+
+
+.navbar-start .navbar-brand .image{
+    width: 70px;
+    height: 70px;
+    background-color: rgb(0, 166, 81);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.navbar-brand .image img{
+    color: white;
+    width: 100%;
+    height: 100%;
+}
+
+.navbar-brand h4{
+    font-family: 'Open Sans', sans-serif;
+    color: rgb(0, 166, 81);
+}
+
+.navbar li a{
+    font-size: 20px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    color: gray;
+}
+
+.navbar li .active{
+    color: black;
+}
+
+.navbar .offcanvas {
+    width: 300px;
+}
+
+
+section#Home {
+    width: 92%;
+    margin: auto;
+}
+
+section#Home .post .post_content {
+    width: 50%
+}
+
+section#Home .post {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    /* cursor: pointer; */
+}
+
+section#Home .post .title{
+    font-size: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+
+section#Home .post img{
+    width: 100%;
+    height: 450px;
+}
+
+section#Home .post .post_content .date {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+section#Home .post .post_content .date h5{
+    font-family: "Baskervville SC", serif;
+    font-weight: 400;
+    color: rgb(74, 73, 73);
+    margin-left: 5px;
+}
+
+section#Home .post .post_content .date i, .date h5{
+    display: inline-block;
+    margin: 10px 5px;
+}
+
+section#Home .post .post_content .like i, .like h5{
+    display: inline-block;
+    margin: 15px 2px;
+}
+
+section#Home .post .post_content .like i{
+    margin-right: 10px;
+    width: 7px;
+    height: 7px;
+    font-size: larger;
+    cursor: pointer;
+}
+
+section#Home .post .post_content .like h5{
+    font-family: "Baskervville SC", serif;
+    color: gray;
+    font-size: 20px;
+    padding-top: 4.5px;
+}
+
+
+
+section#Home .post .post_content p{
+    color: gray;
+}
+
+section#Home .post .post_content .hover-text {
+    color: white;
+}
+
+section#News{
+    width: 92%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 40px;
+    margin: 50px 4%;
+}
+
+section#News .post {
+    height: 279px;
+    padding-bottom: 0;
+}
+
+section#News .post a {
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 600;
+    color: black;
+}
+
+section#News .post img {
+    width: 100%;
+    height: 70%;
+}
+
+section#News .post .date{
+    font-family: sans-serif;
+    width: 100%;
+    display: flex;
+    justify-self: flex-start;
+    align-items: center;
+}
+
+section#News .post .date .calendar{
+    width: 60%;
+}
+
+section#News .post .date .like {
+    width: 50%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+section#News .post .date .like i{
+    font-size: 20px;
+}
+
+section#News .post .date .like h5{
+    margin-left: 8px;
+}
+
+section#News .post .date .calendar h5{
+    font-family: "Baskervville SC", serif;
+    font-size: medium;
+    margin-right: 10px;
+    /*margin-left: 20px;*/
+}
+
+section#News .post h5 {
+    font-family: "Baskervville SC", serif;
+    color: gray;
+}
+
+section#News .post .line {
+    height: 1px;
+    width: 100%;
+    background-color: gray;
+    margin-bottom: 0;
+}
+
+
+section#Contact{
+    margin-top: 100px;
+    background-color: black;
+    padding: 3% 10%;
+}
+
+section#Contact .contact{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+section#Contact .contact .contacts{
+    color: white;
+}
+
+section#Contact .contact .contacts a{
+    color: white;
+    font-family: sans-serif;
+    text-decoration: none;
+}
+
+section#Contact .contact .contacts li{
+    list-style: none;
+}
+
+section#Contact .image{
+    width: 100px;
+    height: 100px;
+}
+
+section#Contact .image img{
+    width: 100%;
+    height: 100%;
+}
+
+section#Contact .line{
+    width: 100%;
+    height: 0.5px;
+    background-color: white;
+    margin-top: 60px;
+}
+
+section#Contact .faq{
+    margin-top: 20px;
+    color: white;
+}
+
+section#Post {
+    width: 60%;
+    margin: 0 auto;
+}
+
+section#Post .date {
+    font-size: 18px;
+    color: rgb(84, 83, 83);
+    font-family: "Lora", serif;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    /* border: 1px solid red; */
+}
+
+section#Post .date .like {
+    margin: 0 45px;
+    cursor: pointer;
+}
+
+section#Post .date .share {
+    cursor: pointer;
+}
+
+section#Post h1 {
+    font-family: "Wittgenstein", serif;
+    font-weight: 600;
+}
+
+section#Post .image img{
+    width: 100%;
+    margin: 50px 0;
+}
+
+section#Post p {
+    font-size: 20px;
+}
+
+section#Post .tags a {
+    font-family: "Kanit", sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+section#Comments {
+    margin: auto;
+    margin-top: 60px;
+    width: 92%;
+    border-radius: 10px;
+    border: 1px solid rgb(0, 166, 81);
+    padding: 10px;
+}
+
+section#Comments .comment-form {
+    width: 100%;
+    /* max-width: 600px; */
+    margin: auto;
+    padding: 10px;
+    /* border: 1px solid #ddd; */
+    border-radius: 7px;
+    /* height: 200px; */
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+}
+
+section#Comments .comment-form textarea{
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgb(0, 166, 81);
+    border-radius: 7px;
+    resize: vertical;
+    height: 100px;
+}
+
+section#Comments .comment-form button{
+    display: inline-block;
+    padding: 10px 20px;
+    /* background-color: #169532; */
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+section#Comments .comments {
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
+    /* background-color: wheat; */
+}
+
+section#Comments .comments h4 {
+    margin-bottom: 15px;
+}
+
+section#Comments .comments .comment{
+    margin-bottom: 40px;
+    border-radius: 10px;
+
+    /* box-shadow: 0 2px 4px rgba(0, 0,1) */
+}
+
+section#Comments .comments .comment .content{
+    display: flex;
+    margin-bottom: 0;
+}
+
+section#Comments .comments .comment .content p{
+    margin-left: 20px;
+    color: gray;
+    margin-top: 5px;
+}
+
+section#Comments .comments .comment .content a{
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    /* color: rgb(121, 128, 0); */
+    color: rgb(0, 166, 81);
+}
+
+section#Comments .comments .comment h4{
+    font-size: 17px;
+    font-weight: 500;
+}
+
+section#Profile {
+    width: 92%;
+    margin: auto;
+    display: flex;
+    justify-content: space-around;
+}
+
+section#Profile .image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-bottom: 30px;
+}
+
+section#Profile .image img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+
+section#Profile .left-side .col-sm-6 {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+}
+
+
+section#Profile .left-side .edit{
+    width: 200px;
+}
+
+section#Profile .left-side .edit button{
+    margin-top: 30px;
+    width: 100%;
+}
+
+section#Profile .userInfo {
+    border-radius: 30px;
+    border:2px solid rgb(0, 166, 81);
+    color:  rgb(0, 166, 81);
+    padding: 20px;
+}
+
+section#Profile .userInfo h3{
+    height: 20%;
+}
+
+section#EditForm {
+    width: 30%;
+    margin: auto;
+    border: 2px solid  rgb(0, 166, 81);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+section#EditForm .userEditForm {
+    width: 100%;
+}
+
+section#EditForm .userEditForm .image {
+    width: 200px;
+    height: 200px;
+    margin: auto;
+    border-radius: 50%;
+    margin-bottom: 30px;
+}
+
+section#EditForm .userEditForm .image img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+section#EditForm .userEditForm .fields {
+    margin-top: 30px;
+}
+
+section#EditForm .userEditForm .btn {
+    margin-top: 30px;
+    width: 100%;
+}
+
+.google {
+    cursor: pointer;
+    border-radius: 0;
+    background-color:white;
+    border: 2px solid gray;
+    color: gray;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    height: 40px;
+}
+
+.google a {
+    background-color: none;
+    border-radius:0;
+    color: gray;
+    margin-left: 5px;
+}
+
+.google:hover {
+    border:2px solid rgb(0, 166, 81);
+    color: rgb(0, 166, 81);
+}
+
+.google:hover a {
+    color: rgb(0, 166, 81);
+}
+
+section#Post .author {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin-top: 30px;
+}
+
+section#Post .author img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+section#Post .author a {
+    font-size: 25px;
+    color: rgb(0, 166, 81);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.title {
+    font-family: "Merriweather", serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
